@@ -55,6 +55,7 @@ function ChatList() {
                     icon={Lock}
                     activeIcon={ActLock}
                     placeholder="비밀번호를 입력해주세요."
+                    type="password"
                     value={userPWD}
                     onChangeFunc={(e) => handleInputChange(e, setUserPWD)}
                 />
@@ -63,7 +64,7 @@ function ChatList() {
             <LargeBtn
                 content="로그인"
                 onClick={handleLogin}
-                isAvailable={true}
+                isAvailable={isLoginAvailable}
             />
 
         </LoginScreenContainer>

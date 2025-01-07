@@ -16,6 +16,7 @@ const LargeBtn = ({ content, onClick, isAvailable }) => {
             className='text-lg-300'
             onClick={onClick}
             disabled={!isAvailable}
+            isAvailable={isAvailable}
         >{content}</LargeBtnContainer>
 
     )
@@ -23,14 +24,14 @@ const LargeBtn = ({ content, onClick, isAvailable }) => {
 
 export default LargeBtn
 
-const LargeBtnContainer = styled.button`
-width: 354px;
-height: 54px;
+const LargeBtnContainer = styled.button<{ isAvailable: boolean }>`
+width: 22.125rem;
+height: 3.375rem;
 
 padding: 14px 126px;
 border-radius: 15px;
-border: 1px solid var(--primary-80);
-background: var(--primary-70);
+border: 1px solid ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
+background: ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
 
 gap: 6px;
 

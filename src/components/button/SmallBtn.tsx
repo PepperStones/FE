@@ -29,8 +29,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-width: 150px;
-height: 46px;
+width: 9.375rem; 
+height: 2.875rem; 
 
 padding: 11px 48px;
 border-radius: 10px;

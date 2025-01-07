@@ -42,4 +42,9 @@ flex-shrink: 0;
 
 color: ${({ isDarkblue }) => isDarkblue ? 'var(--gray-80)' : 'var(--gray-0'};
 text-align: center;
+
+user-select: none; /* 텍스트 선택 방지 */
+-webkit-user-select: none; /* Safari에서 드래그 방지 */
+-moz-user-select: none; /* Firefox에서 드래그 방지 */
+-ms-user-select: none;
 `;

@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-// lefter, center, righter 모두 인터페이스 동일
-
+/* lefter, center, righter 모두 인터페이스 동일
 interface lefter {
     icon: string;
+    iconWidth?: number; // 아이콘 너비 (px 단위)
+    iconHeight?: number; // 아이콘 높이 (px 단위)
     text: string;
     clickFunc: () => void;
 }
+*/
 
 const TopNav = ({ lefter, center, righter }) => {
 
@@ -16,19 +18,25 @@ const TopNav = ({ lefter, center, righter }) => {
             <ImageContainer onClick={lefter ? lefter.clickFunc : undefined}>
                 {lefter ?
                     lefter.icon ? (
-                        <img src={lefter ? lefter.icon : undefined} alt="LeftIcon" />
+                        <LeftIcon src={lefter ? lefter.icon : undefined} alt="LeftIcon"
+                            width={lefter.iconWidth}
+                            height={lefter.iconHeight}
+                        />
                     ) : lefter.text ? (
                         <span>{lefter ? lefter.text : undefined}</span>
                     ) : null
                     : undefined}
             </ImageContainer>
 
-            <CenterContent className="Podo-Ticket-Headline-H3">{center ? center.text : null}</CenterContent>
+            <CenterContent className="title-sm-300">{center ? center.text : null}</CenterContent>
 
             <ImageContainer onClick={righter ? righter.clickFunc : undefined}>
                 {righter ?
                     righter.icon ? (
-                        <img src={righter ? righter.icon : undefined} alt="RightIcon" />
+                        <RightIcon src={righter ? righter.icon : undefined} alt="RightIcon"
+                            width={righter.iconWidth}
+                            height={righter.iconHeight}
+                        />
                     ) : righter.text ? (
                         <span>{righter ? righter.text : undefined}</span>
                     ) : null
@@ -48,27 +56,22 @@ align-items: center;
 z-index: 1000;
 
 height: 71px;
-border: none;
-background: #FFF;
+border-bottom: 1px solid var(--gray-10);
 
 user-select: none; /* 텍스트 선택 방지 */
 -webkit-user-select: none; /* Safari에서 드래그 방지 */
 -moz-user-select: none; /* Firefox에서 드래그 방지 */
+-ms-user-select: none;
 `;
 
 const CenterContent = styled.div`
-    display: flex;
-    justify-content: center;
-    text-align: center; /* 중앙 정렬 */
+display: flex;
+justify-content: center;
+text-align: center; /* 중앙 정렬 */
 
-    width: 210px;
+width: 210px;
 
-color: #14191E;
-font-family: Pretendard;
-font-size: 20px;
-font-style: normal;
-font-weight: 600;
-line-height: 24px; /* 120% */
+color: var(--gray-100);
 `;
 
 const ImageContainer = styled.div`
@@ -78,10 +81,14 @@ const ImageContainer = styled.div`
 
     width: 80px; /* 이미지 크기 조정 */
     height: 40px; /* 이미지 크기 조정 */
-
-    img {
-        max-width: 20px;
-        max-height: 20px;
-    }
 `;
 
+const LeftIcon = styled.img<{ width?: number; height?: number }>`
+width: ${({ width }) => (width ? `${width}px` : '20px')};
+height: ${({ height }) => (height ? `${height}px` : '20px')};
+`;
+
+const RightIcon = styled.img<{ width?: number; height?: number }>`
+width: ${({ width }) => (width ? `${width}px` : '20px')};
+height: ${({ height }) => (height ? `${height}px` : '20px')};
+`;

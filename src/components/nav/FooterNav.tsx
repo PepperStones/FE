@@ -82,6 +82,11 @@ const NavItem = styled.div`
     &.active {
         color: var(--primary-70); /* 활성화된 텍스트 색상 */
     }
+
+user-select: none; /* 텍스트 선택 방지 */
+-webkit-user-select: none; /* Safari에서 드래그 방지 */
+-moz-user-select: none; /* Firefox에서 드래그 방지 */
+-ms-user-select: none;
 `;
 
 const NavLink = styled(Link)`

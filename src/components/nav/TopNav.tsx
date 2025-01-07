@@ -8,7 +8,6 @@ interface lefter {
     clickFunc: () => void;
 }
 
-
 const TopNav = ({ lefter, center, righter }) => {
 
     return (

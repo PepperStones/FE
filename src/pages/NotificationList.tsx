@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import backIcon from "../assets/images/left_arrow.png";
 import starIcon from "../assets/images/solar_star-line-duotone.png";
+import grayStarIcon from "../assets/images/solar_star-line-duotone_gray.png";
 import TopNav from "../components/nav/TopNav.tsx";
 import AlertItem from "../components/button/AlertItem.tsx";
 
@@ -14,7 +15,7 @@ export const notificationsMock = [
     message:
       "500 do를 획득하셨습니다. 더 자세한 내용은 홈 탭 > 최근 획득 경험치에서 확인해보세요.",
     date: "2025.01.06",
-    isRead: false,
+    isRead: true,
   },
   {
     id: 2,
@@ -125,15 +126,24 @@ const NotificationList: React.FC = () => {
               <NoticeIcon src={notification.icon}></NoticeIcon>
               <Notice>
                 <NoticeHead>
-                  <NotificationTitle className="text-md-200">
+                  <NotificationTitle
+                    className="text-md-200"
+                    isRead={notification.isRead}
+                  >
                     {notification.title}
                   </NotificationTitle>
-                  <NotificationDate className="caption-sm-100">
+                  <NotificationDate
+                    className="caption-sm-100"
+                    isRead={notification.isRead}
+                  >
                     {notification.date}
                   </NotificationDate>
                 </NoticeHead>
 
-                <NotificationMessage className="caption-md-100">
+                <NotificationMessage
+                  className="caption-md-100"
+                  isRead={notification.isRead}
+                >
                   {notification.message}
                 </NotificationMessage>
               </Notice>
@@ -154,9 +164,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  background: #131725;
-
   margin: auto;
   height: 100vh;
 `;
@@ -195,8 +202,8 @@ const Notice = styled.div`
   flex-direction: column;
   gap: 11px;
 `;
-const NotificationTitle = styled.div`
-  color: var(--primary-80);
+const NotificationTitle = styled.div<{ isRead: boolean }>`
+  color: ${({ isRead }) => (isRead ? "var(--gray-20)" : "var(--primary-80)")};
   text-align: left;
   max-width: 220px;
 
@@ -205,14 +212,14 @@ const NotificationTitle = styled.div`
   white-space: nowrap;
 `;
 
-const NotificationDate = styled.div`
-  color: var(--gray-40);
+const NotificationDate = styled.div<{ isRead: boolean }>`
+  color: ${({ isRead }) => (isRead ? "var(--gray-20)" : "var(--gray-40)")};
 `;
-const NotificationMessage = styled.div`
+const NotificationMessage = styled.div<{ isRead: boolean }>`
   width: 303px;
   height: 32px;
 
-  color: var(--gray-40);
+  color: ${({ isRead }) => (isRead ? "var(--gray-20)" : "var(--gray-40)")};
   text-align: left;
 
   overflow: hidden;

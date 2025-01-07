@@ -22,7 +22,7 @@ export default AlertItem;
 const Alert = styled.div<{ isRead: boolean }>`
   width: 22.0625rem;
   height: 5.1875rem;
-  background: ${({ isRead }) => (isRead ? "#f0f0f0" : "var(--sub-20)")};
+  background: ${({ isRead }) => (isRead ? "var(--sub-10)" : "var(--sub-20)")};
 
   border-radius: 15px;
   margin-bottom: 16px; /* 항목 간의 간격 */

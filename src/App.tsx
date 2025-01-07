@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Test from './pages/Test.tsx'
+import NotificationList from "./pages/NotificationList.tsx";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Test />} />
+        <Route path="/notification_list" element={<NotificationList />} />
       </Routes>
     </BrowserRouter>
   );

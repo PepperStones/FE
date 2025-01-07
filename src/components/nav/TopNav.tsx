@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 // lefter, center, righter 모두 인터페이스 동일
+
 interface lefter {
     icon: string;
     text: string;
@@ -83,3 +84,4 @@ const ImageContainer = styled.div`
         max-height: 20px;
     }
 `;
+

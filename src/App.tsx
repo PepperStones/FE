@@ -1,8 +1,10 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { createGlobalStyle } from 'styled-components';
 
 import Login from "./pages/Login.tsx"
+
+import NotificationList from "./pages/NotificationList.tsx";
+import { createGlobalStyle } from 'styled-components';
 
 // 전역 스타일 정의
 const GlobalStyle = createGlobalStyle`
@@ -19,6 +21,8 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
+
+
 const App = () => {
   return (
     <>
@@ -26,9 +30,11 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+           <Route path="/notification_list" element={<NotificationList />} />
         </Routes>
       </BrowserRouter>
     </>
+
   );
 };
 

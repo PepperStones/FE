@@ -51,7 +51,9 @@ const Nav = styled.nav`
     bottom: 0;
     left: 0;
     right: 0;
+
     height: 100px;
+
     background-color: white;
     border-top: 1px solid #ccc;
     box-shadow: 0px 0px 9px 6px rgba(0, 0, 0, 0.03);
@@ -96,7 +98,6 @@ const NavLink = styled(Link)`
         margin: 0;
         padding: 0;
     }
-
     p {
     margin-bottom: 32px;
     }

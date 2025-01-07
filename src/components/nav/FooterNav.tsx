@@ -2,6 +2,15 @@ import React from "react";
 import { useLocation, Link } from 'react-router-dom';
 import styled from "styled-components";
 
+import Home from "../../assets/images/gray_star.png"
+import ActHome from "../../assets/images/yellow_star.png"
+import Quest from "../../assets/images/gray_task_add.png"
+import ActQuest from "../../assets/images/yellow_task_add.png"
+import Board from "../../assets/images/gray_pin_paper.png"
+import ActBoard from "../../assets/images/yellow_pin_paper.png"
+import Mypage from "../../assets/images/gray_person_circle.png"
+import ActMypage from "../../assets/images/yellow_person_circle.png"
+
 const BottomNav = ({ }) => {
     const location = useLocation(); // 현재 경로를 가져옴
 
@@ -9,25 +18,25 @@ const BottomNav = ({ }) => {
         <Nav>
             <NavItem className={location.pathname === '/home' ? 'active' : ''}>
                 <NavLink to="/home">
-                    <IconHome src={location.pathname === '/home' ? null : null} />
+                    <IconHome src={location.pathname === '/home' ? ActHome : Home} />
                     <p>홈</p>
                 </NavLink>
             </NavItem>
             <NavItem className={location.pathname === '/quest' ? 'active' : ''}>
                 <NavLink to="/quest">
-                    <IconQuest src={location.pathname === '/quest' ? null : null} />
+                    <IconQuest src={location.pathname === '/quest' ? ActQuest : Quest} />
                     <p>퀘스트</p>
                 </NavLink>
             </NavItem>
             <NavItem className={location.pathname === '/board' ? 'active' : ''}>
                 <NavLink to="/board">
-                    <IconBoard src={location.pathname === '/board' ? null : null} />
+                    <IconBoard src={location.pathname === '/board' ? ActBoard : Board} />
                     <p>게시판</p>
                 </NavLink>
             </NavItem>
             <NavItem className={location.pathname === '/mypage' ? 'active' : ''}>
                 <NavLink to="/mypage">
-                    <IconMypage src={location.pathname === '/mypage' ? null : null} />
+                    <IconMypage src={location.pathname === '/mypage' ? ActMypage : Mypage} />
                     <p>나의 정보</p>
                 </NavLink>
             </NavItem>
@@ -42,7 +51,9 @@ const Nav = styled.nav`
     bottom: 0;
     left: 0;
     right: 0;
-    height: 70px;
+
+    height: 100px;
+
     background-color: white;
     border-top: 1px solid #ccc;
     box-shadow: 0px 0px 9px 6px rgba(0, 0, 0, 0.03);
@@ -69,7 +80,7 @@ const NavItem = styled.div`
     user-select: none;
 
     &.active {
-        color: #6A39C0; /* 활성화된 텍스트 색상 */
+        color: var(--primary-70); /* 활성화된 텍스트 색상 */
     }
 `;
 
@@ -87,32 +98,35 @@ const NavLink = styled(Link)`
         margin: 0;
         padding: 0;
     }
+    p {
+    margin-bottom: 32px;
+    }
 `;
 
 const IconHome = styled.img`
-    width: 27px;
-    height: 19px;
-    margin-top: 10px;
+    width: 24px;
+    height: 24px;
+    margin-top: 19px;
     margin-bottom: 5px;
 `;
 
 const IconQuest = styled.img`
-    width: 27px;
-    height: 19px;
-    margin-top: 10px;
-    margin-bottom: 7px;
+    width: 24px;
+    height: 24px;
+    margin-top: 19px;
+    margin-bottom: 1px;
 `;
 
 const IconBoard = styled.img`
-    width: 22px;
+    width: 24px;
     height: 22px;
-    margin-top: 10px;
+    margin-top: 21px;
     margin-bottom: 5px;
 `;
 
 const IconMypage = styled.img`
     width: 22px;
     height: 22px;
-    margin-top: 10px;
+    margin-top: 19px;
     margin-bottom: 5px;
 `;

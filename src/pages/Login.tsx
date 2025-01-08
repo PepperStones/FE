@@ -20,7 +20,7 @@ const progress = {
     maxProgress: 30000,
 };
 
-function ChatList() {
+function Login() {
     const navigate = useNavigate();
 
     const [userID, setUserID] = useState('');
@@ -71,16 +71,6 @@ function ChatList() {
                 />
             </InputContainer>
 
-            <QuestRewardBtn
-                title="앱 둘러보기 도전!"
-                content="홈 탭에 접속해서 [나의 최근 획득 경험치]를 5회 확인해보세요!"
-                rewardImg={TreeIcon}
-                isAvailable={true}
-                isDone={false}
-                progress={progress}
-                onClick={null}
-            />
-
             <LargeBtn
                 content="로그인"
                 onClick={handleLogin}
@@ -92,7 +82,7 @@ function ChatList() {
     );
 }
 
-export default ChatList;
+export default Login;
 
 const LoginScreenContainer = styled.div`
 display: flex;

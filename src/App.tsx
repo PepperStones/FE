@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login.tsx";
 import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
+import BoardPage from "./pages/BoardPage.tsx";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
+          <Route path="/board" element={<BoardPage />} />
         </Routes>
       </BrowserRouter>
     </>

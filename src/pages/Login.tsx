@@ -5,11 +5,20 @@ import styled from 'styled-components';
 
 import LargeBtn from '../components/button/LargeBtn.tsx';
 import LargeInput from '../components/InputField/LargeInput.tsx';
+import QuestRewardBtn from '../components/button/QuestRewardBtn.tsx';
 
 import ID from '../assets/images/gray_person.png'
 import ActID from '../assets/images/lightgray_person.png'
 import Lock from '../assets/images/gray_lock.png'
 import ActLock from '../assets/images/lightgray_lock.png'
+
+import TreeIcon from '../assets/images/reward/palm_tree.png'
+
+const progress = {
+    progressContent: "도전과제 진행률",
+    currentProgress: 1341,
+    maxProgress: 30000,
+};
 
 function ChatList() {
     const navigate = useNavigate();
@@ -61,7 +70,17 @@ function ChatList() {
                     onChangeFunc={(e) => handleInputChange(e, setUserPWD)}
                 />
             </InputContainer>
-            
+
+            <QuestRewardBtn
+                title="앱 둘러보기 도전!"
+                content="홈 탭에 접속해서 [나의 최근 획득 경험치]를 5회 확인해보세요!"
+                rewardImg={TreeIcon}
+                isAvailable={true}
+                isDone={false}
+                progress={progress}
+                onClick={null}
+            />
+
             <LargeBtn
                 content="로그인"
                 onClick={handleLogin}

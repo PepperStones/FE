@@ -2,36 +2,36 @@ import React from 'react'
 import styled from 'styled-components'
 
 /* Props 정보
-interface LargeBtnProps {
+interface MediumBtnProps {
     content: string;        // 버튼 안 내용
     onClick: () => void;        // 온 클릭 함수
     isAvailable: boolean;       // 버튼 동작 여부
 }
 */
 
-const LargeBtn = ({ content, onClick, isAvailable }) => {
+const MediumBtn = ({ content, onClick, isAvailable }) => {
     return (
 
-        <LargeBtnContainer
-            className='text-lg-300'
+        <MediumBtnContainer
+            className='text-md-300'
             onClick={onClick}
             disabled={!isAvailable}
             isAvailable={isAvailable}
-        >{content}</LargeBtnContainer>
+        >{content}</MediumBtnContainer>
 
     )
 }
 
-export default LargeBtn
+export default MediumBtn
 
-const LargeBtnContainer = styled.button<{ isAvailable: boolean }>`
-width: 22.125rem;
-height: 3.375rem;
+const MediumBtnContainer = styled.button<{ isAvailable: boolean }>`
+width: 20.3125rem;
+height: 3rem;
 
-padding: 17px 0px;
+padding: 15px 0px;
 border-radius: 15px;
-border: 1px solid ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
-background: ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
+border: 1px solid ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--gray-30)')};
+background: ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--gray-30)')};
 
 gap: 6px;
 

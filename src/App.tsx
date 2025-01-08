@@ -35,6 +35,8 @@ const App = () => {
           <Route path="/challenge" element={<ChallengeQuest />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/board" element={<BoardPage />} />
+
+          <Route path="/mypage" element={<Mypage />} />
         </Routes>
       </BrowserRouter>
     </>

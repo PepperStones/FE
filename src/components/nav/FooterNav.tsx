@@ -28,9 +28,13 @@ const BottomNav = ({}) => {
           <p>퀘스트</p>
         </NavLink>
       </NavItem>
-      <NavItem className={location.pathname === "/board" ? "active" : ""}>
+      <NavItem
+        className={location.pathname.startsWith("/board") ? "active" : ""}
+      >
         <NavLink to="/board">
-          <IconBoard src={location.pathname === "/board" ? ActBoard : Board} />
+          <IconBoard
+            src={location.pathname.startsWith("/board") ? ActBoard : Board}
+          />
           <p>게시판</p>
         </NavLink>
       </NavItem>

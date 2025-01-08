@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 import TopNav from "../components/nav/TopNav.tsx";
 import BottomNav from "../components/nav/FooterNav.tsx";
@@ -67,6 +68,12 @@ export const boardListMock = [
 ];
 
 const BoardPage: React.FC = () => {
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+
+  const handleClick = (id: number) => {
+    navigate(`/board/${id}`); // 동적으로 URL 이동
+  };
+
   const NavItem = {
     icon: null,
     text: "게시판",
@@ -78,7 +85,7 @@ const BoardPage: React.FC = () => {
       <TopNav lefter={null} center={NavItem} righter={null} />
       <BoardList>
         {boardListMock.map((board) => (
-          <BoardItem key={board.id}>
+          <BoardItem key={board.id} onClick={() => handleClick(board.id)}>
             <BoardContents>
               <ContentsHead>
                 <BoardVisibility

@@ -79,8 +79,9 @@ const ImageContainer = styled.div`
     align-items: center;
     justify-content: center;
 
-    width: 80px; /* 이미지 크기 조정 */
-    height: 40px; /* 이미지 크기 조정 */
+    color: var(--gray-100);
+    width: 80px;
+    height: 40px;
 `;
 
 const LeftIcon = styled.img<{ width?: number; height?: number }>`

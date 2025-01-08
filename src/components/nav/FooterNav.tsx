@@ -54,8 +54,8 @@ const Nav = styled.nav`
 
     height: 100px;
 
-    background-color: white;
-    border-top: 1px solid #ccc;
+    background-color: var(--sub-20);
+    border: 1px solid var(--sub-40);
     box-shadow: 0px 0px 9px 6px rgba(0, 0, 0, 0.03);
     border-radius: 20px 20px 0px 0px;
     display: flex;

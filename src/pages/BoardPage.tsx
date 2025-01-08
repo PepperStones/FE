@@ -56,6 +56,14 @@ export const boardListMock = [
     creationDate: "2025.01.01",
     modificationDate: "2025.01.06",
   },
+  {
+    id: 7,
+    visibility: "전체",
+    group: null,
+    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
+    creationDate: "2025.01.01",
+    modificationDate: "2025.01.06",
+  },
 ];
 
 const BoardPage: React.FC = () => {
@@ -101,15 +109,15 @@ const BoardPage: React.FC = () => {
 
 export default BoardPage;
 
-const Container = styled.div`
-  height: 100vh;
-`;
+const Container = styled.div``;
 
 const BoardList = styled.div`
   margin: 0 25px;
   flex: 1;
   overflow-y: auto;
+  margin-bottom: 100px;
 `;
+
 const BoardItem = styled.div`
   display: flex;
   flex-direction: row;

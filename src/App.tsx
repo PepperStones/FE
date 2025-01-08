@@ -6,7 +6,7 @@ import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 
 import BoardPage from "./pages/BoardPage.tsx";
-
+import BoardDetail from "./pages/BoardDetail.tsx";
 import Mypage from "./pages/Mypage.tsx";
 
 import { createGlobalStyle } from "styled-components";
@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/challenge" element={<ChallengeQuest />} />
 
           <Route path="/board" element={<BoardPage />} />
-
+          <Route path="/board/:id" element={<BoardDetail />} />
           <Route path="/mypage" element={<Mypage />} />
         </Routes>
       </BrowserRouter>

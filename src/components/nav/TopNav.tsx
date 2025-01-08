@@ -12,84 +12,91 @@ interface lefter {
 */
 
 const TopNav = ({ lefter, center, righter }) => {
+  return (
+    <NavContainer>
+      <ImageContainer onClick={lefter ? lefter.clickFunc : undefined}>
+        {lefter ? (
+          lefter.icon ? (
+            <LeftIcon
+              src={lefter ? lefter.icon : undefined}
+              alt="LeftIcon"
+              width={lefter.iconWidth}
+              height={lefter.iconHeight}
+            />
+          ) : lefter.text ? (
+            <span>{lefter ? lefter.text : undefined}</span>
+          ) : null
+        ) : undefined}
+      </ImageContainer>
 
-    return (
-        <NavContainer>
-            <ImageContainer onClick={lefter ? lefter.clickFunc : undefined}>
-                {lefter ?
-                    lefter.icon ? (
-                        <LeftIcon src={lefter ? lefter.icon : undefined} alt="LeftIcon"
-                            width={lefter.iconWidth}
-                            height={lefter.iconHeight}
-                        />
-                    ) : lefter.text ? (
-                        <span>{lefter ? lefter.text : undefined}</span>
-                    ) : null
-                    : undefined}
-            </ImageContainer>
+      <CenterContent className="title-sm-300">
+        {center ? center.text : null}
+      </CenterContent>
 
-            <CenterContent className="title-sm-300">{center ? center.text : null}</CenterContent>
-
-            <ImageContainer onClick={righter ? righter.clickFunc : undefined}>
-                {righter ?
-                    righter.icon ? (
-                        <RightIcon src={righter ? righter.icon : undefined} alt="RightIcon"
-                            width={righter.iconWidth}
-                            height={righter.iconHeight}
-                        />
-                    ) : righter.text ? (
-                        <span>{righter ? righter.text : undefined}</span>
-                    ) : null
-                    : undefined}
-
-            </ImageContainer>
-        </NavContainer>
-    );
+      <ImageContainer onClick={righter ? righter.clickFunc : undefined}>
+        {righter ? (
+          righter.icon ? (
+            <RightIcon
+              src={righter ? righter.icon : undefined}
+              alt="RightIcon"
+              width={righter.iconWidth}
+              height={righter.iconHeight}
+            />
+          ) : righter.text ? (
+            <span>{righter ? righter.text : undefined}</span>
+          ) : null
+        ) : undefined}
+      </ImageContainer>
+    </NavContainer>
+  );
 };
 
 export default TopNav;
 
 const NavContainer = styled.nav`
-display: flex;
-justify-content: space-around;
-align-items: center;
-z-index: 1000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
 
-height: 71px;
-border-bottom: 1px solid var(--gray-10);
+  position: sticky;
+  top: 0;
+  background: var(--bg-10);
+  height: 71px;
+  border-bottom: 1px solid var(--gray-10);
 
-user-select: none; /* 텍스트 선택 방지 */
--webkit-user-select: none; /* Safari에서 드래그 방지 */
--moz-user-select: none; /* Firefox에서 드래그 방지 */
--ms-user-select: none;
+  user-select: none; /* 텍스트 선택 방지 */
+  -webkit-user-select: none; /* Safari에서 드래그 방지 */
+  -moz-user-select: none; /* Firefox에서 드래그 방지 */
+  -ms-user-select: none;
 `;
 
 const CenterContent = styled.div`
-display: flex;
-justify-content: center;
-text-align: center; /* 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  text-align: center; /* 중앙 정렬 */
 
-width: 210px;
+  width: 210px;
 
-color: var(--gray-100);
+  color: var(--gray-100);
 `;
 
 const ImageContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    color: var(--gray-100);
-    width: 80px;
-    height: 40px;
+  color: var(--gray-100);
+  width: 80px;
+  height: 40px;
 `;
 
 const LeftIcon = styled.img<{ width?: number; height?: number }>`
-width: ${({ width }) => (width ? `${width}px` : '20px')};
-height: ${({ height }) => (height ? `${height}px` : '20px')};
+  width: ${({ width }) => (width ? `${width}px` : "20px")};
+  height: ${({ height }) => (height ? `${height}px` : "20px")};
 `;
 
 const RightIcon = styled.img<{ width?: number; height?: number }>`
-width: ${({ width }) => (width ? `${width}px` : '20px')};
-height: ${({ height }) => (height ? `${height}px` : '20px')};
+  width: ${({ width }) => (width ? `${width}px` : "20px")};
+  height: ${({ height }) => (height ? `${height}px` : "20px")};
 `;

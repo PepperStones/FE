@@ -85,6 +85,8 @@ const NotificationList: React.FC = () => {
 
   const NavItem = {
     icon: backIcon,
+    iconWidth: Number(11), // 아이콘 너비 (px 단위)
+    iconHeight: Number(16), // 아이콘 높이 (px 단위)
     text: "알림",
     clickFunc: null,
   };

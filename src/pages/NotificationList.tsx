@@ -1,9 +1,14 @@
 // NotificationList.tsx
 import React, { useState } from "react";
 import styled from "styled-components";
+
 import backIcon from "../assets/images/left_arrow.png";
 import starIcon from "../assets/images/solar_star-line-duotone.png";
-import grayStarIcon from "../assets/images/solar_star-line-duotone_gray.png";
+import grayStarIcon from "../assets/images/gray_solar_star-line-duotone.png";
+import pinIcon from "../assets/images/Vector.png";
+import chartIcon from "../assets/images/hugeicons_chart-evaluation.png";
+import grayChartIcon from "../assets/images/gray_hugeicons_chart-evaluation.png";
+
 import TopNav from "../components/nav/TopNav.tsx";
 import AlertItem from "../components/button/AlertItem.tsx";
 
@@ -15,12 +20,12 @@ export const notificationsMock = [
     message:
       "500 do를 획득하셨습니다. 더 자세한 내용은 홈 탭 > 최근 획득 경험치에서 확인해보세요.",
     date: "2025.01.06",
-    isRead: true,
+    isRead: false,
   },
   {
     id: 2,
     title: "신규 게시글 등록!",
-    icon: starIcon,
+    icon: pinIcon,
     message:
       "신규 게시글이 등록되었습니다. 게시판 탭에서 등록된 내용을 확인해보세요.",
     date: "2025.01.06.",
@@ -28,67 +33,39 @@ export const notificationsMock = [
   },
   {
     id: 3,
-    title: "신규 게시글 등록!",
-    icon: starIcon,
+    title: "상반기 인사평가 완료!",
+    icon: chartIcon,
     message:
-      "신규 게시글이 등록되었습니다. 게시판 탭에서 등록된 내용을 확인해보세요.",
+      "상반기 인사평가가 등록되었습니다. 홈 탭 > 최근 획득 경험치에서 부여 경험치를 확인해보세요.",
     date: "2025.01.06.",
     isRead: false,
   },
   {
     id: 4,
     title: "신규 경험치(do) 획득!",
-    icon: starIcon,
+    icon: grayStarIcon,
     message:
       "500 do를 획득하셨습니다. 더 자세한 내용은 홈 탭 > 최근 획득 경험치에서 확인해보세요.",
     date: "2025.01.06",
-    isRead: false,
+    isRead: true,
   },
   {
     id: 5,
-    title: "새해맞이 복권 미션 도착",
-    icon: starIcon,
+    title: "신규 게시글 등록!",
+    icon: pinIcon,
     message:
-      "미션 참여 중인 포도님, 누르기만 하면 2일차 출석이 성공입니다! 지금 당장 눌러보세요오",
-    date: "2024-12-29",
-    isRead: false,
+      "신규 게시글이 등록되었습니다. 게시판 탭에서 등록된 내용을 확인해보세요.",
+    date: "2025.01.06.",
+    isRead: true,
   },
   {
     id: 6,
-    title:
-      "새해맞이 복권 미션 도착ddddddddddddddddddddddddddddddddddddddddddddd",
+    title: "상반기 인사평가 완료!",
+    icon: grayChartIcon,
     message:
-      "미션 참여 중인 포도님, 누르기만 하면 2일차 출석이 성공입니다! 지금 당장 눌러보세요오",
-    icon: starIcon,
-    date: "2024-12-29",
-    isRead: false,
-  },
-  {
-    id: 7,
-    title: "새해맞이 복권 미션 도착",
-    icon: starIcon,
-    message:
-      "미션 참여 중인 포도님, 누르기만 하면 2일차 출석이 성공입니다! 지금 당장 눌러보세요오",
-    date: "2024-12-29",
-    isRead: false,
-  },
-  {
-    id: 8,
-    title: "새해맞이 복권 미션 도착",
-    icon: starIcon,
-    message:
-      "미션 참여 중인 포도님, 누르기만 하면 2일차 출석이 성공입니다! 지금 당장 눌러보세요오",
-    date: "2024-12-29",
-    isRead: false,
-  },
-  {
-    id: 9,
-    title: "새해맞이 복권 미션 도착",
-    icon: starIcon,
-    message:
-      "미션 참여 중인 포도님, 누르기만 하면 2일차 출석dddddddddddddddddddddddddddddddddddddd이 성공입니다! 지금 당장 눌러보ddddddddddddddddddddddddddddd세요오",
-    date: "2024-12-29",
-    isRead: false,
+      "상반기 인사평가가 등록되었습니다. 홈 탭 > 최근 획득 경험치에서 부여 경험치를 확인해보세요.",
+    date: "2025.01.06.",
+    isRead: true,
   },
 ];
 

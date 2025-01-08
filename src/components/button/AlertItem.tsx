@@ -32,14 +32,14 @@ const Alert = styled.div<{ isRead: boolean }>`
   }
 
   &:hover {
-    background: ${({ isRead }) => (isRead ? "#e0e0e0" : "var(--sub-30)")};
+    background: ${({ isRead }) => (isRead ? "var(--sub-30)" : "var(--sub-30)")};
     cursor: pointer;
   }
 
-user-select: none; /* 텍스트 선택 방지 */
--webkit-user-select: none; /* Safari에서 드래그 방지 */
--moz-user-select: none; /* Firefox에서 드래그 방지 */
--ms-user-select: none;
+  user-select: none; /* 텍스트 선택 방지 */
+  -webkit-user-select: none; /* Safari에서 드래그 방지 */
+  -moz-user-select: none; /* Firefox에서 드래그 방지 */
+  -ms-user-select: none;
 `;
 
 const AleContent = styled.div``;

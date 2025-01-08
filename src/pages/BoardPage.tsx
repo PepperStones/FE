@@ -77,6 +77,8 @@ const BoardPage: React.FC = () => {
   const NavItem = {
     icon: null,
     text: "게시판",
+    iconWidth: null, // 아이콘 너비 (px 단위)
+    iconHeight: null, // 아이콘 높이 (px 단위)
     clickFunc: null,
   };
 

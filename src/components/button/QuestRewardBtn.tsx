@@ -89,7 +89,6 @@ border-radius: 15px;
 background: var(--sub-20);
 border: ${({ isDone }) => (isDone ? '1px dashed var(--gray-30)' : '1px solid var(--sub-20)')};
 
-margin: 20px auto; /* 중앙 정렬 */
 padding : 5px;
 
 text-align: center;
@@ -154,12 +153,11 @@ border: 1px solid var(--sub-40);
 
 padding: 8px;
 
-position: relative; /* Lock 이미지를 오버레이로 추가하기 위해 position 설정 */
-
+position: relative;
 ${({ isAvailable }) =>
         !isAvailable &&
         `
-  /* 모자이크 효과 (isAvailable이 false일 때만) */
+  /* 모자이크 효과 */
   &::after {
     content: '';
     position: absolute;
@@ -167,27 +165,27 @@ ${({ isAvailable }) =>
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-    backdrop-filter: blur(4px);
-    border-radius: inherit; /* 부모와 동일한 radius */
-    pointer-events: none; /* 클릭 이벤트 방지 */
-    z-index: 1; /* Lock 이미지 아래에 위치 */
+    background-color: rgba(255, 255, 255, 0.001);
+    backdrop-filter: blur(6px) brightness(1.3) contrast(1.0);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
   }
 
-  /* Lock 이미지 (isAvailable이 false일 때만) */
+  /* Lock 이미지 */
   &::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    transform: translate(-50%, -50%);
     width: calc(100% - 10px);
     height: calc(100% - 10px);
     background-image: url(${Lock});
     background-size: contain;
     background-repeat: no-repeat;
-    z-index: 2; /* 모자이크 위에 위치 */
-    pointer-events: none; /* 클릭 이벤트 방지 */
+    z-index: 2;
+    pointer-events: none;
   }
 `}
 

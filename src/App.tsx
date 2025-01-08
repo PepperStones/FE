@@ -7,8 +7,7 @@ import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 
 import BoardPage from "./pages/BoardPage.tsx";
 
-import Mypage from "./pages/Mypage.tsx"
-
+import Mypage from "./pages/Mypage.tsx";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -33,14 +32,13 @@ const App = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
 
           <Route path="/board" element={<BoardPage />} />
 
           <Route path="/mypage" element={<Mypage />} />
-
         </Routes>
       </BrowserRouter>
     </>

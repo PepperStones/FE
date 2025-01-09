@@ -140,12 +140,11 @@ export default NotificationList;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: auto;
   height: 100vh;
 `;
 
 const Notification_list = styled.div`
+  margin: auto;
   flex: 1;
   overflow-y: auto;
   padding-top: 20px;

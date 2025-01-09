@@ -42,8 +42,6 @@ const App = () => {
 
           <Route path="/board" element={<BoardPage />} />
           <Route path="/board/:id" element={<BoardDetail />} />
-          <Route path="/board" element={<BoardPage />} />
-          <Route path="/board/:id" element={<BoardDetail />} />
 
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/mypage-pwd" element={<UpdatePWDPage />} />

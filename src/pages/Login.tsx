@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import LargeBtn from '../components/button/LargeBtn.tsx';
-import LargeInput from '../components/InputField/LargeInput.tsx';
+import LargeInput from '../components/inputField/LargeInput.tsx';
 import QuestRewardBtn from '../components/button/QuestRewardBtn.tsx';
 
 import ID from '../assets/images/gray_person.png'
@@ -13,12 +13,6 @@ import Lock from '../assets/images/gray_lock.png'
 import ActLock from '../assets/images/lightgray_lock.png'
 
 import TreeIcon from '../assets/images/reward/palm_tree.png'
-
-const progress = {
-    progressContent: "도전과제 진행률",
-    currentProgress: 1341,
-    maxProgress: 30000,
-};
 
 function Login() {
     const navigate = useNavigate();
@@ -40,10 +34,9 @@ function Login() {
         }
     };
 
-
     useEffect(() => {
         setIsLoginAvailable(userID !== '' && userPWD !== '');
-    }, [userID, userPWD]); // userID 또는 userPWD가 변경될 때마다 실행
+    }, [userID, userPWD]);
 
     return (
 

@@ -5,6 +5,7 @@ import Login from "./pages/Login.tsx";
 
 import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
+
 import BoardPage from "./pages/BoardPage.tsx";
 import BoardDetail from "./pages/BoardDetail.tsx";
 
@@ -36,10 +37,11 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
-          <Route path="/mypage" element={<Mypage />} />
+
+          <Route path="/board" element={<BoardPage />} />
+          <Route path="/board/:id" element={<BoardDetail />} />
           <Route path="/board" element={<BoardPage />} />
           <Route path="/board/:id" element={<BoardDetail />} />
 

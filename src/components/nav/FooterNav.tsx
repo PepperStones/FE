@@ -16,9 +16,13 @@ const BottomNav = ({}) => {
 
   return (
     <Nav>
-      <NavItem className={location.pathname === "/home" ? "active" : ""}>
+      <NavItem
+        className={location.pathname.startsWith("/home") ? "active" : ""}
+      >
         <NavLink to="/home">
-          <IconHome src={location.pathname === "/home" ? ActHome : Home} />
+          <IconHome
+            src={location.pathname.startsWith("/home") ? ActHome : Home}
+          />
           <p>홈</p>
         </NavLink>
       </NavItem>
@@ -62,6 +66,7 @@ const Nav = styled.nav`
 
   background-color: var(--sub-20);
   border: 1px solid var(--sub-40);
+
   box-shadow: 0px 0px 9px 6px rgba(0, 0, 0, 0.03);
   border-radius: 20px 20px 0px 0px;
   display: flex;

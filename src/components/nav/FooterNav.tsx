@@ -42,10 +42,10 @@ const BottomNav = ({}) => {
           <p>게시판</p>
         </NavLink>
       </NavItem>
-      <NavItem className={location.pathname === "/mypage" ? "active" : ""}>
+      <NavItem className={location.pathname.startsWith("/mypage") ? "active" : ""}>
         <NavLink to="/mypage">
           <IconMypage
-            src={location.pathname === "/mypage" ? ActMypage : Mypage}
+            src={location.pathname.startsWith("/mypage") ? ActMypage : Mypage}
           />
           <p>나의 정보</p>
         </NavLink>

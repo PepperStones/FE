@@ -6,7 +6,7 @@ import TopNav from "../components/nav/TopNav.tsx";
 import QuestRewardBtn from "../components/button/QuestRewardBtn.tsx";
 
 import BackIcon from "../assets/images/left_arrow.png";
-import PalmTree from "../assets/images/reward/palm_tree.png";
+import PalmTree from "../assets/images/reward/star_deco_1.png";
 
 const progress = {
   progressContent: "도전과제 진행률",

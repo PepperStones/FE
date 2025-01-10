@@ -2,14 +2,20 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login.tsx";
+
 import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 
 import BoardPage from "./pages/BoardPage.tsx";
 import BoardDetail from "./pages/BoardDetail.tsx";
-import Mypage from "./pages/Mypage.tsx";
+
 import Home from "./pages/Home.tsx";
 import StarAnimation from "./components/star/StarAnimation.tsx";
+
+
+import Mypage from "./pages/Mypage.tsx"
+import UpdatePWDPage from "./pages/UpdatePwdPage.tsx"
+import CustomizingPage from "./pages/CustomizingPage.tsx"
 
 import { createGlobalStyle } from "styled-components";
 
@@ -42,7 +48,10 @@ const App = () => {
 
           <Route path="/board" element={<BoardPage />} />
           <Route path="/board/:id" element={<BoardDetail />} />
+
           <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypage-pwd" element={<UpdatePWDPage />} />
+          <Route path="/mypage-customize" element={<CustomizingPage />} />
         </Routes>
       </BrowserRouter>
     </>

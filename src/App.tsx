@@ -9,6 +9,7 @@ import BoardPage from "./pages/BoardPage.tsx";
 import BoardDetail from "./pages/BoardDetail.tsx";
 import Mypage from "./pages/Mypage.tsx";
 import Home from "./pages/Home.tsx";
+import StarAnimation from "./components/star/StarAnimation.tsx";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -35,7 +36,7 @@ const App = () => {
         <Routes>
           {/* <Route path="/" element={<Login />} /> */}
           <Route path="/" element={<Home />} />
-          <Route path="/home/:id" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
 

@@ -1,14 +1,21 @@
 // HomeTopNav.tsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-import LeftIconImg from "../../assets/images/solar_star-ring-linear.png";
-import CenterIconImg from "../../assets/images/fluent_book-question-mark-rtl-24-regular.png";
-import RightIconImg from "../../assets/images/solar_bell-outline.png";
-import PopupUp from "../../assets/images/up_arrow.png";
-import PopupDown from "../../assets/images/down_arrow.png";
-import RightArrow from "../../assets/images/right_arrow.png";
+import SpeechBubble from "../../info/InfoBubble.tsx";
+
+import FirstIconImg from "../../../assets/images/solar_star-ring-linear.png";
+import ThirdIconImg from "../../../assets/images/solar_star-line.png";
+import SecondIconImg from "../../../assets/images/streamline_galaxy-2.png";
+import CenterIconImg from "../../../assets/images/fluent_book-question-mark-rtl-24-regular.png";
+import RightIconImg from "../../../assets/images/solar_bell-outline.png";
+import PopupUp from "../../../assets/images/up_arrow.png";
+import PopupDown from "../../../assets/images/down_arrow.png";
+import RightArrow from "../../../assets/images/right_arrow.png";
+
+import levelData from "../../../constants/levels.json";
 
 interface UserData {
   id: number;
@@ -16,7 +23,6 @@ interface UserData {
   level: string;
   recentExperience: number;
   totalAccumulatedExperience: number;
-  max_exp: number;
 }
 
 interface HomeTopNavProps {
@@ -28,6 +34,8 @@ interface HomeTopNavProps {
   isPopupOpen: boolean; // 팝업 상태 전달
   togglePopup: () => void; // 팝업 토글 함수 전달
   userData: UserData; // 사용자 데이터 전달
+  isPageOption: number; // isPageOption 추가
+  handleIconPage: () => void;
 }
 
 const HomeTopNav: React.FC<HomeTopNavProps> = ({
@@ -35,8 +43,57 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
   isPopupOpen,
   togglePopup,
   userData,
+  isPageOption,
+  handleIconPage,
 }) => {
+  // 로컬 스토리지에서 초기 상태 로드
+  const [infoTagState, setInfoTagState] = useState(() => {
+    const savedState = localStorage.getItem("infoTagState");
+    return savedState
+      ? JSON.parse(savedState)
+      : { page0: true, page1: true, page2: true };
+  });
+
+  const leftIconSrc =
+    isPageOption === 0
+      ? FirstIconImg
+      : isPageOption === 1
+      ? SecondIconImg
+      : ThirdIconImg;
+
   const navigate = useNavigate();
+  useEffect(() => {
+    // 상태가 변경될 때 로컬 스토리지에 저장
+    localStorage.setItem("infoTagState", JSON.stringify(infoTagState));
+  }, [infoTagState]);
+
+  const handleHideInfoTag = () => {
+    setInfoTagState((prevState) => ({
+      ...prevState,
+      [`page${isPageOption}`]: false,
+    }));
+  };
+
+  // 현재 레벨 확인 함수
+  const getCurrentLevel = (totalExp: number) => {
+    for (let i = levelData.length - 1; i >= 0; i--) {
+      if (totalExp >= levelData[i].required_experience) {
+        return {
+          level: levelData[i].level,
+          requiredExperience: levelData[i + 1].required_experience,
+        };
+      }
+    }
+    return {
+      level: levelData[0].level,
+      requiredExperience: levelData[1].required_experience,
+    };
+  };
+
+  const { level, requiredExperience } = getCurrentLevel(
+    userData.totalAccumulatedExperience
+  );
+
   const calculateProgressPercent = (current: number, max: number) => {
     if (max === 0) return 0; // Avoid division by zero
     return (current / max) * 100;
@@ -44,11 +101,11 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
 
   const progressPercent = calculateProgressPercent(
     userData.totalAccumulatedExperience,
-    userData.max_exp
+    requiredExperience
   );
 
   const experiencePercent = Math.floor(
-    (userData.totalAccumulatedExperience / userData.max_exp) * 100
+    (userData.totalAccumulatedExperience / requiredExperience) * 100
   );
 
   return (
@@ -56,23 +113,42 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       <TopNav>
         <Left>
           <NavIcon
-            src={LeftIconImg}
+            src={leftIconSrc}
             alt="Left Icon"
-            onClick={() => navigate("/board")}
+            onClick={() => {
+              handleIconPage();
+              handleHideInfoTag(); // InfoTag 숨김
+            }}
           />
+          {/* InfoTag 표시 여부 */}
+          {infoTagState[`page${isPageOption}`] && (
+            <SpeechBubble
+              text={
+                isPageOption === 0
+                  ? "우리 별자리를 확인해보세요!"
+                  : isPageOption === 1
+                  ? "우리 은하를 확인해보세요!"
+                  : "나의 별로 돌아갈 수 있어요!"
+              }
+            />
+          )}
         </Left>
+
         <Center>
           <NavIcon
             src={CenterIconImg}
             alt="Center Icon"
-            onClick={() => navigate("/challenge")}
+            onClick={() => {
+              navigate("/board");
+            }}
           />
         </Center>
+
         <Right>
           <NavIcon
             src={RightIconImg}
             alt="Right Icon"
-            onClick={() => navigate("/notification_list")}
+            onClick={() => navigate("/norification_list")}
           />
         </Right>
       </TopNav>
@@ -110,7 +186,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
                 <TotalExp className="text-lg-300">
                   {userData.totalAccumulatedExperience}
                   <MaxExp className="caption-md-300">
-                    / {userData.max_exp}
+                    / {requiredExperience}
                   </MaxExp>
                 </TotalExp>
                 <Percent className="text-lg-300">{experiencePercent}%</Percent>
@@ -122,12 +198,12 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
               </BarContainer>
               <ExpText className="caption-sm-200"> 올 해 획득한 경험치</ExpText>
               <ExpDivider />
-              <ExpDetail
-                className="caption-sm-200"
-                onClick={() => navigate("/board")}
-              >
+              <ExpDetail className="caption-sm-200">
                 자세히 보기
-                <DtailIcon src={RightArrow}></DtailIcon>
+                <DtailIcon
+                  src={RightArrow}
+                  onClick={() => navigate("/board")}
+                ></DtailIcon>
               </ExpDetail>
             </MyExp>
           </PopUp>
@@ -150,8 +226,6 @@ export default HomeTopNav;
 const NavContainer = styled.nav`
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 0;
   background: var(--sub-10);
 
   user-select: none; /* 텍스트 선택 방지 */
@@ -160,6 +234,11 @@ const NavContainer = styled.nav`
   -ms-user-select: none;
 
   border-radius: 0px 0px 25px 25px;
+  position: fixed;
+  top: 0; /* 화면 상단에 고정 */
+  left: 0;
+  right: 0;
+  z-index: 1000; /* 다른 요소 위에 표시 */
 `;
 
 const TopNav = styled.nav`
@@ -173,8 +252,12 @@ const TopNav = styled.nav`
 
 const Left = styled.div`
   flex: 1; /* 남는 공간 균등 배분 */
+
   display: flex;
+  flex-direction: row;
   justify-content: flex-start; /* 왼쪽 정렬 */
+
+  gap: 10px;
 `;
 const Center = styled.div`
   flex: 1; /* 남는 공간 균등 배분 */
@@ -238,7 +321,7 @@ const PopUp = styled.div<{ isPopupOpen: boolean }>`
   width: 100%;
 
   overflow: hidden; /* 내용이 줄어들 때 깔끔하게 처리 */
-  transition: all 0.9s ease;
+  transition: all 1.2s ease;
 `;
 
 const MyInfo = styled.div`
@@ -273,6 +356,7 @@ const MyLevel = styled.div`
   flex-direction: row;
   gap: 10px;
   align-items: center;
+  white-space: nowrap;
 `;
 
 const Text = styled.span`
@@ -298,6 +382,7 @@ const MyExp = styled.div`
   padding-top: 14px;
   padding-left: 14px;
   padding-right: 14px;
+  white-space: nowrap;
 `;
 const ExpHead = styled.div`
   display: flex;
@@ -397,3 +482,32 @@ const Icon = styled.img`
   height: 12px;
   flex-shrink: 0;
 `;
+
+const TagContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: right;
+
+  position: relative;
+  width: fit-content; /* 컨텐츠 크기에 맞게 자동으로 조절 */
+`;
+
+const TagImage = styled.img`
+  height: 20px; /* 높이는 고정 */
+  width: 100%; /* 텍스트에 맞게 가로 크기 조정 */
+  object-fit: contain; /* 텍스트 길이에 맞게 이미지를 축소/확대 */
+  position: absolute; /* 텍스트와 이미지가 겹치도록 설정 */
+  z-index: -1; /* 텍스트 위에 표시되지 않도록 뒤로 보냄 */
+`;
+
+const TagText = styled.span`
+  position: relative; /* 텍스트 위치 고정 */
+  color: var(--sub-20);
+  pointer-events: none;
+  padding-right: 10px; /* 텍스트 양쪽 여백 */
+  padding-left: 15px;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  z-index: 1; /* 텍스트가 이미지 위에 보이도록 설정 */
+`;
+
+// border: 1px solid rgb(239, 10, 10);

@@ -7,30 +7,64 @@ import MilkyWay from "../assets/images/milky_way.png";
 
 import BottomNav from "../components/nav/FooterNav.tsx";
 
-import HomeTopNav from "../components/nav/HomeTopNav.tsx";
+import HomeTopNav from "../components/nav/homeNav/HomeTopNav.tsx";
+import StarAnimation from "../components/star/StarAnimation.tsx";
 
 export const myMock = [
   {
-    id: 1,
     username: "서준",
-    level: "F1-1",
-    recentExperience: Number(3000),
+    level: "F1-I",
+    centerName: "음성 2센터",
+    jobName: "개발팀",
+    recentExperience: Number(1300),
     totalAccumulatedExperience: Number(5000),
-    max_exp: Number(9000),
   },
 ];
 
 const Home: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isPageOption, setIsPageOption] = useState(0);
+  // 0 == 나의 별
+  // 1 == 팀 별자리
+  // 2 == 두핸즈 은하
 
   const togglePopup = () => {
     setIsPopupOpen((prev) => !prev);
   };
 
   const hometitle = {
-    first: "오늘도 빛나는",
-    second: `${myMock[0].username}의 별`,
-    third: "을 보러 오셨군요!",
+    first:
+      isPageOption === 0
+        ? "오늘도 빛나는"
+        : isPageOption === 1
+        ? `${myMock[0].centerName}의`
+        : "빛나는 열정이 모여",
+    second:
+      isPageOption === 0
+        ? `${myMock[0].username}의 별`
+        : isPageOption === 1
+        ? `${myMock[0].jobName}`
+        : "DOHANDS 은하",
+    third:
+      isPageOption === 0
+        ? `을 보러 오셨군요!`
+        : isPageOption === 1
+        ? `자리가 빛나고 있어요!`
+        : "를 밝히고 있어요!",
+  };
+
+  // 다음 별
+  const handleNextPage = () => {
+    setIsPageOption((prev) => prev + 1);
+  };
+
+  //이전 별
+  const handlePrevPage = () => {
+    setIsPageOption((prev) => prev - 1);
+  };
+
+  const handleIconPage = () => {
+    setIsPageOption((prev) => (prev + 1) % 3); // 0 → 1 → 2 → 0 순환
   };
 
   return (
@@ -40,8 +74,18 @@ const Home: React.FC = () => {
         isPopupOpen={isPopupOpen}
         togglePopup={togglePopup}
         userData={myMock[0]}
+        isPageOption={isPageOption} // isPageOption 전달
+        handleIconPage={handleIconPage}
       />
-      <Star isPopupOpen={isPopupOpen} src={StarImg} alt="Star Img"></Star>
+      {/* <Star isPopupOpen={isPopupOpen} src={StarImg} alt="Star Img"></Star> */}
+      <StarAnimation
+        handleIconPage={handleIconPage}
+        handleNextPage={handleNextPage}
+        handlePrevPage={handlePrevPage}
+        isPageOption={isPageOption}
+        isPopupOpen={isPopupOpen}
+        setIsPageOption={setIsPageOption}
+      ></StarAnimation>
       <BottomNav />
     </HomeContainer>
   );

@@ -9,6 +9,10 @@ import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 import BoardPage from "./pages/BoardPage.tsx";
 import BoardDetail from "./pages/BoardDetail.tsx";
 
+import Home from "./pages/Home.tsx";
+import StarAnimation from "./components/star/StarAnimation.tsx";
+
+
 import Mypage from "./pages/Mypage.tsx"
 import UpdatePWDPage from "./pages/UpdatePwdPage.tsx"
 import CustomizingPage from "./pages/CustomizingPage.tsx"
@@ -36,7 +40,9 @@ const App = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          {/* <Route path="/" element={<Login />} /> */}
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
 

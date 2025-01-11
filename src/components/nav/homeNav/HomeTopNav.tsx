@@ -55,6 +55,8 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       : { page0: true, page1: true, page2: true };
   });
 
+  const [progressState, setProgressState] = useState(0); // ProgressBar 상태
+
   const leftIconSrc =
     isPageOption === 0
       ? FirstIconImg
@@ -63,6 +65,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       : ThirdIconImg;
 
   const navigate = useNavigate();
+
   useEffect(() => {
     // 상태가 변경될 때 로컬 스토리지에 저장
     localStorage.setItem("infoTagState", JSON.stringify(infoTagState));

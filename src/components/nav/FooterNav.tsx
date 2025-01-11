@@ -27,9 +27,9 @@ const BottomNav = ({ isAdmin = false }) => {
     <Nav>
       {isAdmin ?
         <>
-          <NavItem className={location.pathname === "/member" ? "active" : ""}>
+          <NavItem className={location.pathname.startsWith("/member") ? "active" : ""}>
             <NavLink to="/member">
-              <IconQuest src={location.pathname === "/member" ? ActMypage : Mypage} />
+              <IconQuest src={location.pathname.startsWith("/member") ? ActMypage : Mypage} />
               <p>구성원</p>
             </NavLink>
           </NavItem>
@@ -62,9 +62,9 @@ const BottomNav = ({ isAdmin = false }) => {
               <p>홈</p>
             </NavLink>
           </NavItem>
-          <NavItem className={location.pathname === "/quest" ? "active" : ""}>
+          <NavItem className={location.pathname.startsWith("/quest") ? "active" : ""}>
             <NavLink to="/quest">
-              <IconQuest src={location.pathname === "/quest" ? ActQuest : Quest} />
+              <IconQuest src={location.pathname.startsWith("/quest") ? ActQuest : Quest} />
               <p>퀘스트</p>
             </NavLink>
           </NavItem>

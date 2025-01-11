@@ -6,6 +6,10 @@
     cursor: pointer;
 }
 
+.n-pointer {
+    pointer-events: none; /* 마우스 이벤트 차단 */
+}
+
 .no-drag {
     user-select: none;
     -webkit-user-drag: none; /* 웹킷 기반 브라우저 (크롬, 사파리)에서 드래그 금지 */

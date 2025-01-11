@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { useNavigate } from "react-router-dom";
 import backIcon from "../assets/images/left_arrow.png";
 import starIcon from "../assets/images/solar_star-line-duotone.png";
 import grayStarIcon from "../assets/images/gray_solar_star-line-duotone.png";
-import pinIcon from "../assets/images/Vector.png";
+import pinIcon from "../assets/images/pin.png";
 import chartIcon from "../assets/images/hugeicons_chart-evaluation.png";
 import grayChartIcon from "../assets/images/gray_hugeicons_chart-evaluation.png";
 
@@ -71,6 +72,7 @@ export const notificationsMock = [
 
 const NotificationList: React.FC = () => {
   const [notifications, setNotifications] = useState(notificationsMock);
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   // 알림 클릭 시 확인 상태로 변경
   const handleNotificationClick = (id: number) => {
@@ -83,12 +85,16 @@ const NotificationList: React.FC = () => {
     );
   };
 
+  const handlePageNav = () => {
+    navigate("/home/1");
+  };
+
   const NavItem = {
     icon: backIcon,
     iconWidth: Number(11), // 아이콘 너비 (px 단위)
     iconHeight: Number(16), // 아이콘 높이 (px 단위)
     text: "알림",
-    clickFunc: null,
+    clickFunc: handlePageNav,
   };
 
   return (

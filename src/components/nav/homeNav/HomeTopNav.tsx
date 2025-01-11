@@ -18,9 +18,10 @@ import RightArrow from "../../../assets/images/right_arrow.png";
 import levelData from "../../../constants/levels.json";
 
 interface UserData {
-  id: number;
   username: string;
   level: string;
+  centerName: string;
+  jobName: string;
   recentExperience: number;
   totalAccumulatedExperience: number;
 }
@@ -54,6 +55,8 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       : { page0: true, page1: true, page2: true };
   });
 
+  const [progressState, setProgressState] = useState(0); // ProgressBar 상태
+
   const leftIconSrc =
     isPageOption === 0
       ? FirstIconImg
@@ -62,6 +65,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       : ThirdIconImg;
 
   const navigate = useNavigate();
+
   useEffect(() => {
     // 상태가 변경될 때 로컬 스토리지에 저장
     localStorage.setItem("infoTagState", JSON.stringify(infoTagState));
@@ -178,7 +182,10 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
                   + {userData.recentExperience} do
                 </Text>
               </MyLevel>
-              <Icon src={RightArrow} onClick={() => navigate("/board")}></Icon>
+              <Icon
+                src={RightArrow}
+                onClick={() => navigate("/experience-point")}
+              ></Icon>
             </MyInfo>
 
             <MyExp>
@@ -202,7 +209,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
                 자세히 보기
                 <DtailIcon
                   src={RightArrow}
-                  onClick={() => navigate("/board")}
+                  onClick={() => navigate("/experience-point")}
                 ></DtailIcon>
               </ExpDetail>
             </MyExp>

@@ -31,6 +31,8 @@ const TagContainer = styled.div`
   justify-content: right;
 
   position: relative;
+  padding-top: 4px;
+  padding-bottom: 4px;
   width: fit-content; /* 컨텐츠 크기에 맞게 자동으로 조절 */
 `;
 
@@ -39,7 +41,7 @@ const TagImage = styled.img`
   width: 100%; /* 텍스트에 맞게 가로 크기 조정 */
   object-fit: contain; /* 텍스트 길이에 맞게 이미지를 축소/확대 */
   position: absolute; /* 텍스트와 이미지가 겹치도록 설정 */
-  z-index: -1; /* 텍스트 위에 표시되지 않도록 뒤로 보냄 */
+  z-index: 0; /* 텍스트 위에 표시되지 않도록 뒤로 보냄 */
 `;
 
 const TagText = styled.span`

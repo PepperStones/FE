@@ -16,9 +16,10 @@ import BoardDetail from "./pages/BoardDetail.tsx";
 import Home from "./pages/Home.tsx";
 import StarAnimation from "./components/star/StarAnimation.tsx";
 
-import Mypage from "./pages/Mypage.tsx"
-import UpdatePWDPage from "./pages/UpdatePwdPage.tsx"
-import CustomizingPage from "./pages/CustomizingPage.tsx"
+import Mypage from "./pages/Mypage.tsx";
+import UpdatePWDPage from "./pages/UpdatePwdPage.tsx";
+import CustomizingPage from "./pages/CustomizingPage.tsx";
+import ExperiencePoint from "./pages/ExperiencePoint.tsx";
 
 import MemberManage from "./pages/admin/MemberManage.tsx";
 import MemberDetail from "./pages/admin/MemberDetail.tsx";
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
+          <Route path="/experience-point" element={<ExperiencePoint />} />
 
           <Route path="/quest" element={<QuestPage />} />
           <Route path="/quest/:id" element={<QuestDetailPage />} />

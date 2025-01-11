@@ -5,14 +5,11 @@ import styled from 'styled-components';
 
 import LargeBtn from '../components/button/LargeBtn.tsx';
 import LargeInput from '../components/inputField/LargeInput.tsx';
-import QuestRewardBtn from '../components/button/QuestRewardBtn.tsx';
 
 import ID from '../assets/images/gray_person.png'
 import ActID from '../assets/images/lightgray_person.png'
 import Lock from '../assets/images/gray_lock.png'
 import ActLock from '../assets/images/lightgray_lock.png'
-
-import TreeIcon from '../assets/images/reward/palm_tree.png'
 
 function Login() {
     const navigate = useNavigate();

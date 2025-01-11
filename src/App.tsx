@@ -6,6 +6,10 @@ import Login from "./pages/Login.tsx";
 import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 
+import QuestPage from "./pages/QuestPage.tsx"
+import QuestDetailPage from "./pages/QuestDetailPage.tsx"
+import AllQuestPage from "./pages/AllQuestPage.tsx";
+
 import BoardPage from "./pages/BoardPage.tsx";
 import BoardDetail from "./pages/BoardDetail.tsx";
 
@@ -18,6 +22,7 @@ import UpdatePWDPage from "./pages/UpdatePwdPage.tsx"
 import CustomizingPage from "./pages/CustomizingPage.tsx"
 
 import { createGlobalStyle } from "styled-components";
+
 
 // 전역 스타일 정의
 const GlobalStyle = createGlobalStyle`
@@ -40,11 +45,15 @@ const App = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/" element={<Login />} /> */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
+        
           <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
+
+          <Route path="/quest" element={<QuestPage />} />
+          <Route path="/quest/:id" element={<QuestDetailPage />} />
+          <Route path="/quest-all/:id" element={<AllQuestPage />} />
 
           <Route path="/board" element={<BoardPage />} />
           <Route path="/board/:id" element={<BoardDetail />} />

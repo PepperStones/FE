@@ -15,7 +15,7 @@ const progress = {
     currentProgress: 1341,
     maxProgress: 3000,
     Variation: 40,
-    circleRadius : 27
+    circleRadius: 27
 };
 
 function QuestDetailPage() {
@@ -80,14 +80,14 @@ function QuestDetailPage() {
         };
     }, [isDragging]);
 
-    // 뒤로가기 클릭 함수
-    const handleBackIconClick = () => {
-        navigate('/quest');
-    };
-
     // 모든 기록 열람 함수
     const handleQuestClick = (quest) => {
         navigate(`/quest-all/${quest.id}`, { state: quest }); // quest 데이터를 state로 전달
+    };
+
+    // 뒤로가기 클릭 함수
+    const handleBackIconClick = () => {
+        navigate('/quest');
     };
 
     const Center = {

@@ -11,45 +11,84 @@ import ActBoard from "../../assets/images/yellow_pin_paper.png";
 import Mypage from "../../assets/images/gray_person_circle.png";
 import ActMypage from "../../assets/images/yellow_person_circle.png";
 
-const BottomNav = ({}) => {
+import Synchronize from "../../assets/images/admin/gray_arrow_cycle.png"
+import ActSynchronize from "../../assets/images/admin/yellow_arrow_cycle.png"
+
+/* lefter, center, righter 모두 인터페이스 동일
+interface FooterNavProps {
+    isAdmin?: boolean // 어드민 계정 여부
+}
+*/
+
+const BottomNav = ({ isAdmin = false }) => {
   const location = useLocation(); // 현재 경로를 가져옴
 
   return (
     <Nav>
-      <NavItem
-        className={location.pathname.startsWith("/home") ? "active" : ""}
-      >
-        <NavLink to="/home">
-          <IconHome
-            src={location.pathname.startsWith("/home") ? ActHome : Home}
-          />
-          <p>홈</p>
-        </NavLink>
-      </NavItem>
-      <NavItem className={location.pathname === "/quest" ? "active" : ""}>
-        <NavLink to="/quest">
-          <IconQuest src={location.pathname === "/quest" ? ActQuest : Quest} />
-          <p>퀘스트</p>
-        </NavLink>
-      </NavItem>
-      <NavItem
-        className={location.pathname.startsWith("/board") ? "active" : ""}
-      >
-        <NavLink to="/board">
-          <IconBoard
-            src={location.pathname.startsWith("/board") ? ActBoard : Board}
-          />
-          <p>게시판</p>
-        </NavLink>
-      </NavItem>
-      <NavItem className={location.pathname.startsWith("/mypage") ? "active" : ""}>
-        <NavLink to="/mypage">
-          <IconMypage
-            src={location.pathname.startsWith("/mypage") ? ActMypage : Mypage}
-          />
-          <p>나의 정보</p>
-        </NavLink>
-      </NavItem>
+      {isAdmin ?
+        <>
+          <NavItem className={location.pathname === "/member" ? "active" : ""}>
+            <NavLink to="/member">
+              <IconQuest src={location.pathname === "/member" ? ActMypage : Mypage} />
+              <p>구성원</p>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            className={location.pathname.startsWith("/admin-board") ? "active" : ""}
+          >
+            <NavLink to="/admin-board">
+              <IconBoard
+                src={location.pathname.startsWith("/admin-board") ? ActBoard : Board}
+              />
+              <p>게시글</p>
+            </NavLink>
+          </NavItem>
+          <NavItem className={location.pathname.startsWith("/synchro") ? "active" : ""}>
+            <NavLink to="/synchro">
+              <IconMypage
+                src={location.pathname.startsWith("/synchro") ? ActSynchronize : Synchronize}
+              />
+              <p>동기화</p>
+            </NavLink>
+          </NavItem>
+        </>
+        :
+        <>
+          <NavItem className={location.pathname.startsWith("/home") ? "active" : ""}>
+            <NavLink to="/home">
+              <IconHome
+                src={location.pathname.startsWith("/home") ? ActHome : Home}
+              />
+              <p>홈</p>
+            </NavLink>
+          </NavItem>
+          <NavItem className={location.pathname === "/quest" ? "active" : ""}>
+            <NavLink to="/quest">
+              <IconQuest src={location.pathname === "/quest" ? ActQuest : Quest} />
+              <p>퀘스트</p>
+            </NavLink>
+          </NavItem>
+          <NavItem
+            className={location.pathname.startsWith("/board") ? "active" : ""}
+          >
+            <NavLink to="/board">
+              <IconBoard
+                src={location.pathname.startsWith("/board") ? ActBoard : Board}
+              />
+              <p>게시판</p>
+            </NavLink>
+          </NavItem>
+          <NavItem className={location.pathname.startsWith("/mypage") ? "active" : ""}>
+            <NavLink to="/mypage">
+              <IconMypage
+                src={location.pathname.startsWith("/mypage") ? ActMypage : Mypage}
+              />
+              <p>나의 정보</p>
+            </NavLink>
+          </NavItem>
+        </>
+      }
+
     </Nav>
   );
 };

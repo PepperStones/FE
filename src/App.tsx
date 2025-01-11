@@ -21,6 +21,10 @@ import UpdatePWDPage from "./pages/UpdatePwdPage.tsx";
 import CustomizingPage from "./pages/CustomizingPage.tsx";
 import ExperiencePoint from "./pages/ExperiencePoint.tsx";
 
+import MemberManage from "./pages/admin/MemberManage.tsx";
+import MemberDetail from "./pages/admin/MemberDetail.tsx";
+import InsertMember from "./pages/admin/InsertMember.tsx";
+
 import { createGlobalStyle } from "styled-components";
 
 
@@ -50,6 +54,7 @@ const App = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
+          <Route path="/experience-point" element={<ExperiencePoint />} />
 
           <Route path="/quest" element={<QuestPage />} />
           <Route path="/quest/:id" element={<QuestDetailPage />} />
@@ -61,7 +66,10 @@ const App = () => {
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/mypage-pwd" element={<UpdatePWDPage />} />
           <Route path="/mypage-customize" element={<CustomizingPage />} />
-          <Route path="/experience-point" element={<ExperiencePoint />} />
+
+          <Route path="/member" element={<MemberManage />} />
+          <Route path="/member/:id" element={<MemberDetail />} />
+          <Route path="/addMember" element={<InsertMember />} />
         </Routes>
       </BrowserRouter>
     </>

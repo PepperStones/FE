@@ -74,8 +74,8 @@ const NotificationList: React.FC = () => {
   const [notifications, setNotifications] = useState(notificationsMock);
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  // 알림 클릭 시 확인 상태로 변경
-  const handleNotificationClick = (id: number) => {
+  // 알림 클릭 시 확인 상태로 변경 및 페이지 이동
+  const handleNotificationClick = (id: number, title: string) => {
     setNotifications((prev) =>
       prev.map((notification) =>
         notification.id === id
@@ -83,10 +83,20 @@ const NotificationList: React.FC = () => {
           : notification
       )
     );
+
+    // title에 따라 다른 페이지로 이동
+    switch (title) {
+      case "신규 경험치(do) 획득!":
+        navigate("/experience-point?tab=receipt");
+        break;
+      case "신규 게시글 등록!":
+        navigate("/board");
+        break;
+    }
   };
 
   const handlePageNav = () => {
-    navigate("/home/1");
+    navigate("/home");
   };
 
   const NavItem = {
@@ -105,7 +115,9 @@ const NotificationList: React.FC = () => {
           <AlertItem
             key={notification.id}
             isRead={notification.isRead}
-            onClick={() => handleNotificationClick(notification.id)}
+            onClick={() =>
+              handleNotificationClick(notification.id, notification.title)
+            }
           >
             <NoticeContent>
               <NoticeIcon src={notification.icon}></NoticeIcon>

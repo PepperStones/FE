@@ -1,4 +1,4 @@
-//TopExpNav.tsx
+//TwoButtonTopNav.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -13,11 +13,17 @@ interface lefter {
 }
 */
 
-const TwoButtonTopNav = ({ lefter, center, righter, onTabChange }) => {
+const TwoButtonTopNav = ({
+  lefter,
+  center,
+  righter,
+  activeTab,
+  onTabChange,
+}) => {
   const [activeOption, setActiveOption] = useState(0); // 0: 첫 번째 옵션, 1: 두 번째 옵션
   const navigate = useNavigate();
 
-  const handleOptionClick = (index) => {
+  const handleOptionClick = (index: number) => {
     setActiveOption(index);
     if (onTabChange) onTabChange(index);
   };
@@ -61,13 +67,13 @@ const TwoButtonTopNav = ({ lefter, center, righter, onTabChange }) => {
       </NavContainer>
       <OptionContainer>
         <Option
-          className={activeOption === 0 ? "active" : "disable"}
+          className={activeTab === 0 ? "active" : "disable"}
           onClick={() => handleOptionClick(0)}
         >
           <p>현재 경험치 현황</p>
         </Option>
         <Option
-          className={activeOption === 1 ? "active" : "disable"}
+          className={activeTab === 1 ? "active" : "disable"}
           onClick={() => handleOptionClick(1)}
         >
           <p>수령 경험치 목록</p>

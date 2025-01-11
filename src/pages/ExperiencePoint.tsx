@@ -1,6 +1,7 @@
 //ExperiencePoint.tsx
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+
 import styled from "styled-components";
 
 import TwoButtonTopNav from "../components/nav/TwoButtonTopNav.tsx";
@@ -38,12 +39,16 @@ export const myMock = [
 ];
 
 const ExperiencePoint: React.FC = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialTab = queryParams.get("tab") === "receipt" ? 1 : 0;
+
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
 
   const handleOpenModal = () => setIsModalOpen(true); // 모달 열기
   const handleCloseModal = () => setIsModalOpen(false); // 모달 닫기
 
-  const [activeTab, setActiveTab] = useState(0); // 0: 현재 경험치 현황, 1: 수령 경험치 목록
+  const [activeTab, setActiveTab] = useState(initialTab); // 0: 현재 경험치 현황, 1: 수령 경험치 목록
 
   const navigate = useNavigate();
   const totalAccumulatedExperience =
@@ -51,10 +56,6 @@ const ExperiencePoint: React.FC = () => {
     myMock[0].data.experience.totalExperienceThisYear;
   const handleBackIconClick = () => {
     navigate("/home");
-  };
-
-  const handleTabChange = (index) => {
-    setActiveTab(index);
   };
 
   const NavItem = {
@@ -68,6 +69,13 @@ const ExperiencePoint: React.FC = () => {
   const calculateProgressPercent = (current: number, max: number) => {
     if (max === 0) return 0; // Avoid division by zero
     return (current / max) * 100;
+  };
+
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    // URL을 동기화하려면 다음 코드 추가
+    const newTab = index === 1 ? "receipt" : "current";
+    navigate(`/experience-point?tab=${newTab}`);
   };
 
   const totalProgressPercent = calculateProgressPercent(
@@ -89,7 +97,8 @@ const ExperiencePoint: React.FC = () => {
         lefter={NavItem}
         center={NavItem}
         righter={null}
-        onTabChange={handleTabChange}
+        activeTab={activeTab} // activeTab 전달
+        onTabChange={handleTabChange} // 탭 변경 핸들러 전달
       />
       {activeTab === 0 ? (
         <CurrentExpContainer>

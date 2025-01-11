@@ -152,7 +152,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
           <NavIcon
             src={RightIconImg}
             alt="Right Icon"
-            onClick={() => navigate("/norification_list")}
+            onClick={() => navigate("/notification_list")}
           />
         </Right>
       </TopNav>

@@ -132,7 +132,7 @@ const ExperiencePoint: React.FC = () => {
             </Head>
             <ExpModal isOpen={isModalOpen} onClose={handleCloseModal} />
             <Exp>
-              <h1 className="text-sm-200 ">총 누적 경험치</h1>
+              <div className="text-sm-200 ">총 누적 경험치</div>
               <BarContainer>
                 <BarFill progress={totalProgressPercent} />
                 <Circle position={totalProgressPercent} />
@@ -153,7 +153,7 @@ const ExperiencePoint: React.FC = () => {
               </BarCount>
             </Exp>
             <Exp>
-              <h1 className="text-sm-200 ">올해 획득 경험치</h1>
+              <div className="text-sm-200 ">올해 획득 경험치</div>
               <BarContainer>
                 <BarFill progress={yearProgressPercent} />
                 <Circle position={yearProgressPercent} />
@@ -393,7 +393,7 @@ const Exp = styled.div`
   margin-bottom: 15px;
   padding: 14px;
 
-  > h1 {
+  > div {
     color: var(--Grayscale-gray-90, #f7f7f7);
     margin-bottom: 14px;
   }

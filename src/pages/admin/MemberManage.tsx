@@ -19,6 +19,7 @@ interface Member {
     joinDate: string;
     level: string;
     userID: string;
+    initPWD: string;
     userPWD: string;
 }
 
@@ -32,6 +33,7 @@ const memberItem: Member[] = [
         joinDate: "2022-01-15",
         level: "F1-I",
         userID: "seojoon01",
+        initPWD: "1234",
         userPWD: "password123"
     },
     {
@@ -40,9 +42,10 @@ const memberItem: Member[] = [
         ein: 5864,
         group: 1,
         department: "음성 1센터",
-        joinDate: "2021-06-20",
+        joinDate: "2022-01-15",
         level: "F1-I",
         userID: "hongseung02",
+        initPWD: "1234",
         userPWD: "secure456"
     },
     {
@@ -51,9 +54,10 @@ const memberItem: Member[] = [
         ein: 5392,
         group: 2,
         department: "음성 2센터",
-        joinDate: "2020-03-10",
+        joinDate: "2022-01-15",
         level: "F1-I",
         userID: "choijihoon03",
+        initPWD: "1234",
         userPWD: "mypassword789"
     },
     {
@@ -62,9 +66,10 @@ const memberItem: Member[] = [
         ein: 4046,
         group: 4,
         department: "남양주센터",
-        joinDate: "2019-11-05",
+        joinDate: "2022-01-15",
         level: "F1-I",
         userID: "kimjungyoon04",
+        initPWD: "1234",
         userPWD: "pass1234"
     },
     {
@@ -73,9 +78,10 @@ const memberItem: Member[] = [
         ein: 9807,
         group: 5,
         department: "남양주센터",
-        joinDate: "2018-07-25",
+        joinDate: "2022-01-15",
         level: "F1-I",
         userID: "joeunhyang05",
+        initPWD: "1234",
         userPWD: "admin5678"
     },
     {
@@ -84,9 +90,10 @@ const memberItem: Member[] = [
         ein: 9807,
         group: 5,
         department: "CX팀",
-        joinDate: "2023-02-01",
+        joinDate: "2022-01-15",
         level: "F1-I",
         userID: "parkjunseok06",
+        initPWD: "1234",
         userPWD: "intern123"
     }
 ];

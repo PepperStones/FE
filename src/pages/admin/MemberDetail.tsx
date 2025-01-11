@@ -5,7 +5,9 @@ import styled from 'styled-components';
 
 import TopNav from '../../components/nav/TopNav.tsx';
 import FooterNav from '../../components/nav/FooterNav.tsx'
+import LargeBtn from '../../components/button/LargeBtn.tsx';
 import SmallBtn from '../../components/button/SmallBtn.tsx';
+import DefaultModal from '../../components/modal/DefaultModal.tsx';
 
 import BackIcon from '../../assets/images/left_arrow.png'
 import EinImg from '../../assets/images/admin/yellow_ein.png'
@@ -15,8 +17,9 @@ import DepartmentImg from '../../assets/images/admin/yellow_house.png'
 import GroupImg from '../../assets/images/admin/yellow_group.png'
 import LevelImg from '../../assets/images/admin/yellow_diamond_star.png'
 import IdImg from '../../assets/images/admin/yellow_id.png'
+import DeactIdImg from '../../assets/images/admin/gray_id.png'
 import PwdImg from '../../assets/images/admin/yellow_lock.png'
-
+import DeactPwdImg from '../../assets/images/admin/gray_lock.png'
 
 function MemberDetail() {
     const navigate = useNavigate();
@@ -30,9 +33,12 @@ function MemberDetail() {
     const [group, setGroup] = useState(member.group);
     const [level, setLevel] = useState(member.level);
     const [userID, setUserID] = useState(member.userID);
+    const [initPWD, setInitPWD] = useState(member.initPWD);
     const [userPWD, setUserPWD] = useState(member.userPWD);
+
     const [isModifyAvailable, setIsModifyAvailable] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     // 뒤로가기 클릭 함수
     const handleBackIconClick = () => {
@@ -46,6 +52,12 @@ function MemberDetail() {
 
     // 삭제 처리 함수
     const handleDeleteClick = () => {
+
+        navigate('/member'); // 삭제 후 목록 페이지로 이동
+    };
+
+    // 수정 처리 함수
+    const handleModifyClick = () => {
 
         navigate('/member'); // 삭제 후 목록 페이지로 이동
     };
@@ -66,20 +78,12 @@ function MemberDetail() {
         setInput(event.target.value);
     };
 
-    const handleJoinDateChange = (event) => {
-        setJoinDate(event.target.value);
+    const openDeleteModal = () => {
+        setIsDeleteModalOpen(true);
     };
 
-    const handleDepartmentChange = (event) => {
-        setDepartment(event.target.value);
-    };
-
-    const handleGroupChange = (event) => {
-        setGroup(event.target.value);
-    };
-
-    const handleLevelChange = (event) => {
-        setLevel(event.target.value);
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
     };
 
     useEffect(() => {
@@ -104,7 +108,7 @@ function MemberDetail() {
                             placeholder="사번을 입력해주세요."
                             value={ein}
                             onChange={(e) => handleInputChange(e, setEin)}
-                            disabled={!isEditable} 
+                            disabled={!isEditable}
                         />
                     </DetailContent>
                     <DetailContent>
@@ -117,7 +121,7 @@ function MemberDetail() {
                             placeholder="이름을 입력해주세요."
                             value={name}
                             onChange={(e) => handleInputChange(e, setName)}
-                            disabled={!isEditable} 
+                            disabled={!isEditable}
                         />
                     </DetailContent>
                     <DetailContent>
@@ -128,10 +132,10 @@ function MemberDetail() {
                             value={joinDate}
                             onChange={(e) => handleSelectChange(e, setJoinDate)}
                             className='text-sm-200'
-                            disabled={!isEditable} 
+                            disabled={!isEditable}
                         >
                             <option value="default">입사일을 선택해주세요</option>
-                            <option value="1">입사일1</option>
+                            <option value="2022-01-15">입사일1</option>
                             <option value="2">입사일2</option>
                             <option value="3">입사일3</option>
                             <option value="4">입사일4</option>
@@ -147,7 +151,7 @@ function MemberDetail() {
                             value={department}
                             onChange={(e) => handleSelectChange(e, setDepartment)}
                             className='text-sm-200'
-                            disabled={!isEditable} 
+                            disabled={!isEditable}
                         >
                             <option value="default">소속을 선택해주세요</option>
                             <option value="음성 1센터">음성 1센터</option>
@@ -168,7 +172,7 @@ function MemberDetail() {
                             value={group}
                             onChange={(e) => handleSelectChange(e, setGroup)}
                             className='text-sm-200'
-                            disabled={!isEditable} 
+                            disabled={!isEditable}
                         >
                             <option value="default">직무그룹을 선택해주세요</option>
                             <option value="1">그룹 1</option>
@@ -187,7 +191,7 @@ function MemberDetail() {
                             value={level}
                             onChange={(e) => handleSelectChange(e, setLevel)}
                             className='text-sm-200'
-                            disabled={!isEditable} 
+                            disabled={!isEditable}
                         >
                             <option value="default">레벨 직군을 선택해주세요</option>
                             <option value="1">F1-I</option>
@@ -206,7 +210,8 @@ function MemberDetail() {
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
-                            <MypageIcon src={IdImg} /><IconDescription className='text-md-200'>아이디</IconDescription>
+                            <MypageIcon src={isEditable ? DeactIdImg : IdImg} />
+                            <IconDescription className='text-md-200' isEditable={isEditable}>아이디</IconDescription>
                         </DetailLeft>
                         <DetailInput
                             type="text"
@@ -214,12 +219,29 @@ function MemberDetail() {
                             placeholder="아이디를 입력해주세요."
                             value={userID}
                             onChange={(e) => handleInputChange(e, setUserID)}
-                            disabled={!isEditable} 
+                            disabled={true}
+                            isEditable={isEditable}
                         />
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
-                            <MypageIcon src={PwdImg} /><IconDescription className='text-md-200'>기본 비밀번호</IconDescription>
+                            <MypageIcon src={isEditable ? DeactPwdImg : PwdImg} />
+                            <IconDescription className='text-md-200' isEditable={isEditable}>기본 비밀번호</IconDescription>
+                        </DetailLeft>
+                        <DetailInput
+                            type="text"
+                            className='text-sm-200'
+                            placeholder="비밀번호를 입력해주세요."
+                            value={initPWD}
+                            onChange={(e) => handleInputChange(e, setInitPWD)}
+                            disabled={true}
+                            isEditable={isEditable}
+                        />
+                    </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={isEditable ? DeactPwdImg : PwdImg} />
+                            <IconDescription className='text-md-200' isEditable={isEditable}>변경 비밀번호</IconDescription>
                         </DetailLeft>
                         <DetailInput
                             type="text"
@@ -227,39 +249,46 @@ function MemberDetail() {
                             placeholder="비밀번호를 입력해주세요."
                             value={userPWD}
                             onChange={(e) => handleInputChange(e, setUserPWD)}
-                            disabled={!isEditable} 
-                        />
-                    </DetailContent>
-                    <DetailContent>
-                        <DetailLeft>
-                            <MypageIcon src={PwdImg} /><IconDescription className='text-md-200'>변경 비밀번호</IconDescription>
-                        </DetailLeft>
-                        <DetailInput
-                            type="text"
-                            className='text-sm-200'
-                            placeholder="비밀번호를 입력해주세요."
-                            value={userPWD}
-                            onChange={(e) => handleInputChange(e, setUserPWD)}
-                            disabled={!isEditable} 
+                            disabled={true}
+                            isEditable={isEditable}
                         />
                     </DetailContent>
                 </ProfileDetailContainer>
 
                 <ButtonContainer>
-                    <SmallBtn
-                        content="삭제"
-                        onClick={handleDeleteClick}
-                        isAvailable={true}
-                        isDarkblue={true}
-                    />
-                    <SmallBtn
-                        content="수정"
-                        onClick={handleEditClick}
-                        isAvailable={true}
-                        isDarkblue={false}
-                    />
+                    {isEditable ?
+                        <LargeBtn
+                            content="완료"
+                            onClick={handleModifyClick}
+                            isAvailable={isModifyAvailable}
+                        />
+                        :
+                        <>
+                            <SmallBtn
+                                content="삭제"
+                                onClick={openDeleteModal}
+                                isAvailable={true}
+                                isDarkblue={true}
+                            />
+                            <SmallBtn
+                                content="수정"
+                                onClick={handleEditClick}
+                                isAvailable={true}
+                                isDarkblue={false}
+                            />
+                        </>
+                    }
+
                 </ButtonContainer>
             </ProfileInfoContainer>
+
+            <DefaultModal
+                showDefaultModal={isDeleteModalOpen}
+                title='구성원 정보를 정말 삭제하시겠습니까?'
+                description='삭제한 정보는 다시 복구 불가합니다.'
+                onAcceptFunc={handleDeleteClick} // 삭제 함수 연결
+                onUnacceptFunc={closeDeleteModal}
+            />
 
             <FooterNav />
         </MypageContainer>
@@ -280,7 +309,7 @@ display: flex;
 flex-direction: column;
 
 padding: 20px;
-gap: 200px;
+gap: 20px;
 `;
 
 const ProfileDetailContainer = styled.div`
@@ -297,7 +326,7 @@ flex: 1;
 gap: 8px;
 `;
 
-const DetailInput = styled.input`
+const DetailInput = styled.input<{ isEditable?: boolean }>`
 display: flex;
 justify-content: center;
 align-items: center;
@@ -313,6 +342,16 @@ direction: rtl;
     color: var(--gray-20);
     text-align: right;
 }
+
+&:disabled {
+    background: var(--sub-20); /* 배경색 유지 */
+    color: var(--gray-60); /* 텍스트 색상 유지 */
+    opacity: 1; /* 투명도 제거 */
+
+    color: ${({ isEditable }) => (isEditable ? `var(--gray-20)` : 'var(--gray-60)')};
+}
+
+color: ${({ isEditable }) => (isEditable ? `var(--gray-20)` : 'var(--gray-60)')};
 `;
 
 const DetailSelect = styled.select`
@@ -328,6 +367,12 @@ border: none;
 color: var(--gray-60);
 text-align: right;
 direction: rtl;
+
+&:disabled {
+    background: var(--sub-20); /* 배경색 유지 */
+    color: var(--gray-60); /* 텍스트 색상 유지 */
+    opacity: 1; /* 투명도 제거 */
+}
 `;
 
 
@@ -343,12 +388,13 @@ width: 14px;
 height: 14px;
 `;
 
-const IconDescription = styled.div`
+const IconDescription = styled.div<{ isEditable?: boolean }>`
 display: flex;
 justify-content: center;
 align-items: center;
 
 color: var(--primary-80);
+color: ${({ isEditable }) => (isEditable ? `var(--gray-20)` : 'var(--gray-60)')};
 `;
 
 const ButtonContainer = styled.div`

@@ -4,16 +4,17 @@ import { motion } from "framer-motion";
 
 import StarImage from "../../assets/images/my_star.png";
 import tagImage from "../../assets/images/union.png";
+import levelsData from "../../assets/images/data/levels.json";
 
 const starData = [
   { id: 1, x: 120, y: 600, size: 30 },
   { id: 2, x: 110, y: 500, size: 30 },
   { id: 3, x: 70, y: 460, size: 30 },
-  { id: 4, x: 30, y: 470, size: 30 },
+  { id: 4, x: 30, y: 470, size: 30 }, // 내 별
   { id: 5, x: 70, y: 330, size: 30 },
   { id: 6, x: 110, y: 310, size: 30 },
   { id: 7, x: 140, y: 330, size: 30 },
-  { id: 8, x: 170, y: 299, size: 30 }, // 내 별 (8번 별)
+  { id: 8, x: 170, y: 299, size: 30 },
   { id: 9, x: 200, y: 400, size: 30 },
   { id: 10, x: 250, y: 460, size: 30 },
   { id: 11, x: 350, y: 400, size: 30 },
@@ -31,6 +32,23 @@ const lineData = [
   { x1: 200, y1: 400, x2: 250, y2: 460 },
   { x1: 170, y1: 299, x2: 350, y2: 400 },
 ];
+
+// Mock 데이터
+const mockData = {
+  user: {
+    name: "홍길동",
+    level: "F5",
+    centerName: "서울센터",
+    jobName: "개발팀",
+    recentExperience: 150,
+    totalExperienceThisYear: 12500,
+  },
+  team: {
+    count: 4,
+    levels: ["F2-II", "F3-III", "F5", "F5"],
+  },
+};
+
 interface HomePage {
   handleIconPage: () => void;
   handlePrevPage: () => void;
@@ -40,6 +58,26 @@ interface HomePage {
   setIsPageOption: (value: number) => void;
 }
 
+// 광량 계산 함수
+const calculateOpacityByLevel = (levelName: string | null): number => {
+  const minOpacity = 0.4; // 최소 광량
+  const maxOpacity = 1; // 최대 광량
+
+  // 레벨이 null인 경우(비활성화 상태)
+  if (!levelName) return 0; // 완전히 투명하게 설정
+
+  // 레벨 이름을 기준으로 인덱스 찾기
+  const levelIndex = levelsData.findIndex((level) => level.level === levelName);
+
+  if (levelIndex === -1) return minOpacity; // 레벨을 찾을 수 없을 경우 기본값
+
+  // 레벨 인덱스를 기반으로 Opacity 계산
+  const levelRatio = levelIndex / (levelsData.length - 1); // 0 ~ 1 사이 값
+  const opacity = minOpacity + (maxOpacity - minOpacity) * levelRatio;
+
+  return Math.min(Math.max(opacity, minOpacity), maxOpacity); // 0.4 ~ 1 사이로 제한
+};
+
 const StarAnimation: React.FC<HomePage> = ({
   isPageOption,
   handleIconPage,
@@ -48,7 +86,7 @@ const StarAnimation: React.FC<HomePage> = ({
   isPopupOpen,
   setIsPageOption,
 }) => {
-  const myStarId = 4; // "내 별"의 ID
+  const myStarId = 1; // "내 별"의 ID
 
   const containerRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +97,28 @@ const StarAnimation: React.FC<HomePage> = ({
 
   const originalContainerWidth = 363; // 디자인 기준 너비
   const originalContainerHeight = 800; // 디자인 기준 높이
+
+  // 사용자와 팀원의 레벨 정보를 별에 배치
+  const enhancedStarData = starData.map((star, index) => {
+    if (index === 0) {
+      // 1번 별은 항상 사용자
+      return {
+        ...star,
+        level: mockData.user.level,
+        isActive: true, // 활성화 상태
+        opacity: calculateOpacityByLevel(mockData.user.level),
+      };
+    } else {
+      // 나머지 별에 팀원 정보 배치
+      const teamLevel = mockData.team.levels[index - 1] || null; // 팀원 레벨 또는 null
+      return {
+        ...star,
+        level: teamLevel,
+        isActive: !!teamLevel, // 팀원이 있으면 활성화
+        opacity: calculateOpacityByLevel(teamLevel),
+      };
+    }
+  });
 
   useEffect(() => {
     console.log("Container Size:", containerSize);
@@ -87,20 +147,36 @@ const StarAnimation: React.FC<HomePage> = ({
   }, []);
 
   // 별 위치 계산
-  const adjustedStarData = starData.map((star) => ({
+  const adjustedStarData = enhancedStarData.map((star) => ({
     ...star,
     x: (star.x / originalContainerWidth) * containerSize.width,
     y: (star.y / originalContainerHeight) * containerSize.height,
   }));
 
   // 선 데이터 계산
-  const adjustedLineData = lineData.map((line) => ({
-    x1: (line.x1 / originalContainerWidth) * containerSize.width,
-    y1: (line.y1 / originalContainerHeight) * containerSize.height,
-    x2: (line.x2 / originalContainerWidth) * containerSize.width,
-    y2: (line.y2 / originalContainerHeight) * containerSize.height,
-  }));
+  const adjustedLineData = lineData
+    .map((line) => {
+      // 선의 두 끝에 해당하는 별 찾기
+      const startStar = enhancedStarData.find(
+        (star) => star.x === line.x1 && star.y === line.y1
+      );
+      const endStar = enhancedStarData.find(
+        (star) => star.x === line.x2 && star.y === line.y2
+      );
 
+      // 두 별이 모두 활성화 상태인지 확인
+      const isActive = startStar?.isActive && endStar?.isActive;
+
+      return {
+        ...line,
+        x1: (line.x1 / originalContainerWidth) * containerSize.width,
+        y1: (line.y1 / originalContainerHeight) * containerSize.height,
+        x2: (line.x2 / originalContainerWidth) * containerSize.width,
+        y2: (line.y2 / originalContainerHeight) * containerSize.height,
+        isActive,
+      };
+    })
+    .filter((line) => line.isActive); // 활성화된 선만 포함
   const myStar = adjustedStarData.find((star) => star.id === myStarId);
 
   const handleStarClick = (id: number) => {
@@ -136,10 +212,12 @@ const StarAnimation: React.FC<HomePage> = ({
     }
 
     if (isPageOption === 2) {
-      scale = 0.3; // 팝업 열렸을 때의 확대 비율
+      scale = 0.5; // 팝업 열렸을 때의 확대 비율
+      translateX = containerSize.width / 2 - myStar.x - 40;
+      translateY = containerSize.height / 2 - myStar.y + 100;
       if (isPopupOpen) {
-        translateX = containerSize.width / 2 - myStar.x - 100;
-        translateY = containerSize.height / 2 - myStar.y + 125;
+        translateX = containerSize.width / 2 - myStar.x - 50;
+        translateY = containerSize.height / 2 - myStar.y + 210;
         scale = 0.7;
       }
     }
@@ -196,7 +274,12 @@ const StarAnimation: React.FC<HomePage> = ({
                 repeatType: "loop",
               }}
               size={star.size}
-              style={{ left: `${star.x}px`, top: `${star.y}px` }}
+              style={{
+                left: `${star.x}px`,
+                top: `${star.y}px`,
+                opacity: star.opacity, // 활성화 여부에 따른 광량 적용
+                filter: star.isActive ? "none" : "grayscale(100%)", // 비활성화된 별은 흑백 처리
+              }}
               onClick={() => handleStarClick(star.id)}
             />
             {star.id === myStarId && (
@@ -225,7 +308,7 @@ const StarAnimation: React.FC<HomePage> = ({
           as={motion.div}
           animate={{
             opacity: isPageOption === 2 ? 1 : 0, // 팝업 열림 여부에 따라 투명도 조절
-            left: isPopupOpen ? "40%" : "15%", // StarContainer의 중앙
+            left: isPopupOpen ? "40%" : "35%", // StarContainer의 중앙
             top: isPopupOpen ? "81%" : "66%", // 중앙 아래에 위치
             scale: isPopupOpen ? 1.5 : 1, // 크기 변화
           }}

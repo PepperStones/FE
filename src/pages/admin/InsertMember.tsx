@@ -47,20 +47,8 @@ function InsertMember() {
         setInput(event.target.value);
     };
 
-    const handleJoinDateChange = (event) => {
-        setJoinDate(event.target.value);
-    };
-
-    const handleDepartmentChange = (event) => {
-        setDepartment(event.target.value);
-    };
-
-    const handleGroupChange = (event) => {
-        setGroup(event.target.value);
-    };
-
-    const handleLevelChange = (event) => {
-        setLevel(event.target.value);
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
+        setInput(event.target.value);
     };
 
     const handleInsertMember = () => {
@@ -113,7 +101,7 @@ function InsertMember() {
                         </DetailLeft>
                         <DetailSelect
                             value={joinDate}
-                            onChange={handleJoinDateChange}
+                            onChange={(e) => handleSelectChange(e, setJoinDate)}
                             className='text-sm-200'
                         >
                             <option value="default">입사일을 선택해주세요</option>
@@ -131,7 +119,7 @@ function InsertMember() {
                         </DetailLeft>
                         <DetailSelect
                             value={department}
-                            onChange={handleDepartmentChange}
+                            onChange={(e) => handleSelectChange(e, setDepartment)}
                             className='text-sm-200'
                         >
                             <option value="default">소속을 선택해주세요</option>
@@ -151,7 +139,7 @@ function InsertMember() {
                         </DetailLeft>
                         <DetailSelect
                             value={group}
-                            onChange={handleGroupChange}
+                            onChange={(e) => handleSelectChange(e, setGroup)}
                             className='text-sm-200'
                         >
                             <option value="default">직무그룹을 선택해주세요</option>
@@ -169,7 +157,7 @@ function InsertMember() {
                         </DetailLeft>
                         <DetailSelect
                             value={level}
-                            onChange={handleLevelChange}
+                            onChange={(e) => handleSelectChange(e, setLevel)}
                             className='text-sm-200'
                         >
                             <option value="default">레벨 직군을 선택해주세요</option>

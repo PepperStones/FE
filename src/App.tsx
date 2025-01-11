@@ -25,6 +25,8 @@ import MemberManage from "./pages/admin/MemberManage.tsx";
 import MemberDetail from "./pages/admin/MemberDetail.tsx";
 import InsertMember from "./pages/admin/InsertMember.tsx";
 
+import Synchronization from "./pages/admin/Synchronization.tsx";
+
 import { createGlobalStyle } from "styled-components";
 
 
@@ -70,6 +72,8 @@ const App = () => {
           <Route path="/member" element={<MemberManage />} />
           <Route path="/member/:id" element={<MemberDetail />} />
           <Route path="/addMember" element={<InsertMember />} />
+
+          <Route path="/synchro" element={<Synchronization />} />
         </Routes>
       </BrowserRouter>
     </>

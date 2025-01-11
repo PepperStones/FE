@@ -1,14 +1,13 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import TopNav from "../../components/nav/TopNav.tsx";
+import FooterNav from "../../components/nav/FooterNav.tsx";
+import SearchFilter from "../../components/filter/SearchFilter.tsx";
+import Member from "../../components/button/MemberListItem.tsx";
 
-import TopNav from '../../components/nav/TopNav.tsx';
-import FooterNav from '../../components/nav/FooterNav.tsx';
-import SearchFilter from '../../components/filter/SearchFilter.tsx';
-import Member from '../../components/button/MemberListItem.tsx'
-
-import AddPersonIcon from '../../assets/images/admin/white_user_add.png'
+import AddPersonIcon from "../../assets/images/admin/white_user_add.png";
 
 interface Member {
     id: number;
@@ -99,83 +98,83 @@ const memberItem: Member[] = [
 ];
 
 function MemberManage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [search, setSearch] = useState<string>('');
-    const [department, setDepartment] = useState<string>('default');
-    const [group, setGroup] = useState<string>('default');
+  const [search, setSearch] = useState<string>("");
+  const [department, setDepartment] = useState<string>("default");
+  const [group, setGroup] = useState<string>("default");
 
-    const handleMemberClick = (member: Member) => {
-        navigate(`/member/${member.id}`, { state: member }); // quest 데이터를 state로 전달
-    };
+  const handleMemberClick = (member: Member) => {
+    navigate(`/member/${member.id}`, { state: member }); // quest 데이터를 state로 전달
+  };
 
-    // 필터링된 멤버 리스트 계산
-    const filteredMembers = memberItem.filter((member) => {
-        const matchesSearch =
-            member.name.toLowerCase().includes(search.toLowerCase()) ||
-            member.ein.toString().includes(search);
-        const matchesDepartment =
-            department === 'default' || member.department === department;
-        const matchesGroup =
-            group === 'default' || member.group === parseInt(group);
+  // 필터링된 멤버 리스트 계산
+  const filteredMembers = memberItem.filter((member) => {
+    const matchesSearch =
+      member.name.toLowerCase().includes(search.toLowerCase()) ||
+      member.ein.toString().includes(search);
+    const matchesDepartment =
+      department === "default" || member.department === department;
+    const matchesGroup =
+      group === "default" || member.group === parseInt(group);
 
-        return matchesSearch && matchesDepartment && matchesGroup;
-    });
+    return matchesSearch && matchesDepartment && matchesGroup;
+  });
 
-    const handleAddMerberClick = () => {
-        navigate('/addMember');
-    };
+  const handleAddMerberClick = () => {
+    navigate("/addMember");
+  };
 
-    const NavItem = {
-        icon: AddPersonIcon,
-        iconWidth: 22,
-        iconHeight: 19,
-        text: "구성원 목록",
-        clickFunc: handleAddMerberClick
-    };
+  const NavItem = {
+    icon: AddPersonIcon,
+    iconWidth: 22,
+    iconHeight: 19,
+    text: "구성원 목록",
+    clickFunc: handleAddMerberClick,
+  };
 
-    return (
-        <MemberManageContainer>
-            <TopNav lefter={null} center={NavItem} righter={NavItem} />
+  return (
+    <MemberManageContainer>
+      <TopNav lefter={null} center={NavItem} righter={NavItem} />
 
-            <SearchFilter
-                search={search}
-                setSearch={setSearch}
-                department={department}
-                setDepartment={setDepartment}
-                group={group}
-                setGroup={setGroup}
-            />
+      <SearchFilter
+        search={search}
+        setSearch={setSearch}
+        department={department}
+        setDepartment={setDepartment}
+        group={group}
+        setGroup={setGroup}
+      />
 
-            <ResultContainer>
-                {filteredMembers.map((member) => (
-                    <Member
-                        key={member.id}
-                        data={member}
-                        onClick={() => handleMemberClick(member)}
-                    />
-                ))}
-                <div style={{ height: '60px' }}></div>
-            </ResultContainer>
+      <ResultContainer>
+        {filteredMembers.map((member) => (
+          <Member
+            key={member.id}
+            data={member}
+            onClick={() => handleMemberClick(member)}
+          />
+        ))}
+        <div style={{ height: "60px" }}></div>
+      </ResultContainer>
 
-            <FooterNav isAdmin={true} />
-        </MemberManageContainer>
-    );
+      <FooterNav isAdmin={true} />
+    </MemberManageContainer>
+  );
 }
 
 export default MemberManage;
 
 const MemberManageContainer = styled.div`
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ResultContainer = styled.div`
-display: flex;
-flex-direction: column;
-list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
 
-gap: 15px;
-padding: 20px;
-margin: 0; 
+  gap: 15px;
+  padding: 20px;
+  margin: 0;
 `;

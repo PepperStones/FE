@@ -6,8 +6,8 @@ import Login from "./pages/Login.tsx";
 import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 
-import QuestPage from "./pages/QuestPage.tsx"
-import QuestDetailPage from "./pages/QuestDetailPage.tsx"
+import QuestPage from "./pages/QuestPage.tsx";
+import QuestDetailPage from "./pages/QuestDetailPage.tsx";
 import AllQuestPage from "./pages/AllQuestPage.tsx";
 
 import BoardPage from "./pages/BoardPage.tsx";
@@ -25,10 +25,15 @@ import MemberManage from "./pages/admin/MemberManage.tsx";
 import MemberDetail from "./pages/admin/MemberDetail.tsx";
 import InsertMember from "./pages/admin/InsertMember.tsx";
 
+
+import AdminBoard from "./pages/admin/AdminBoard.tsx";
+import AdminBoardList from "./pages/admin/AdminBoardList.tsx";
+import AdminAddBoard from "./pages/admin/AdminAddBoard.tsx";
+
 import Synchronization from "./pages/admin/Synchronization.tsx";
 
-import { createGlobalStyle } from "styled-components";
 
+import { createGlobalStyle } from "styled-components";
 
 // 전역 스타일 정의
 const GlobalStyle = createGlobalStyle`
@@ -52,7 +57,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-        
+
           <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />
           <Route path="/challenge" element={<ChallengeQuest />} />
@@ -73,7 +78,13 @@ const App = () => {
           <Route path="/member/:id" element={<MemberDetail />} />
           <Route path="/addMember" element={<InsertMember />} />
 
+
+          <Route path="/admin-board" element={<AdminBoardList />} />
+          <Route path="/admin-board/:id" element={<AdminBoard />} />
+          <Route path="/admin-add-board" element={<AdminAddBoard />} />
+
           <Route path="/synchro" element={<Synchronization />} />
+
         </Routes>
       </BrowserRouter>
     </>

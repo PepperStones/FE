@@ -208,7 +208,7 @@ function InsertMember() {
                 />
             </ProfileInfoContainer>
 
-            <FooterNav />
+            <FooterNav isAdmin={true} />
         </MypageContainer>
 
     );

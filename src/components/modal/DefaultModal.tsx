@@ -60,7 +60,7 @@ const Content = styled.div`
   background-color: var(--sub-20);
   border-radius: 10px;
 
-  padding: 25px;
+  padding: 15px;
 
   text-align: center;
 `;

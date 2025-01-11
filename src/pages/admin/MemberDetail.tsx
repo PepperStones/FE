@@ -59,7 +59,7 @@ function MemberDetail() {
     // 수정 처리 함수
     const handleModifyClick = () => {
 
-        navigate('/member'); // 삭제 후 목록 페이지로 이동
+        navigate('/member'); // 수정 후 목록 페이지로 이동
     };
 
     const Center = {
@@ -290,7 +290,7 @@ function MemberDetail() {
                 onUnacceptFunc={closeDeleteModal}
             />
 
-            <FooterNav />
+            <FooterNav isAdmin={true}/>
         </MypageContainer>
 
     );

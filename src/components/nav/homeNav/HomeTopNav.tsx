@@ -18,9 +18,10 @@ import RightArrow from "../../../assets/images/right_arrow.png";
 import levelData from "../../../constants/levels.json";
 
 interface UserData {
-  id: number;
   username: string;
   level: string;
+  centerName: string;
+  jobName: string;
   recentExperience: number;
   totalAccumulatedExperience: number;
 }
@@ -178,7 +179,10 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
                   + {userData.recentExperience} do
                 </Text>
               </MyLevel>
-              <Icon src={RightArrow} onClick={() => navigate("/board")}></Icon>
+              <Icon
+                src={RightArrow}
+                onClick={() => navigate("/experience-point")}
+              ></Icon>
             </MyInfo>
 
             <MyExp>
@@ -202,7 +206,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
                 자세히 보기
                 <DtailIcon
                   src={RightArrow}
-                  onClick={() => navigate("/board")}
+                  onClick={() => navigate("/experience-point")}
                 ></DtailIcon>
               </ExpDetail>
             </MyExp>

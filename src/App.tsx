@@ -16,10 +16,10 @@ import BoardDetail from "./pages/BoardDetail.tsx";
 import Home from "./pages/Home.tsx";
 import StarAnimation from "./components/star/StarAnimation.tsx";
 
-
-import Mypage from "./pages/Mypage.tsx"
-import UpdatePWDPage from "./pages/UpdatePwdPage.tsx"
-import CustomizingPage from "./pages/CustomizingPage.tsx"
+import Mypage from "./pages/Mypage.tsx";
+import UpdatePWDPage from "./pages/UpdatePwdPage.tsx";
+import CustomizingPage from "./pages/CustomizingPage.tsx";
+import ExperiencePoint from "./pages/ExperiencePoint.tsx";
 
 import { createGlobalStyle } from "styled-components";
 
@@ -61,6 +61,7 @@ const App = () => {
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/mypage-pwd" element={<UpdatePWDPage />} />
           <Route path="/mypage-customize" element={<CustomizingPage />} />
+          <Route path="/experience-point" element={<ExperiencePoint />} />
         </Routes>
       </BrowserRouter>
     </>

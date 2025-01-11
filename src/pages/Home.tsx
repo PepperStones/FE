@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+
 import StarImg from "../assets/images/my_star.png";
 import MilkyWay from "../assets/images/milky_way.png";
 

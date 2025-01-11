@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import styled, { keyframes, css } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
@@ -13,12 +13,33 @@ import JoinDateImg from '../assets/images/yellow_calendar.png'
 import LevelImg from '../assets/images/yellow_diamod_star.png'
 import PasswordImg from '../assets/images/yellow_lock.png'
 
+// Keyframes 정의
+const slideBwdTop = keyframes`
+  0% {
+    transform: scale(1.55) translateZ(160px) translateY(39px);
+  }
+  100% {
+    transform: scale(1) translateZ(0px) translateY(0px);
+  }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
 function Mypage() {
     const Center = {
         text: "나의 정보",
     };
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const isFromCustomize = location.state?.fromCustomize || false;
 
     const handleUpdatePwdClick = () => {
         navigate('/mypage-pwd');
@@ -34,7 +55,7 @@ function Mypage() {
 
             <ProfileInfoContainer>
                 <ProfileContainer>
-                    <ProfileImageContainer>
+                    <ProfileImageContainer isFromCustomize={isFromCustomize}>
                         <ProfileImage src={ProfileImg} alt="프로필 이미지" />
                         <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
                     </ProfileImageContainer>
@@ -42,7 +63,7 @@ function Mypage() {
                     <ProfileEIN className='text-sm-300'>20-76026744</ProfileEIN>
                 </ProfileContainer>
 
-                <ProfileDetailContainer>
+                <ProfileDetailContainer isFromCustomize={isFromCustomize}>
                     <DetailContent>
                         <DetailLeft>
                             <MypageIcon src={DepartmentImg} /><IconDescription className='text-md-200'>소속</IconDescription>
@@ -69,7 +90,7 @@ function Mypage() {
                     </DetailContent>
                 </ProfileDetailContainer>
 
-                <Evaluation>
+                <Evaluation isFromCustomize={isFromCustomize}>
                     <DetailLeft>
                         <EvaluationTime className='caption-sm-300'>24년 상반기 인사평가</EvaluationTime>
                         <EvaluationDescription className='text-md-200'>A등급</EvaluationDescription>
@@ -108,12 +129,14 @@ justify-content: center;
 align-items: center;
 `;
 
-const ProfileImageContainer = styled.div`
+const ProfileImageContainer = styled.div<{ isFromCustomize: boolean }>`
     position: relative;
     width: 100px;
     height: 100px;
 
     margin-bottom: 20px;
+
+    ${({ isFromCustomize }) => isFromCustomize && css `animation: ${slideBwdTop} 0.75s cubic-bezier(0.25, 0.45, 0.46, 0.94) both;`}
 `;
 
 const ProfileImage = styled.img`
@@ -143,10 +166,12 @@ const ProfileEIN = styled.div`
 color: var(--gray-40);
 `;
 
-const ProfileDetailContainer = styled.div`
+const ProfileDetailContainer = styled.div<{ isFromCustomize: boolean }>`
 
 border-radius: 15px;
 background: var(--sub-20);
+
+${({ isFromCustomize }) => isFromCustomize && css `animation: ${fadeIn} 0.5s ease-in-out;`}
 `;
 
 const DetailLeft = styled.div`
@@ -184,7 +209,7 @@ width: 14px;
 height: 14px;
 `;
 
-const Evaluation = styled.div`
+const Evaluation = styled.div<{ isFromCustomize: boolean }>`
 display: flex;
 flex-direction: row;
 flex: 1;
@@ -193,6 +218,8 @@ border-radius: 15px;
 background: var(--sub-20);
 
 padding: 12px 14px;
+
+${({ isFromCustomize }) => isFromCustomize && css `animation: ${fadeIn} 0.5s ease-in-out;`}
 `;
 
 const EvaluationTime = styled.div`

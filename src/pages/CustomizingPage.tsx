@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
@@ -21,6 +21,26 @@ import StarSkin6 from '../assets/images/reward/star_skin_6.png'
 import StarDeco1 from '../assets/images/reward/star_deco_1.png'
 
 import StarEffect1 from '../assets/images/reward/star_effect_1.png'
+
+const slideFwdBottom = keyframes`
+  0% {
+    transform: scale(0.6) translateZ(0) translateY(-100px);
+  }
+  100% {
+    transform: scale(1) translateZ(160px) translateY(0px);
+  }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const tabOffsets = [0, 120, 240]; // 슬라이드 양
 
 // 탭별 데이터
 const tabData = {
@@ -50,13 +70,31 @@ const tabData = {
     ],
 };
 
+const selectedData = {
+    skin: 2,   // 스킨 ID 1
+    deco: 1,   // 장식 ID 2
+    effect: 1, // 효과 ID 3
+};
+
 function CustomizingPage() {
 
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('별 스킨');
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+    const [selectedSkin, setSelectedSkin] = useState<number | null>(null); // 선택된 스킨 ID
+    const [selectedDeco, setSelectedDeco] = useState<number | null>(null); // 선택된 장식 ID
+    const [selectedEffect, setSelectedEffect] = useState<number | null>(null); // 선택된 효과 ID
+
+    useEffect(() => {
+        // 샘플 데이터를 상태에 설정
+        setSelectedSkin(selectedData.skin);
+        setSelectedDeco(selectedData.deco);
+        setSelectedEffect(selectedData.effect);
+    }, []);
 
     const handleBackIconClick = () => {
-        navigate('/mypage');
+        navigate('/mypage', { state: { fromCustomize: true } });
     };
 
     const NavItem = {
@@ -67,8 +105,19 @@ function CustomizingPage() {
         clickFunc: handleBackIconClick,
     };
 
-    const handleTabClick = (tabName: string) => {
+    const handleTabClick = (tabName: string, index: number) => {
         setActiveTab(tabName); // 클릭된 탭을 활성화
+        setActiveTabIndex(index); // 활성화된 탭의 인덱스 업데이트
+    };
+
+    const handleItemClick = (id: number) => {
+        if (activeTab === '별 스킨') {
+            setSelectedSkin(id); // 스킨 선택
+        } else if (activeTab === '별 장식') {
+            setSelectedDeco(id); // 장식 선택
+        } else if (activeTab === '별 효과') {
+            setSelectedEffect(id); // 효과 선택
+        }
     };
 
     return (
@@ -78,22 +127,29 @@ function CustomizingPage() {
 
             <StarCustomizingContainer>
                 <MainStar src={ProfileImg} alt="메인 별 스킨" />
-                <TabMenu>
-                    <TabItem active={activeTab === '별 스킨'} onClick={() => handleTabClick('별 스킨')}>
+                <TabMenu activeIndex={activeTabIndex}>
+                    <TabItem active={activeTab === '별 스킨'} onClick={() => handleTabClick('별 스킨', 0)}>
                         별 스킨
                     </TabItem>
-                    <TabItem active={activeTab === '별 장식'} onClick={() => handleTabClick('별 장식')}>
+                    <TabItem active={activeTab === '별 장식'} onClick={() => handleTabClick('별 장식', 1)}>
                         별 장식
                     </TabItem>
-                    <TabItem active={activeTab === '별 효과'} onClick={() => handleTabClick('별 효과')}>
+                    <TabItem active={activeTab === '별 효과'} onClick={() => handleTabClick('별 효과', 2)}>
                         별 효과
                     </TabItem>
                 </TabMenu>
 
-                {/* 현재 활성화된 탭의 콘텐츠를 렌더링 */}
                 <StarSkinsContainer>
                     {tabData[activeTab].map((item) => (
-                        <StarSkin key={item.id} locked={item.locked}>
+                        <StarSkin
+                            key={item.id} 
+                            selected={
+                                (activeTab === '별 스킨' && selectedSkin === item.id) ||
+                                (activeTab === '별 장식' && selectedDeco === item.id) ||
+                                (activeTab === '별 효과' && selectedEffect === item.id)
+                            }
+                            onClick={() => handleItemClick(item.id)}
+                            locked={item.locked}>
                             {item.locked && (
                                 <>
                                     <LockOverlay />
@@ -128,57 +184,63 @@ const StarCustomizingContainer = styled.div`
 const MainStar = styled.img`
     width: 150px;
     height: 150px;
+
+    animation: ${slideFwdBottom} 0.75s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 `;
 
-const TabMenu = styled.div`
+const TabMenu = styled.div<{ activeIndex: number }>`
     display: flex;
     justify-content: center;
+    position: relative;
 
     width: 100%;
     border-bottom: 1px solid var(--gray-40);
 
-    gap: 25px;
+    gap: 35px;
     margin-top: 53px;
+
+    /* 슬라이드 애니메이션 */
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 20px;
+        height: 2px;
+        width: 110px; /* 각 탭의 너비 */
+        background-color: var(--primary-70);
+        transform: translateX(${({ activeIndex }) => `${tabOffsets[activeIndex]}px`});
+        transition: transform 0.2s ease-in-out;
+    }
 `;
 
 const TabItem = styled.div<{ active?: boolean }>`
     padding: 10px 20px;
     font-size: 1rem;
     color: ${({ active }) => (active ? 'var(--primary-70)' : 'var(--gray-40)')};
-    border-bottom: ${({ active }) => (active ? '1px solid var(--primary-70)' : 'none')};
 `;
 
 const StarSkinsContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3개씩 한 행에 배치 */
 
-    gap: 10px;
-    margin-top: 20px;
-`;
-
-const SkinDivider = styled.div`
-    display: flex;
-    flex-direction: row;
-
     gap: 12px;
+    margin-top: 20px;
+
+    animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
-const StarSkin = styled.div<{ locked?: boolean }>`
+const StarSkin = styled.div<{ locked?: boolean, selected?: boolean }>`
     position: relative;
 
-    width: 96px;
-    height: 96px;
+    width: 110px;
+    height: 110px;
     border-radius: 15px;
-    border: 1px solid var(--sub-40);
+    border: ${({ selected }) => (selected ? '1px solid var(--gray-100)' : '1px solid var(--sub-40)')};
     background: var(--sub-20);
 
     padding: 7px;
 
-    ${({ locked }) =>
-        locked &&
-        `
-        pointer-events: none; /* 클릭 방지 */
-    `}
+    ${({ locked }) => locked && `pointer-events: none; /* 클릭 방지 */ `}
 `;
 
 const StarSkinImage = styled.img`

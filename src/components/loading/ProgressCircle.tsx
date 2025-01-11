@@ -21,10 +21,10 @@ const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius 
 
     // Derived values based on radius
     const circleCircumference = 2 * Math.PI * circleRadius;
-    const viewBoxSize = circleRadius * 2 + 10; // Add padding for stroke width
+    const viewBoxSize = circleRadius * 2 + 12; // Add padding for stroke width
 
     return (
-        <ProgressCircleContainer>
+        <ProgressCircleContainer className='no-drag'>
             <CircularProgressWrapper size={viewBoxSize}>
                 <CircularSvg viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}>
                     {/* Background Circle */}
@@ -32,14 +32,14 @@ const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius 
                         cx={viewBoxSize / 2}
                         cy={viewBoxSize / 2}
                         r={circleRadius}
-                        strokeWidth="10"
+                        strokeWidth="12"
                     />
                     {/* Progress Circle */}
                     <CircleProgress
                         cx={viewBoxSize / 2}
                         cy={viewBoxSize / 2}
                         r={circleRadius}
-                        strokeWidth="10"
+                        strokeWidth="12"
                         strokeDasharray={`${circleCircumference}, ${circleCircumference}`}
                         strokeDashoffset={`${circleCircumference - (progressPercent / 100) * circleCircumference}`}
                     />

@@ -30,7 +30,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
 
         <QuestSection>
             <QuestHeader>
-                <QuestTitleWrapper>
+                <QuestTitleWrapper className='no-drag'>
                     <QuestLeftContent>
                         <QuestIcon src={PaperIcon} alt="퀘스트 아이콘" />
                         <QuestTitle className='text-sm-200'>{title} 퀘스트</QuestTitle>
@@ -41,9 +41,9 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
             </QuestHeader>
 
             <QuestCardContainer>
-                <ProgressContainer>
+                <ProgressContainer className='no-drag'>
                     <ProgressCircleContainer>
-                        <ConditionTitle className='caption-sm-300'>누적 획득 경험치</ConditionTitle>
+                        <ConditionTitle className='caption-sm-300'>누적 획득 경험치<DownwardTriangle /></ConditionTitle>
                         <ProgressCircle
                             currentProgress={progress.currentProgress}
                             maxProgress={progress.maxProgress}
@@ -66,7 +66,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                             <Condition>{mediumCondition}</Condition>
                         </ConditionContainer>
 
-                        <div>
+                        <>
                             <GetPurpose className='caption-sm-300'
                                 onClick={onClick}
                             >
@@ -77,7 +77,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                                         <PercentageDivider /> <PercentageIcon src={RateIcon} /> 비중 {rate}%
                                     </>
                                 )}</GetPurpose>
-                        </div>
+                        </>
                     </ProgressDetails>
 
                 </ProgressContainer>
@@ -184,6 +184,21 @@ padding: 3px 10px;
 
 color: var(--sub-20);
 text-align: center;
+
+position: relative;
+`;
+
+const DownwardTriangle = styled.div`
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent; /* Adjust size */
+  border-right: 6px solid transparent; /* Adjust size */
+  border-top: 6px solid var(--sub-80); /* Color of the triangle */
+  
+  position: absolute; /* Positioning relative to parent */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for exact center alignment */
+  top: calc(100%); /* Position below the ConditionTitle with spacing */
 `;
 
 const Condition = styled.div`
@@ -194,11 +209,12 @@ align-items: center;
 color: var(--gray-80);
 `;
 
-const GetPurpose = styled.div`
+const GetPurpose = styled.button`
 display: flex;
 justify-content: left;
 align-items: center;
 
+width: fit-content;
 border-radius: 15px;
 border: 1px solid var(--sub-40);
 background: linear-gradient(to bottom, var(--sub-40), var(--sub-20));

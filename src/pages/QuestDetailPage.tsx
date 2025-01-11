@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
@@ -10,6 +10,15 @@ import ProgressCircle from '../components/loading/ProgressCircle.tsx';
 
 import profileImg from '../assets/images/reward/star_skin_1.png'
 import BackIcon from "../assets/images/left_arrow.png";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const progress = {
     currentProgress: 1341,
@@ -23,7 +32,7 @@ function QuestDetailPage() {
     const location = useLocation(); // URL에서 전달된 state 데이터 가져오기
     const quest = location.state; // 전달된 quest 데이터
 
-    const buttons = Array.from({ length: quest.unit === '주' ? 50 : quest.unit === '월' ? 12 : 0 }); // 버튼 50개 생성
+    const buttons = Array.from({ length: quest.unit === '주' ? 50 : quest.unit === '월' ? 48 : 0 }); // 버튼 50개 또는 24개 생성
     const angleIncrement = 360 / buttons.length; // 각 버튼 간의 각도
     const radius = 700; // 원의 반지름 (버튼 배치 반경)
 
@@ -103,7 +112,7 @@ function QuestDetailPage() {
         <QuestDetailPageContainer>
             <TopNav lefter={Center} center={Center} righter={null} />
 
-            <QuestDetailTopContent>
+            <QuestDetailTopContent className='no-drag'>
                 {quest ? (
                     <QuestCard
                         title={quest.title}
@@ -151,9 +160,9 @@ function QuestDetailPage() {
                         `,
                         }}
                     >
-                        <ButtonContainer>
+                        <ButtonContainer className='no-drag'>
                             <ShowUnit className='caption-sm-300'>
-                                {index + 1}
+                                {quest.unit === '주' ? index + 1 : quest.unit === '월' ? index%12 + 1 : undefined}
                                 {quest.unit === '주' ? '주차' : quest.unit === '월' ? '월' : undefined}
                             </ShowUnit>
                             <ProgressCircle
@@ -168,7 +177,7 @@ function QuestDetailPage() {
             </DonutWrapper>
 
             <QuestDetailBottomContent>
-                <ProfileSkin src={profileImg} />
+                <ProfileSkin className='no-drag n-pointer' src={profileImg} />
             </QuestDetailBottomContent>
 
             <FooterNav />
@@ -195,7 +204,7 @@ padding: 20px;
 gap: 20px
 `;
 
-const ViewAllButton = styled.div`
+const ViewAllButton = styled.button`
 display: flex;
 
 border-radius: 15px;
@@ -203,6 +212,8 @@ border: 1px solid var(--sub-40);
 background: var(--sub-20);
 
 padding: 13px 20px;
+
+animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const ViewAllText = styled.span`
@@ -235,6 +246,8 @@ height: 410px;
 margin-top: 135px;
 
 z-index: 20;
+
+animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const DonutWrapper = styled.div`
@@ -252,8 +265,9 @@ transform: translate(-50%, -50%);
   border-radius: 50%;
 
   z-index: 10; /* 다른 컴포넌트보다 위에 배치 */
-
   overflow: hidden; /* 내부 요소가 튀어나오지 않도록 설정 */
+
+  animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const CenterHole = styled.div`

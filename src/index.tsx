@@ -8,6 +8,7 @@ import App from "./App.tsx";
 import "./styles/index.css";
 import "./styles/text.css";
 import "./styles/color.css";
+import "./styles/utilities.css";
 
 import {
   requestPermissionAndGetToken,

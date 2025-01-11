@@ -1,8 +1,7 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
@@ -10,6 +9,15 @@ import QuestCard from '../components/button/QuestCardBtn.tsx'
 import ProgressCircle from '../components/loading/ProgressCircle.tsx';
 
 import BackIcon from "../assets/images/left_arrow.png";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const progress = {
     currentProgress: 1341,
@@ -40,7 +48,7 @@ function AllQuestPage() {
     const gridItems = Array.from(
         { length: quest.unit === '주' ? 50 : quest.unit === '월' ? 12 : 0 }
         , (_, index) => (
-            <GridItem key={index}>
+            <GridItem key={index} className='no-drag'>
                 <ShowUnit className='caption-sm-300'>
                     {index + 1}
                     {quest.unit === '주' ? '주차' : quest.unit === '월' ? '월' : undefined }
@@ -114,6 +122,8 @@ align-items: center;
 
 padding: 20px;
 overflow: hidden; /* 내용이 초과되지 않도록 숨김 */
+
+animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const GridContainer = styled.div<{ isWeekly: boolean }>`

@@ -11,6 +11,8 @@ import SmallBtn from '../components/button/SmallBtn.tsx'
 import Lock from '../assets/images/gray_lock.png'
 import ActLock from '../assets/images/lightgray_lock.png'
 
+import { changePassword } from '../api/user/MypageApi.ts';
+
 // 진동 애니메이션 정의
 const shake = keyframes`
   0%, 100% { transform: translateX(0); }
@@ -51,40 +53,47 @@ function UpdatePwdPage() {
         setIsUpdateAvailable(currentPWD !== '' && updatePWD !== '' && confirmPWD !== '');
     }, [currentPWD, updatePWD, confirmPWD]);
 
-    const handleUpdateClick = () => {
-        // 현재 비밀번호가 맞는 지 검사
+    const handleUpdateClick = async () => {
+        try {
+            // Call the API to change password
+            const response = await changePassword(currentPWD, updatePWD, confirmPWD);
 
-        // 비밀번호 유효성 검사 (8~30자의 영문, 숫자, 특수문자 포함)
-        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,30}$/;
-        const isPasswordValid = passwordRegex.test(updatePWD);
+            if (response.data === true) {
+                alert('비밀번호가 성공적으로 변경되었습니다!');
+                navigate('/mypage'); // Navigate to MyPage on success
+            }
+        } catch (error: any) {
+            console.error('Error changing password:', error.message);
 
-        // 새 비밀번호와 확인 비밀번호가 일치하는지 확인
-        const isPasswordMatch = updatePWD === confirmPWD;
+            // 비밀번호 유효성 검사 (8~30자의 영문, 숫자, 특수문자 포함)
+            const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,30}$/;
+            const isPasswordValid = passwordRegex.test(updatePWD);
 
-        // 에러 상태 업데이트
-        setCurrentPasswordError(true);
-        setUpdatePasswordError(!isPasswordValid);
-        setConfirmError(!isPasswordMatch);
+            // 새 비밀번호와 확인 비밀번호가 일치하는지 확인
+            const isPasswordMatch = updatePWD === confirmPWD;
 
-        // 각각의 입력 필드에 대해 진동 애니메이션 트리거
-        if (currentPWD === '1') {
-            setCurrentPWDShake(true);
-            setTimeout(() => setCurrentPWDShake(false), 500); // 500ms 후 해제
+            setUpdatePasswordError(!isPasswordValid);
+            setConfirmError(!isPasswordMatch);
+
+            // 각각의 입력 필드에 대해 진동 애니메이션 트리거
+            if (error.message == '현재 사용 중인 비밀번호를 입력해주세요') {
+                setCurrentPasswordError(true);
+                setCurrentPWDShake(true);
+                setTimeout(() => setCurrentPWDShake(false), 500); // 500ms 후 해제
+            }
+            if (error.message != '현재 사용 중인 비밀번호를 입력해주세요') {
+                setCurrentPasswordError(false);
+            }
+            if (!isPasswordValid) {
+                setUpdatePWDShake(true);
+                setTimeout(() => setUpdatePWDShake(false), 500); // 500ms 후 해제
+            }
+            if (!isPasswordMatch) {
+                setConfirmPWDShake(true);
+                setTimeout(() => setConfirmPWDShake(false), 500); // 500ms 후 해제
+            }
         }
-        if (!isPasswordValid) {
-            setUpdatePWDShake(true);
-            setTimeout(() => setUpdatePWDShake(false), 500); // 500ms 후 해제
-        }
-        if (!isPasswordMatch) {
-            setConfirmPWDShake(true);
-            setTimeout(() => setConfirmPWDShake(false), 500); // 500ms 후 해제
-        }
 
-        // 모든 조건이 충족되면 처리 로직 실행
-        if (isPasswordValid && isPasswordMatch) {
-            alert('비밀번호가 성공적으로 변경되었습니다!');
-            navigate('/mypage'); // 성공 시 마이페이지로 이동
-        }
     };
 
     return (

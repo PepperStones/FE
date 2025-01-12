@@ -13,6 +13,8 @@ import JoinDateImg from '../assets/images/yellow_calendar.png'
 import LevelImg from '../assets/images/yellow_diamod_star.png'
 import PasswordImg from '../assets/images/yellow_lock.png'
 
+import { fetchMyInfo, fetchStarCustomization, MypageInfoResponse, StarCustomizationResponse } from "../api/user/MypageApi.ts";
+
 // Keyframes 정의
 const slideBwdTop = keyframes`
   0% {
@@ -40,6 +42,8 @@ function Mypage() {
     const navigate = useNavigate();
     const location = useLocation();
     const isFromCustomize = location.state?.fromCustomize || false;
+    const [myInfo, setMyInfo] = useState<MypageInfoResponse["data"] | null>(null);
+    const [starData, setStarData] = useState<StarCustomizationResponse['data'] | null>(null);
 
     const handleUpdatePwdClick = () => {
         navigate('/mypage-pwd');
@@ -48,6 +52,32 @@ function Mypage() {
     const handleCustomizingClick = () => {
         navigate('/mypage-customize');
     };
+
+    // 사용자 데이터 로드
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const response = await fetchMyInfo();
+                setMyInfo(response.data); // 데이터 저장
+                console.log(response.data);
+            } catch (error) {
+                console.error("Failed to load my info:", error);
+            }
+        };
+
+        const loadStarData = async () => {
+            try {
+                const response = await fetchStarCustomization();
+                setStarData(response.data);
+                console.log(response.data);
+            } catch (error: any) {
+                console.error('Error loading star customization:', error);
+            }
+        };
+
+        loadData();
+        loadStarData();
+    }, []);
 
     return (
         <MypageContainer>
@@ -59,8 +89,8 @@ function Mypage() {
                         <ProfileImage src={ProfileImg} alt="프로필 이미지" />
                         <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
                     </ProfileImageContainer>
-                    <ProfileName className='title-md-300'>서 준</ProfileName>
-                    <ProfileEIN className='text-sm-300'>20-76026744</ProfileEIN>
+                    <ProfileName className='title-md-300'>{myInfo?.name}</ProfileName>
+                    <ProfileEIN className='text-sm-300'>{myInfo?.companyNum}</ProfileEIN>
                 </ProfileContainer>
 
                 <ProfileDetailContainer isFromCustomize={isFromCustomize}>
@@ -68,19 +98,19 @@ function Mypage() {
                         <DetailLeft>
                             <MypageIcon src={DepartmentImg} /><IconDescription className='text-md-200'>소속</IconDescription>
                         </DetailLeft>
-                        <DetailRight className='text-sm-200'>음성 2센터</DetailRight>
+                        <DetailRight className='text-sm-200'></DetailRight>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
                             <MypageIcon src={JoinDateImg} /><IconDescription className='text-md-200'>입사일</IconDescription>
                         </DetailLeft>
-                        <DetailRight className='text-sm-200'>2021.01.01</DetailRight>
+                        <DetailRight className='text-sm-200'>{myInfo?.joinDate}</DetailRight>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
                             <MypageIcon src={LevelImg} /><IconDescription className='text-md-200'>레벨</IconDescription>
                         </DetailLeft>
-                        <DetailRight className='text-sm-200'>F1-1</DetailRight>
+                        <DetailRight className='text-sm-200'>{myInfo?.level}</DetailRight>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
@@ -93,7 +123,7 @@ function Mypage() {
                 <Evaluation isFromCustomize={isFromCustomize}>
                     <DetailLeft>
                         <EvaluationTime className='caption-sm-300'>24년 상반기 인사평가</EvaluationTime>
-                        <EvaluationDescription className='text-md-200'>A등급</EvaluationDescription>
+                        <EvaluationDescription className='text-md-200'>{myInfo?.grade}등급</EvaluationDescription>
                     </DetailLeft>
                     <DetailRight className='text-sm-200'>+ 3500 do</DetailRight>
                 </Evaluation>
@@ -136,7 +166,7 @@ const ProfileImageContainer = styled.div<{ isFromCustomize: boolean }>`
 
     margin-bottom: 20px;
 
-    ${({ isFromCustomize }) => isFromCustomize && css `animation: ${slideBwdTop} 0.75s cubic-bezier(0.25, 0.45, 0.46, 0.94) both;`}
+    ${({ isFromCustomize }) => isFromCustomize && css`animation: ${slideBwdTop} 0.75s cubic-bezier(0.25, 0.45, 0.46, 0.94) both;`}
 `;
 
 const ProfileImage = styled.img`
@@ -171,7 +201,7 @@ const ProfileDetailContainer = styled.div<{ isFromCustomize: boolean }>`
 border-radius: 15px;
 background: var(--sub-20);
 
-${({ isFromCustomize }) => isFromCustomize && css `animation: ${fadeIn} 0.5s ease-in-out;`}
+${({ isFromCustomize }) => isFromCustomize && css`animation: ${fadeIn} 0.5s ease-in-out;`}
 `;
 
 const DetailLeft = styled.div`
@@ -219,7 +249,7 @@ background: var(--sub-20);
 
 padding: 12px 14px;
 
-${({ isFromCustomize }) => isFromCustomize && css `animation: ${fadeIn} 0.5s ease-in-out;`}
+${({ isFromCustomize }) => isFromCustomize && css`animation: ${fadeIn} 0.5s ease-in-out;`}
 `;
 
 const EvaluationTime = styled.div`

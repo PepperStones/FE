@@ -1,26 +1,25 @@
-import axios from "axios";
+import axios from 'axios';
 
-export interface SignInRequest {
-  userId: string;
-  password: string;
-}
+// Base URL for the API
+const BASE_URL = process.env.REACT_APP_API_BASE_URL + '/auth';
 
-export interface SignInResponse {
-    userRole: string;
-    accessToken: string;
-    refreshToken: string;
-}
+// Create Axios instance
+const authApi = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const LoginApi = async (requestBody: SignInRequest): Promise<SignInResponse> => {
-  try {
-    const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/signin`, requestBody, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error('Login failed:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.data || '로그인 요청에 실패했습니다.');
-  }
+// Export reusable functions for authentication
+export const login = async (userId: string, password: string) => {
+  const response = await authApi.post('/signin', { userId, password });
+  return response.data;
 };
+
+export const refreshToken = async (refreshToken: string) => {
+  const response = await authApi.post('/newToken', { refreshToken });
+  return response.data;
+};
+
+export default authApi;

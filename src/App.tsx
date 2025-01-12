@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { createGlobalStyle } from 'styled-components';
-import { AuthProvider } from "./context/AuthContext.tsx";
 
 import Login from "./pages/Login.tsx";
 
@@ -55,39 +54,39 @@ const App = () => {
     <>
       <GlobalStyle />
       <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Login />} />
 
-            <Route path="/home" element={<Home />} />
-            <Route path="/notification_list" element={<NotificationList />} />
-            <Route path="/challenge" element={<ChallengeQuest />} />
-            <Route path="/experience-point" element={<ExperiencePoint />} />
+        <Routes>
+          <Route path="/" element={<Login />} />
 
-            <Route path="/quest" element={<QuestPage />} />
-            <Route path="/quest/:id" element={<QuestDetailPage />} />
-            <Route path="/quest-all/:id" element={<AllQuestPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/notification_list" element={<NotificationList />} />
+          <Route path="/challenge" element={<ChallengeQuest />} />
+          <Route path="/experience-point" element={<ExperiencePoint />} />
 
-            <Route path="/board" element={<BoardPage />} />
-            <Route path="/board/:id" element={<BoardDetail />} />
+          <Route path="/quest" element={<QuestPage />} />
+          <Route path="/quest/:id" element={<QuestDetailPage />} />
+          <Route path="/quest-all/:id" element={<AllQuestPage />} />
 
-            <Route path="/mypage" element={<Mypage />} />
-            <Route path="/mypage-pwd" element={<UpdatePWDPage />} />
-            <Route path="/mypage-customize" element={<CustomizingPage />} />
+          <Route path="/board" element={<BoardPage />} />
+          <Route path="/board/:id" element={<BoardDetail />} />
 
-            <Route path="/member" element={<MemberManage />} />
-            <Route path="/member/:id" element={<MemberDetail />} />
-            <Route path="/addMember" element={<InsertMember />} />
+          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypage-pwd" element={<UpdatePWDPage />} />
+          <Route path="/mypage-customize" element={<CustomizingPage />} />
+
+          <Route path="/member" element={<MemberManage />} />
+          <Route path="/member/:id" element={<MemberDetail />} />
+          <Route path="/addMember" element={<InsertMember />} />
 
 
-            <Route path="/admin-board" element={<AdminBoardList />} />
-            <Route path="/admin-board/:id" element={<AdminBoard />} />
-            <Route path="/admin-add-board" element={<AdminAddBoard />} />
+          <Route path="/admin-board" element={<AdminBoardList />} />
+          <Route path="/admin-board/:id" element={<AdminBoard />} />
+          <Route path="/admin-add-board" element={<AdminAddBoard />} />
 
-            <Route path="/synchro" element={<Synchronization />} />
+          <Route path="/synchro" element={<Synchronization />} />
 
-            </Routes>
-          </AuthProvider>
+        </Routes>
+
       </BrowserRouter>
     </>
   );

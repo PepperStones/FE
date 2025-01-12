@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -11,7 +11,7 @@ import ActID from '../assets/images/lightgray_person.png'
 import Lock from '../assets/images/gray_lock.png'
 import ActLock from '../assets/images/lightgray_lock.png'
 
-import AuthContext from "../context/AuthContext.tsx";
+import { login } from '../api/user/AuthApi.ts';
 
 function Login() {
     const navigate = useNavigate();
@@ -21,26 +21,28 @@ function Login() {
     const [isLoginAvailable, setIsLoginAvailable] = useState<boolean>(false);
     const [isLoginFailModalOpen, setIsLoginFailModalOpen] = useState<boolean>(false);
 
-    const auth = useContext(AuthContext);
-
-    if (!auth) {
-        throw new Error("AuthProvider is missing.");
-    }
-
+    // Function to handle login
     const handleLogin = async () => {
-        try {
-            await auth.login(userID, userPWD); // 로그인 실행
+        if (!isLoginAvailable) return;
 
-            if (auth.userRole === "USER") {
-                navigate("/home");
-            } else if (auth.userRole === "ADMIN") {
-                navigate("/member");
-            } else {
-                console.error("Unknown user role:", auth.userRole);
+        try {
+            // Call the login API
+            const result = await login(userID, userPWD);
+
+            // Save tokens to localStorage
+            localStorage.setItem('accessToken', result.data.accessToken);
+            localStorage.setItem('refreshToken', result.data.refreshToken);
+
+            if (result.data.userRole === 'USER') {
+                navigate('/home');
             }
+            else if (result.data.userRole === 'ADMIN') {
+                navigate('/member');
+            }
+            
         } catch (error) {
+            console.error('Login failed:', error);
             openLoginFailModal();
-            console.error("Login failed:", error);
         }
     };
 
@@ -55,7 +57,7 @@ function Login() {
     const closeLoginFailModal = () => {
         setIsLoginFailModalOpen(false);
     };
-    
+
     useEffect(() => {
         setIsLoginAvailable(userID !== '' && userPWD !== '');
     }, [userID, userPWD]);

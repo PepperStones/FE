@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import TopNav from '../../components/nav/TopNav.tsx';
 import FooterNav from '../../components/nav/FooterNav.tsx'
 import LargeBtn from '../../components/button/LargeBtn.tsx';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 import BackIcon from '../../assets/images/left_arrow.png'
 import EinImg from '../../assets/images/admin/yellow_ein.png'
@@ -22,7 +24,7 @@ function InsertMember() {
     const navigate = useNavigate();
     const [ein, setEin] = useState('');
     const [name, setName] = useState('');
-    const [joinDate, setJoinDate] = useState('');
+    const [joinDate, setJoinDate] = useState(null);
     const [department, setDepartment] = useState('');
     const [group, setGroup] = useState('');
     const [level, setLevel] = useState('');
@@ -51,10 +53,13 @@ function InsertMember() {
         setInput(event.target.value);
     };
 
+    const handleDateChange = (date) => {
+        setJoinDate(date);
+    }
+
     const handleInsertMember = () => {
 
         if (isInsertAvailable) {
-
             navigate('/member');
         }
     };
@@ -99,19 +104,16 @@ function InsertMember() {
                         <DetailLeft>
                             <MypageIcon src={JoinDateImg} /><IconDescription className='text-md-200'>입사일</IconDescription>
                         </DetailLeft>
-                        <DetailSelect
-                            value={joinDate}
-                            onChange={(e) => handleSelectChange(e, setJoinDate)}
-                            className='text-sm-200'
-                        >
-                            <option value="default">입사일을 선택해주세요</option>
-                            <option value="1">입사일1</option>
-                            <option value="2">입사일2</option>
-                            <option value="3">입사일3</option>
-                            <option value="4">입사일4</option>
-                            <option value="5">입사일5</option>
-                            <option value="6">입사일6</option>
-                        </DetailSelect>
+                        <DatePickerWrapper>
+                            <DatePicker
+                                selected={joinDate}
+                                onChange={handleDateChange}
+                                dateFormat="YYYY-MM-DD"
+                                placeholderText="입사일을 선택해주세요"
+                                className='text-sm-200'
+                            >
+                            </DatePicker>
+                        </DatePickerWrapper>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
@@ -296,4 +298,26 @@ justify-content: center;
 align-items: center;
 
 color: var(--primary-80);
+`;
+
+const DatePickerWrapper = styled.div`
+.react-datepicker {
+    font-family: "Pretendard";
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;
+    background-color: white;
+}
+
+input {
+    background-color: var(--sub-20); /* 인풋 배경색 */
+    color: var(--gray-60); /* 텍스트 색상 */
+    border: none;
+
+    text-align: right;
+
+    &:focus {
+      border-color: white; /* 포커스 시 테두리 색상 */
+      outline: none;
+    }
+}
 `;

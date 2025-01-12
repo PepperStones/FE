@@ -1,4 +1,4 @@
-import axios from "../axiosInstance.ts";
+import axios from "axios";
 
 export interface SignInRequest {
   userId: string;

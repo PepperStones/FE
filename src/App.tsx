@@ -35,9 +35,6 @@ import AdminAddBoard from "./pages/admin/AdminAddBoard.tsx";
 
 import Synchronization from "./pages/admin/Synchronization.tsx";
 
-
-import { createGlobalStyle } from "styled-components";
-
 // 전역 스타일 정의
 const GlobalStyle = createGlobalStyle`
     * {

@@ -8,6 +8,8 @@ import FooterNav from '../../components/nav/FooterNav.tsx'
 import LargeBtn from '../../components/button/LargeBtn.tsx';
 import SmallBtn from '../../components/button/SmallBtn.tsx';
 import DefaultModal from '../../components/modal/DefaultModal.tsx';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 import BackIcon from '../../assets/images/left_arrow.png'
 import EinImg from '../../assets/images/admin/yellow_ein.png'
@@ -29,7 +31,7 @@ function MemberDetail() {
     const [ein, setEin] = useState(member.ein);
     const [name, setName] = useState(member.name);
     const [joinDate, setJoinDate] = useState(member.joinDate);
-    const [department, setDepartment] = useState(ein.department);
+    const [department, setDepartment] = useState(member.department);
     const [group, setGroup] = useState(member.group);
     const [level, setLevel] = useState(member.level);
     const [userID, setUserID] = useState(member.userID);
@@ -77,6 +79,10 @@ function MemberDetail() {
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
         setInput(event.target.value);
     };
+
+    const handleDateChange = (date) => {
+        setJoinDate(date);
+    }
 
     const openDeleteModal = () => {
         setIsDeleteModalOpen(true);
@@ -128,20 +134,17 @@ function MemberDetail() {
                         <DetailLeft>
                             <MypageIcon src={JoinDateImg} /><IconDescription className='text-md-200'>입사일</IconDescription>
                         </DetailLeft>
-                        <DetailSelect
-                            value={joinDate}
-                            onChange={(e) => handleSelectChange(e, setJoinDate)}
-                            className='text-sm-200'
-                            disabled={!isEditable}
-                        >
-                            <option value="default">입사일을 선택해주세요</option>
-                            <option value="2022-01-15">입사일1</option>
-                            <option value="2">입사일2</option>
-                            <option value="3">입사일3</option>
-                            <option value="4">입사일4</option>
-                            <option value="5">입사일5</option>
-                            <option value="6">입사일6</option>
-                        </DetailSelect>
+                        <DatePickerWrapper>
+                            <DatePicker
+                                selected={joinDate}
+                                onChange={handleDateChange}
+                                dateFormat="YYYY-MM-DD"
+                                placeholderText="입사일을 선택해주세요"
+                                className='text-sm-200'
+                                disabled={!isEditable}
+                            >
+                            </DatePicker>
+                        </DatePickerWrapper>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
@@ -194,18 +197,18 @@ function MemberDetail() {
                             disabled={!isEditable}
                         >
                             <option value="default">레벨 직군을 선택해주세요</option>
-                            <option value="1">F1-I</option>
-                            <option value="2">F1-II</option>
-                            <option value="3">F2-I</option>
-                            <option value="4">F2-II</option>
-                            <option value="5">F2-III</option>
-                            <option value="6">F3-I</option>
-                            <option value="7">F3-II</option>
-                            <option value="8">F3-III</option>
-                            <option value="9">F4-I</option>
-                            <option value="10">F4-II</option>
-                            <option value="11">F4-II</option>
-                            <option value="12">F5</option>
+                            <option value="F1-I">F1-I</option>
+                            <option value="F1-II">F1-II</option>
+                            <option value="F2-I">F2-I</option>
+                            <option value="F2-II">F2-II</option>
+                            <option value="F2-III">F2-III</option>
+                            <option value="F3-I">F3-I</option>
+                            <option value="F3-II">F3-II</option>
+                            <option value="F3-III">F3-III</option>
+                            <option value="F4-I">F4-I</option>
+                            <option value="F4-II">F4-II</option>
+                            <option value="F4-III">F4-III</option>
+                            <option value="F5">F5</option>
                         </DetailSelect>
                     </DetailContent>
                     <DetailContent>
@@ -290,7 +293,7 @@ function MemberDetail() {
                 onUnacceptFunc={closeDeleteModal}
             />
 
-            <FooterNav isAdmin={true}/>
+            <FooterNav isAdmin={true} />
         </MypageContainer>
 
     );
@@ -403,4 +406,26 @@ justify-content: center;
 align-items: center;
 
 gap: 10px;
+`;
+
+const DatePickerWrapper = styled.div`
+.react-datepicker {
+    font-family: "Pretendard";
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 10px;
+    background-color: white;
+}
+
+input {
+    background-color: var(--sub-20); /* 인풋 배경색 */
+    color: var(--gray-60); /* 텍스트 색상 */
+    border: none;
+
+    text-align: right;
+    
+    &:focus {
+      border-color: white; /* 포커스 시 테두리 색상 */
+      outline: none;
+    }
+}
 `;

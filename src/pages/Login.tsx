@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import LargeBtn from '../components/button/LargeBtn.tsx';
-import LargeInput from '../components/InputField/LargeInput.tsx';
+import LargeInput from '../components/inputField/LargeInput.tsx';
+import NoticeModal from '../components/modal/NoticeModal.tsx';
 
 import ID from '../assets/images/gray_person.png'
 import ActID from '../assets/images/lightgray_person.png'
@@ -18,6 +19,7 @@ function Login() {
     const [userID, setUserID] = useState<string>('');
     const [userPWD, setUserPWD] = useState<string>('');
     const [isLoginAvailable, setIsLoginAvailable] = useState<boolean>(false);
+    const [isLoginFailModalOpen, setIsLoginFailModalOpen] = useState<boolean>(false);
 
     const auth = useContext(AuthContext);
 
@@ -37,6 +39,7 @@ function Login() {
                 console.error("Unknown user role:", auth.userRole);
             }
         } catch (error) {
+            openLoginFailModal();
             console.error("Login failed:", error);
         }
     };
@@ -45,6 +48,14 @@ function Login() {
         setInput(event.target.value);
     };
 
+    const openLoginFailModal = () => {
+        setIsLoginFailModalOpen(true);
+    };
+
+    const closeLoginFailModal = () => {
+        setIsLoginFailModalOpen(false);
+    };
+    
     useEffect(() => {
         setIsLoginAvailable(userID !== '' && userPWD !== '');
     }, [userID, userPWD]);
@@ -79,6 +90,13 @@ function Login() {
                 content="로그인"
                 onClick={handleLogin}
                 isAvailable={isLoginAvailable}
+            />
+
+            <NoticeModal
+                showDefaultModal={isLoginFailModalOpen}
+                title='로그인 실패'
+                description='아이디와 비밀번호를 다시 입력해주세요.'
+                onAcceptFunc={closeLoginFailModal}
             />
 
         </LoginScreenContainer>

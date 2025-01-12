@@ -13,7 +13,7 @@ const MediumBtn = ({ content, onClick, isAvailable }) => {
     return (
 
         <MediumBtnContainer
-            className='text-md-300'
+            className='text-lg-300'
             onClick={onClick}
             disabled={!isAvailable}
             isAvailable={isAvailable}

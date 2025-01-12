@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import SmallBtn from '../button/SmallBtn.tsx';
 
-interface DeleteModalProps {
+interface DefaultModalProps {
     showDefaultModal: boolean;
     title: string;
     description: string;
@@ -11,7 +11,7 @@ interface DeleteModalProps {
     onUnacceptFunc: () => void;
 }
 
-const DefaultModal: React.FC<DeleteModalProps> = ({ showDefaultModal, title, description, onAcceptFunc, onUnacceptFunc }) => {
+const DefaultModal: React.FC<DefaultModalProps> = ({ showDefaultModal, title, description, onAcceptFunc, onUnacceptFunc }) => {
     if (!showDefaultModal) return null;
 
     return (

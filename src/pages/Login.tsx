@@ -1,72 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
-import LargeBtn from "../components/button/LargeBtn.tsx";
-import LargeInput from "../components/inputField/LargeInput.tsx";
+import LargeBtn from '../components/button/LargeBtn.tsx';
+import LargeInput from '../components/InputField/LargeInput.tsx';
 
-import ID from "../assets/images/gray_person.png";
-import ActID from "../assets/images/lightgray_person.png";
-import Lock from "../assets/images/gray_lock.png";
-import ActLock from "../assets/images/lightgray_lock.png";
+import ID from '../assets/images/gray_person.png'
+import ActID from '../assets/images/lightgray_person.png'
+import Lock from '../assets/images/gray_lock.png'
+import ActLock from '../assets/images/lightgray_lock.png'
+
+import AuthContext from "../context/AuthContext.tsx";
 
 function Login() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const [userID, setUserID] = useState("");
-  const [userPWD, setUserPWD] = useState("");
-  const [isLoginAvailable, setIsLoginAvailable] = useState(false);
+    const [userID, setUserID] = useState<string>('');
+    const [userPWD, setUserPWD] = useState<string>('');
+    const [isLoginAvailable, setIsLoginAvailable] = useState<boolean>(false);
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setInput: React.Dispatch<React.SetStateAction<string>>
-  ) => {
-    setInput(event.target.value);
-  };
+    const auth = useContext(AuthContext);
 
-  const handleLogin = () => {
-    // 로그인 성공 시 /home으로 네비게이트
-    if (isLoginAvailable) {
-      // 여기서 로그인 로직을 추가할 수 있습니다.
-
-      navigate("/home");
+    if (!auth) {
+        throw new Error("AuthProvider is missing.");
     }
-  };
 
-  useEffect(() => {
-    setIsLoginAvailable(userID !== "" && userPWD !== "");
-  }, [userID, userPWD]);
+    const handleLogin = async () => {
+        try {
+            await auth.login(userID, userPWD); // 로그인 실행
 
-  return (
-    <LoginScreenContainer>
-      <Header className="title-lg-300">로그인</Header>
+            if (auth.userRole === "USER") {
+                navigate("/home");
+            } else if (auth.userRole === "ADMIN") {
+                navigate("/member");
+            } else {
+                console.error("Unknown user role:", auth.userRole);
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
+    };
 
-      <InputContainer>
-        <LargeInput
-          icon={ID}
-          activeIcon={ActID}
-          placeholder="아이디를 입력해주세요."
-          value={userID}
-          onChangeFunc={(e) => handleInputChange(e, setUserID)}
-        />
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
+        setInput(event.target.value);
+    };
 
-        <LargeInput
-          icon={Lock}
-          activeIcon={ActLock}
-          placeholder="비밀번호를 입력해주세요."
-          type="password"
-          value={userPWD}
-          onChangeFunc={(e) => handleInputChange(e, setUserPWD)}
-        />
-      </InputContainer>
+    useEffect(() => {
+        setIsLoginAvailable(userID !== '' && userPWD !== '');
+    }, [userID, userPWD]);
 
-      <LargeBtn
-        content="로그인"
-        onClick={handleLogin}
-        isAvailable={isLoginAvailable}
-      />
-    </LoginScreenContainer>
-  );
+    return (
+
+        <LoginScreenContainer>
+            <Header className='title-lg-300'>
+                로그인
+            </Header>
+
+            <InputContainer>
+                <LargeInput
+                    icon={ID}
+                    activeIcon={ActID}
+                    placeholder="아이디를 입력해주세요."
+                    value={userID}
+                    onChangeFunc={(e) => handleInputChange(e, setUserID)}
+                />
+
+                <LargeInput
+                    icon={Lock}
+                    activeIcon={ActLock}
+                    placeholder="비밀번호를 입력해주세요."
+                    type="password"
+                    value={userPWD}
+                    onChangeFunc={(e) => handleInputChange(e, setUserPWD)}
+                />
+            </InputContainer>
+
+            <LargeBtn
+                content="로그인"
+                onClick={handleLogin}
+                isAvailable={isLoginAvailable}
+            />
+
+        </LoginScreenContainer>
+
+    );
 }
 
 export default Login;

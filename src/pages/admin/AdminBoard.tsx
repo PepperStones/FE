@@ -9,43 +9,48 @@ import BackIcon from "../../assets/images/left_arrow.png";
 
 import DefaultModal from "../../components/modal/DefaultModal.tsx";
 
-export const boardListMock = [
-  {
-    id: 1,
-    visibility: "전체",
-    group: null,
-    title:
-      "AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인dddddddddddd",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-    contents:
-      "AAA 프로젝트 신설 안내 AAAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인vv줄인 경우두 줄인AA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인v",
-  },
-  {
-    id: 2,
-    visibility: "음성 1센터",
-    group: "1그룹",
-    title: "ddddd",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-    contents: "dd",
-  },
-];
+import {
+  getBoardDetail,
+  BoardDetail,
+  DeleteBoard,
+  patchBoard,
+} from "../../api/admin/adminBoardApi.ts";
 
 const AdminBoard: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
-  const boardData = boardListMock.find((board) => board.id === Number(id)); // 데이터 검색
+  // const boardData = boardListMock.find((board) => board.id === Number(id)); // 데이터 검색
+
+  const [boardData, setBoardData] = useState<BoardDetail | null>(null); // 게시글 데이터
 
   const [isEditable, setIsEditable] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isModifyAvailable, setIsModifyAvailable] = useState(false);
+
   const [editVisibility, setEditVisibility] = useState(""); // 센터 수정 상태
   const [editGroup, setEditGroup] = useState(""); // 그룹 수정 상태
-  const [textareaHeight, setTextareaHeight] = useState("auto"); // textarea 높이 상태
   const [editTitle, setEditTitle] = useState(""); // 제목 수정 상태
   const [editContents, setEditContents] = useState(""); // 내용 수정 상태
 
+  const [textareaHeight, setTextareaHeight] = useState("auto"); // textarea 높이 상태
+
   const navigate = useNavigate();
+
+  // API 호출하여 게시글 데이터 가져오기
+  useEffect(() => {
+    const fetchBoardData = async () => {
+      if (!id) return;
+
+      try {
+        const boardDetail = await getBoardDetail(Number(id));
+        setBoardData(boardDetail);
+      } catch (error) {
+        console.error("Error fetching board detail:", error);
+        alert("게시글을 불러오는 데 실패했습니다.");
+        navigate("/admin-board"); // 오류 발생 시 목록 페이지로 이동
+      }
+    };
+
+    fetchBoardData();
+  }, [id, navigate]);
 
   if (!boardData) {
     return <div>게시글을 찾을 수 없습니다.</div>;
@@ -59,10 +64,10 @@ const AdminBoard: React.FC = () => {
   const handleEditClick = () => {
     setIsEditable(true); // 수정 모드 활성화
     setEditTitle(boardData.title); // 현재 제목 상태에 저장
-    setEditContents(boardData.contents); // 현재 내용 상태에 저장
-    setEditVisibility(boardData.visibility); // 현재 내용 상태에 저장
-    setEditGroup(boardData.group); // 현재 내용 상태에 저장
-    adjustTextareaHeight(boardData.contents); // textarea 높이 조정
+    setEditContents(boardData.content); // 현재 내용 상태에 저장
+    setEditVisibility(boardData.centerGroup); // 현재 내용 상태에 저장
+    setEditGroup(boardData.jobGroup); // 현재 내용 상태에 저장
+    adjustTextareaHeight(boardData.content); // textarea 높이 조정
   };
 
   const adjustTextareaHeight = (content: string) => {
@@ -78,26 +83,53 @@ const AdminBoard: React.FC = () => {
     setTextareaHeight(`${height}px`);
   };
 
-  // visibility 변경 시 그룹 값을 "그룹 없음"으로 설정
+  // centerGroup 변경 시 그룹 값을 "그룹 없음"으로 설정
   const handleVisibilityChange = (value: string) => {
-    setEditVisibility(value);
-    if (value === "전체") {
-      setEditGroup(""); // 그룹 없음
+    setEditVisibility(value === "" ? "전체" : value); // "전체"를 ""로 변환
+    if (value === "" || value === "전체") {
+      setEditGroup("전체"); // centerGroup이 없으면 group도 초기화
+      setEditVisibility("전체");
+    }
+
+    if (nullTitle()) {
+      setEditGroup("전체");
     }
   };
 
   // 삭제 처리 함수
-  const handleDeleteClick = () => {
-    navigate("/admin-board"); // 삭제 후 목록 페이지로 이동
+  const handleDeleteClick = async () => {
+    try {
+      const result = await DeleteBoard(Number(id)); // API 호출
+      if (result) {
+        navigate("/admin-board"); // 삭제 후 목록 페이지로 이동
+      }
+    } catch (error: any) {
+      alert(`삭제 실패: ${error.message}`);
+    }
   };
 
   // 수정 처리 함수
-  const handleModifyClick = () => {
-    // 수정 데이터 저장 처리 (예: 서버 요청)
-    console.log("수정된 제목:", editTitle);
-    console.log("수정된 내용:", editContents);
-    console.log("수정된 센터:", editVisibility);
-    console.log("수정된 그룹:", editGroup);
+  const handleModifyClick = async () => {
+    const requestBody = {
+      centerGroup: editVisibility,
+      jobGroup: nullTitle() ? "전체" : editGroup,
+      title: editTitle,
+      content: editContents,
+    };
+
+    try {
+      const response = await patchBoard(Number(id), requestBody);
+      setBoardData((prev) => ({
+        ...prev!,
+        centerGroup: requestBody.centerGroup,
+        jobGroup: nullTitle() ? "" : requestBody.jobGroup,
+        title: requestBody.title,
+        content: requestBody.content,
+      }));
+      console.log("API Response:", response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
 
     // 수정 모드 비활성화
     setIsEditable(false);
@@ -128,6 +160,18 @@ const AdminBoard: React.FC = () => {
     clickFunc: handleBackIconClick,
   };
 
+  const nullTitle = () => {
+    if (
+      editVisibility === null ||
+      editVisibility === "전체" ||
+      editVisibility === "사회기획팀" ||
+      editVisibility === "그로스팀" ||
+      editVisibility === "CX팀"
+    ) {
+      return true;
+    } else return false;
+  };
+
   return (
     <div>
       <TopNav lefter={Center} center={Center} righter={null} />
@@ -143,31 +187,36 @@ const AdminBoard: React.FC = () => {
                 <option value="음성 1센터">음성 1센터</option>
                 <option value="음성 2센터">음성 2센터</option>
                 <option value="용인백암센터">용인백암센터</option>
+                <option value="남양주센터">남양주센터</option>
+                <option value="파주센터">파주센터</option>
+                <option value="사회기획팀">사회기획팀</option>
+                <option value="그로스팀">그로스팀</option>
+                <option value="CX팀">CX팀</option>
               </EditSelect>
             ) : (
               <BoardVisibility
                 className="caption-sm-300"
-                visibility={boardData.visibility}
+                visibility={boardData.centerGroup}
               >
-                {boardData.visibility}
+                {boardData.centerGroup || "전체"}
               </BoardVisibility>
             )}
             {isEditable
-              ? editVisibility !== "전체" && (
+              ? editVisibility !== null && (
                   <EditSelect
                     value={editGroup}
                     onChange={(e) => setEditGroup(e.target.value)}
-                    disabled={editVisibility === "전체"}
+                    disabled={nullTitle()}
                     style={{ background: "var(--primary-90)" }} // 객체 형태로 스타일 지정
                   >
-                    <option value="">그룹 없음</option>
-                    <option value="1그룹">1그룹</option>
-                    <option value="2그룹">2그룹</option>
+                    <option value="전체">그룹 없음</option>
+                    <option value="1">1그룹</option>
+                    <option value="2">2그룹</option>
                   </EditSelect>
                 )
-              : boardData.group && (
+              : boardData.jobGroup && (
                   <BoardGroup className="caption-sm-300">
-                    {boardData.group}
+                    {boardData.jobGroup}그룹
                   </BoardGroup>
                 )}
           </Category>
@@ -183,8 +232,7 @@ const AdminBoard: React.FC = () => {
           )}
 
           <BoardDate className="caption-sm-100">
-            작성일 {boardData.creationDate} | 수정일{" "}
-            {boardData.modificationDate}
+            작성일 {boardData.createdAt} | 수정일 {boardData.updatedAt}
           </BoardDate>
         </Head>
         <DivLine></DivLine>
@@ -198,7 +246,7 @@ const AdminBoard: React.FC = () => {
           />
         ) : (
           <MainContents className="caption-md-100">
-            {boardData.contents}
+            {boardData.content}
           </MainContents>
         )}
       </BoardContainer>

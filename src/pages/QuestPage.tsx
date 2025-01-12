@@ -7,64 +7,43 @@ import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
 import QuestCard from '../components/button/QuestCardBtn.tsx'
 
-const progress = {
-    currentProgress: 1341,
-    maxProgress: 3000,
-    isVariable: false
-};
+import { fetchQuestProgress, JobQuest, LeaderQuest } from '../api/user/QuestApi.ts';
 
 const Center = {
     text: "퀘스트",
 };
 
-const quests = [
-    {
-        id: 1,
-        title: "직무별",
-        subtitle: "생산성 향상",
-        maxCondition: "업무 프로세스 개선 리드자",
-        mediumCondition: "업무 프로세스 개선 리드자",
-        progress,
-        unit: "주",
-        rate: null,
-    },
-    {
-        id: 2,
-        title: "리더부여",
-        subtitle: "월 특근",
-        maxCondition: "업무 프로세스 개선 리드자",
-        mediumCondition: "업무 프로세스 개선 리드자",
-        progress,
-        unit: "월",
-        rate: 60,
-    },
-    {
-        id: 3,
-        title: "직무별",
-        subtitle: "생산성 향상",
-        maxCondition: "업무 프로세스 개선 리드자",
-        mediumCondition: "업무 프로세스 개선 리드자",
-        progress,
-        unit: "월",
-        rate: null,
-    },
-    {
-        id: 4,
-        title: "리더부여",
-        subtitle: "월 특근",
-        maxCondition: "업무 프로세스 개선 리드자",
-        mediumCondition: "업무 프로세스 개선 리드자",
-        progress,
-        unit: "월",
-        rate: 60,
-    },
-];
-
 function QuestPage() {
-    const navigate = useNavigate(); // useNavigate 훅 사용
+    const navigate = useNavigate();
 
-    const handleQuestClick = (quest) => {
-        navigate(`/quest/${quest.id}`, { state: quest }); // quest 데이터를 state로 전달
+    const [jobQuests, setJobQuests] = useState<JobQuest[]>([]);
+    const [leaderQuests, setLeaderQuests] = useState<LeaderQuest[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    // Fetch quest data on component mount
+    useEffect(() => {
+        const loadQuests = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetchQuestProgress();
+                setJobQuests(response.data.jobQuests);
+                setLeaderQuests(response.data.leaderQuests);
+            } catch (error) {
+                console.error('Error loading quests:', error);
+
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadQuests();
+    }, []);
+
+    const handleQuestClick = (quest: JobQuest | LeaderQuest) => {
+        const type = 'questName' in quest ? 'leader' : 'job';
+        console.log("type & id : ", type, quest.id );
+        console.log("Debug: ", quest );
+        navigate(`/quest/${quest.id}`, { state: { ...quest, type } });
     };
 
     return (
@@ -73,23 +52,54 @@ function QuestPage() {
             <TopNav lefter={null} center={Center} righter={null} />
 
             <QuestCardContainer>
-                {quests.map((quest) => (
-                    <QuestCard
-                        key={quest.id}
-                        title={quest.title}
-                        subtitle={quest.subtitle}
-                        maxCondition={quest.maxCondition}
-                        mediumCondition={quest.mediumCondition}
-                        progress={quest.progress}
-                        unit={quest.unit}
-                        rate={quest.rate}
-                        isMoreDetail={true}
-                        onClick={() => handleQuestClick(quest)}
-                    />
-                ))}
+                {!isLoading && (
+                    <>
+                        {/* Render Job Quests */}
+                        {jobQuests.map((quest) => (
+                            <QuestCard
+                                key={`job-${quest.id}`}
+                                title="직무별"
+                                subtitle="생산성 향상"
+                                maxCondition={quest.maxStandard}
+                                mediumCondition={quest.mediumStandard}
+                                progress={{
+                                    currentProgress: quest.accumulatedExperience,
+                                    maxProgress: 4000,
+                                    isVariable: false,
+                                }}
+                                unit={quest.period === 'MONTHLY' ? '월' : '주'}
+                                rate={null}
+                                isMoreDetail={true}
+                                onClick={() => handleQuestClick(quest)}
+                            />
+                        ))}
+
+                        {/* Render Leader Quests */}
+                        {leaderQuests.map((quest) => (
+                            <QuestCard
+                                key={`leader-${quest.id}`}
+                                title="리더부여"
+                                subtitle={quest.questName}
+                                maxCondition={quest.maxCondition}
+                                mediumCondition={quest.medianCondition}
+                                progress={{
+                                    currentProgress: quest.accumulatedExperience,
+                                    maxProgress: 2000,
+                                    isVariable: false,
+                                }}
+                                unit={quest.period === 'MONTHLY' ? '월' : '주'}
+                                rate={quest.weight}
+                                isMoreDetail={true}
+                                onClick={() => handleQuestClick(quest)}
+                            />
+                        ))}
+                    </>
+                )}
 
                 <div style={{ height: '100px' }}></div>
             </QuestCardContainer>
+
+            {isLoading && <p>로딩 중...</p>}
 
             <FooterNav />
         </QuestPageContainer>

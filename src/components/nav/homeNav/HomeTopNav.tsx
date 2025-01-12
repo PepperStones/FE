@@ -143,7 +143,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
             src={CenterIconImg}
             alt="Center Icon"
             onClick={() => {
-              navigate("/board");
+              navigate("/challenge");
             }}
           />
         </Center>

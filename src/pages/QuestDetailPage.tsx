@@ -11,6 +11,8 @@ import ProgressCircle from '../components/loading/ProgressCircle.tsx';
 import profileImg from '../assets/images/reward/star_skin_1.png'
 import BackIcon from "../assets/images/left_arrow.png";
 
+import { fetchQuestDetail, QuestDetailResponse } from '../api/user/QuestApi.ts';
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -20,19 +22,36 @@ const fadeIn = keyframes`
   }
 `;
 
-const progress = {
-    currentProgress: 1341,
-    maxProgress: 3000,
-    Variation: 40,
-    circleRadius: 27
-};
-
 function QuestDetailPage() {
     const navigate = useNavigate();
     const location = useLocation(); // URL에서 전달된 state 데이터 가져오기
-    const quest = location.state; // 전달된 quest 데이터
+    const quest = location.state;
 
-    const buttons = Array.from({ length: quest.unit === '주' ? 50 : quest.unit === '월' ? 48 : 0 }); // 버튼 50개 또는 24개 생성
+    const [questDetails, setQuestDetails] = useState<QuestDetailResponse | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    // Fetch quest details on component mount
+    useEffect(() => {
+        const loadQuestDetails = async () => {
+            try {
+                setIsLoading(true);
+                console.log("Debugggggg: ", quest.type, quest.id);
+                const response = await fetchQuestDetail(quest.type, Number(quest.id));
+                console.log("response.data: ", response.data);
+                setQuestDetails(response);
+            } catch (error) {
+                console.error('Error fetching quest details:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadQuestDetails();
+    }, []);
+
+    const buttons = questDetails
+        ? Array.from({ length: questDetails.data.period === "WEEKLY" ? 50 : questDetails.data.period === "MONTHLY" ? 48 : 0 })
+        : []; // 버튼 50개 또는 24개 생성
     const angleIncrement = 360 / buttons.length; // 각 버튼 간의 각도
     const radius = 700; // 원의 반지름 (버튼 배치 반경)
 
@@ -103,7 +122,7 @@ function QuestDetailPage() {
         icon: BackIcon,
         iconWidth: 11,
         iconHeight: 16,
-        text: quest.title + " 퀘스트",
+        text: `${quest.type === 'job' ? '직무별' : '리더부여'} 퀘스트`,
         clickFunc: handleBackIconClick
     };
 
@@ -113,19 +132,40 @@ function QuestDetailPage() {
             <TopNav lefter={Center} center={Center} righter={null} />
 
             <QuestDetailTopContent className='no-drag'>
-                {quest ? (
+                {quest.type === 'job' ? (
                     <QuestCard
-                        title={quest.title}
-                        subtitle={quest.subtitle}
-                        maxCondition={quest.maxCondition}
-                        mediumCondition={quest.mediumCondition}
-                        progress={quest.progress}
-                        unit={quest.unit}
-                        rate={quest.rate}
-                        onClick={null}
+                        key={`job-${quest.id}`}
+                        title="직무별"
+                        subtitle="생산성 향상"
+                        maxCondition={quest.maxStandard}
+                        mediumCondition={quest.mediumStandard}
+                        progress={{
+                            currentProgress: quest.accumulatedExperience,
+                            maxProgress: 4000,
+                            isVariable: false,
+                        }}
+                        unit={quest.period === 'MONTHLY' ? '월' : '주'}
+                        rate={null}
+                        isMoreDetail={false}
+                        onClick={() => handleQuestClick(quest)}
                     />
                 ) : (
-                    null
+                    <QuestCard
+                        key={`leader-${quest.id}`}
+                        title="리더부여"
+                        subtitle={quest.questName}
+                        maxCondition={quest.maxCondition}
+                        mediumCondition={quest.medianCondition}
+                        progress={{
+                            currentProgress: quest.accumulatedExperience,
+                            maxProgress: 2000,
+                            isVariable: false,
+                        }}
+                        unit={quest.period === 'MONTHLY' ? '월' : '주'}
+                        rate={quest.weight}
+                        isMoreDetail={false}
+                        onClick={() => handleQuestClick(quest)}
+                    />
                 )}
 
                 <ViewAllButton className='text-md-300' onClick={() => handleQuestClick(quest)}>
@@ -149,31 +189,35 @@ function QuestDetailPage() {
                 }}
             >
                 <CenterHole />
-                {buttons.map((_, index) => (
-                    <CircleComponent
-                        key={index}
-                        style={{
-                            // 각 버튼을 원형으로 배치하고, 텍스트가 중심을 바라보게 설정
-                            transform: `
-                            rotate(${angleIncrement * index}deg) 
-                            translate(0, -${radius}px) 
-                        `,
-                        }}
-                    >
-                        <ButtonContainer className='no-drag'>
-                            <ShowUnit className='caption-sm-300'>
-                                {quest.unit === '주' ? index + 1 : quest.unit === '월' ? index%12 + 1 : undefined}
-                                {quest.unit === '주' ? '주차' : quest.unit === '월' ? '월' : undefined}
-                            </ShowUnit>
-                            <ProgressCircle
-                                currentProgress={progress.currentProgress}
-                                maxProgress={progress.maxProgress}
-                                Variation={progress.Variation}
-                                circleRadius={progress.circleRadius}
-                            />
-                        </ButtonContainer>
-                    </CircleComponent>
-                ))}
+                {buttons.map((_, index) => {
+                    const unit = questDetails?.data.period === 'WEEKLY' ? index + 1 : index % 12 + 1;
+                    const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
+
+                    return (
+                        <CircleComponent
+                            key={index}
+                            style={{
+                                // Arrange each button in a circular layout
+                                transform: `
+                    rotate(${angleIncrement * index}deg) 
+                    translate(0, -${radius}px)
+                `,
+                            }}
+                        >
+                            <ButtonContainer className="no-drag">
+                                <ShowUnit className="caption-sm-300">
+                                    {questDetails?.data.period === 'WEEKLY' ? `${index + 1}주차` : `${index % 12 + 1}월`}
+                                </ShowUnit>
+                                <ProgressCircle
+                                    currentProgress={0}
+                                    maxProgress={0}
+                                    Variation={questData?.experience || 0}
+                                    circleRadius={27}
+                                />
+                            </ButtonContainer>
+                        </CircleComponent>
+                    );
+                })}
             </DonutWrapper>
 
             <QuestDetailBottomContent>

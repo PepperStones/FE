@@ -6,6 +6,7 @@ export interface MypageInfoResponse {
         id: number;
         name: string;
         companyNum: string;
+        centerGroup: string;
         joinDate: string;
         level: string;
         evaluationPeriod: string;
@@ -37,8 +38,6 @@ export interface ChangePasswordResponse {
 
 export const fetchMyInfo = async (): Promise<MypageInfoResponse> => {
     try {
-        console.log("accessToken이다 새기야: ", localStorage.getItem('accessToken'));
-
         const response = await axios.get<MypageInfoResponse>(`${process.env.REACT_APP_API_BASE_URL}/mypage/info`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

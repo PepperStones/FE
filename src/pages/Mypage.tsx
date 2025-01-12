@@ -98,7 +98,7 @@ function Mypage() {
                         <DetailLeft>
                             <MypageIcon src={DepartmentImg} /><IconDescription className='text-md-200'>소속</IconDescription>
                         </DetailLeft>
-                        <DetailRight className='text-sm-200'></DetailRight>
+                        <DetailRight className='text-sm-200'>{myInfo?.centerGroup}</DetailRight>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>

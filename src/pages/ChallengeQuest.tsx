@@ -62,7 +62,7 @@ function ChallengeQuest() {
   const navigate = useNavigate();
 
   const handleBackIconClick = () => {
-    navigate("/home/1");
+    navigate("/home");
   };
 
   const NavItem = {

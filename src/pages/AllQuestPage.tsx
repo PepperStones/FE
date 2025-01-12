@@ -10,6 +10,8 @@ import ProgressCircle from '../components/loading/ProgressCircle.tsx';
 
 import BackIcon from "../assets/images/left_arrow.png";
 
+import { fetchQuestDetail, QuestDetailResponse, JobQuest, LeaderQuest } from '../api/user/QuestApi.ts';
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -19,18 +21,36 @@ const fadeIn = keyframes`
   }
 `;
 
-const progress = {
-    currentProgress: 1341,
-    maxProgress: 3000,
-    circleRadius: 20,
-    Variation: 40
-};
-
 function AllQuestPage() {
     const navigate = useNavigate();
     const location = useLocation(); // URL에서 전달된 state 데이터 가져오기
 
     const quest = location.state; // 전달된 quest 데이터
+
+    console.log("quest: ", quest);
+
+    const [questDetails, setQuestDetails] = useState<QuestDetailResponse | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    // Fetch quest details on component mount
+    useEffect(() => {
+        const loadQuestDetails = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetchQuestDetail(quest.type, Number(quest.id));
+                
+                console.log("response: ", response);
+
+                setQuestDetails(response);
+            } catch (error) {
+                console.error('Error fetching quest details:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadQuestDetails();
+    }, []);
 
     const handleBackIconClick = () => {
         navigate('/quest');
@@ -40,27 +60,41 @@ function AllQuestPage() {
         icon: BackIcon,
         iconWidth: 11,
         iconHeight: 16,
-        text: quest.title + " 퀘스트",
+        text: `${quest.type === 'job' ? '직무별' : '리더부여'} 퀘스트`,
         clickFunc: handleBackIconClick
     };
 
     // Generate 50 divs for the grid
     const gridItems = Array.from(
-        { length: quest.unit === '주' ? 50 : quest.unit === '월' ? 12 : 0 }
-        , (_, index) => (
-            <GridItem key={index} className='no-drag'>
-                <ShowUnit className='caption-sm-300'>
-                    {index + 1}
-                    {quest.unit === '주' ? '주차' : quest.unit === '월' ? '월' : undefined }
-                </ShowUnit>
-                <ProgressCircle
-                    currentProgress={progress.currentProgress}
-                    maxProgress={progress.maxProgress}
-                    Variation={progress.Variation}
-                    circleRadius={progress.circleRadius}
-                />
-            </GridItem>
-        ));
+        { length: questDetails?.data.period === 'WEEKLY' ? 50 : questDetails?.data.period === 'MONTHLY' ? 12 : 0 },
+        (_, index) => {
+            // Determine the unit based on the period (WEEKLY or MONTHLY)
+            const unit = questDetails?.data.period === 'WEEKLY' ? index + 1 : index % 12 + 1;
+
+            // Find the corresponding quest data for this unit
+            const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
+
+            // Calculate currentProgress dynamically
+            const currentProgress = questData
+                ? (questData.experience / (quest.maxScore || quest.maxPoints || 100)) * 100
+                : 0;
+
+            return (
+                <GridItem key={index} className="no-drag">
+                    <ShowUnit className="caption-sm-300">
+                        {unit}
+                        {questDetails?.data.period === 'WEEKLY' ? '주차' : '월'}
+                    </ShowUnit>
+                    <ProgressCircle
+                        currentProgress={currentProgress || null}
+                        maxProgress={quest.maxScore || quest.maxPoints}
+                        Variation={questData?.experience || null} 
+                        circleRadius={22}
+                    />
+                </GridItem>
+            );
+        }
+    );
 
     return (
 
@@ -68,24 +102,45 @@ function AllQuestPage() {
             <TopNav lefter={Center} center={Center} righter={null} />
 
             <QuestDetailTopContent>
-                {quest ? (
+                {quest.type === 'job' ? (
                     <QuestCard
-                        title={quest.title}
-                        subtitle={quest.subtitle}
-                        maxCondition={quest.maxCondition}
-                        mediumCondition={quest.mediumCondition}
-                        progress={quest.progress}
-                        unit={quest.unit}
-                        rate={quest.rate}
+                        key={`job-${quest.id}`}
+                        title="직무별"
+                        subtitle="생산성 향상"
+                        maxCondition={quest.maxStandard}
+                        mediumCondition={quest.mediumStandard}
+                        progress={{
+                            currentProgress: quest.accumulatedExperience,
+                            maxProgress: 4000,
+                            isVariable: false,
+                        }}
+                        unit={questDetails?.data.period === 'MONTHLY' ? '월' : '주'}
+                        rate={null}
+                        isMoreDetail={false}
                         onClick={null}
                     />
                 ) : (
-                    null
+                    <QuestCard
+                        key={`leader-${quest.id}`}
+                        title="리더부여"
+                        subtitle={quest.questName}
+                        maxCondition={quest.maxCondition}
+                        mediumCondition={quest.medianCondition}
+                        progress={{
+                            currentProgress: quest.accumulatedExperience,
+                            maxProgress: 2000,
+                            isVariable: false,
+                        }}
+                        unit={questDetails?.data.period === 'MONTHLY' ? '월' : '주'}
+                        rate={quest.weight}
+                        isMoreDetail={false}
+                        onClick={null}
+                    />
                 )}
             </QuestDetailTopContent>
 
             <QuestDetailBottomContent>
-                <GridContainer isWeekly={quest.unit === '주'}>
+                <GridContainer isWeekly={questDetails?.data.period === 'WEEKLY'}>
                     {gridItems}
                 </GridContainer>
             </QuestDetailBottomContent>
@@ -135,8 +190,8 @@ width: 100%; /* Adjust width as needed */
 background-color: var(--sub-20);
 border-radius: 15px;
 
-gap: 14px; /* Space between grid items */
-padding: 20px; /* Optional padding */
+gap: 10px; /* Space between grid items */
+padding: 15px; /* Optional padding */
 `;
 
 const GridItem = styled.div`

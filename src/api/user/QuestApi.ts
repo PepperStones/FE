@@ -7,6 +7,8 @@ import axios from 'axios';
 export interface JobQuest {
     id: number;
     period: string;
+    maxScore: number;
+    mediumScore: number;
     accumulatedExperience: number;
     maxStandard?: number;
     mediumStandard?: number;
@@ -17,6 +19,8 @@ export interface LeaderQuest {
     period: string;
     accumulatedExperience: number;
     questName: string;
+    maxPoints: number;
+    medianPoints: number;
     maxCondition: string;
     medianCondition: string;
     weight: number;

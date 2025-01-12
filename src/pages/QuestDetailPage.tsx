@@ -11,7 +11,7 @@ import ProgressCircle from '../components/loading/ProgressCircle.tsx';
 import profileImg from '../assets/images/reward/star_skin_1.png'
 import BackIcon from "../assets/images/left_arrow.png";
 
-import { fetchQuestDetail, QuestDetailResponse } from '../api/user/QuestApi.ts';
+import { fetchQuestDetail, QuestDetailResponse, JobQuest, LeaderQuest } from '../api/user/QuestApi.ts';
 
 const fadeIn = keyframes`
   from {
@@ -35,7 +35,6 @@ function QuestDetailPage() {
         const loadQuestDetails = async () => {
             try {
                 setIsLoading(true);
-                console.log("Debugggggg: ", quest.type, quest.id);
                 const response = await fetchQuestDetail(quest.type, Number(quest.id));
                 console.log("response.data: ", response.data);
                 setQuestDetails(response);
@@ -49,11 +48,16 @@ function QuestDetailPage() {
         loadQuestDetails();
     }, []);
 
+    // 모든 기록 열람 함수
+    const handleQuestClick = (quest: JobQuest | LeaderQuest) => {
+        const type = 'questName' in quest ? 'leader' : 'job';
+        navigate(`/quest-all/${quest.id}`, { state: { ...quest, type } }); // quest 데이터를 state로 전달
+    };
+
     const buttons = questDetails
-        ? Array.from({ length: questDetails.data.period === "WEEKLY" ? 50 : questDetails.data.period === "MONTHLY" ? 48 : 0 })
-        : []; // 버튼 50개 또는 24개 생성
+        ? Array.from({ length: questDetails.data.period === "WEEKLY" ? 50 : questDetails.data.period === "MONTHLY" ? 48 : 0 }) : [];
     const angleIncrement = 360 / buttons.length; // 각 버튼 간의 각도
-    const radius = 700; // 원의 반지름 (버튼 배치 반경)
+    const radius = 700;
 
     const scrollContainerRef = useRef(null);
     const [dragStart, setDragStart] = useState(null);
@@ -107,11 +111,6 @@ function QuestDetailPage() {
             document.removeEventListener('wheel', preventScroll);
         };
     }, [isDragging]);
-
-    // 모든 기록 열람 함수
-    const handleQuestClick = (quest) => {
-        navigate(`/quest-all/${quest.id}`, { state: quest }); // quest 데이터를 state로 전달
-    };
 
     // 뒤로가기 클릭 함수
     const handleBackIconClick = () => {
@@ -193,6 +192,8 @@ function QuestDetailPage() {
                     const unit = questDetails?.data.period === 'WEEKLY' ? index + 1 : index % 12 + 1;
                     const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
 
+                    const currentProgress = (questData?.experience / (quest.maxScore || quest.maxPoints)) * 100;
+
                     return (
                         <CircleComponent
                             key={index}
@@ -209,9 +210,9 @@ function QuestDetailPage() {
                                     {questDetails?.data.period === 'WEEKLY' ? `${index + 1}주차` : `${index % 12 + 1}월`}
                                 </ShowUnit>
                                 <ProgressCircle
-                                    currentProgress={0}
-                                    maxProgress={0}
-                                    Variation={questData?.experience || 0}
+                                    currentProgress={currentProgress || null}
+                                    maxProgress={quest.maxScore || quest.maxPoints}
+                                    Variation={questData?.experience || null}
                                     circleRadius={27}
                                 />
                             </ButtonContainer>

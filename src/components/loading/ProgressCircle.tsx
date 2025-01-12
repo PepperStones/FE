@@ -32,21 +32,21 @@ const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius 
                         cx={viewBoxSize / 2}
                         cy={viewBoxSize / 2}
                         r={circleRadius}
-                        strokeWidth="12"
+                        strokeWidth="10"
                     />
                     {/* Progress Circle */}
                     <CircleProgress
                         cx={viewBoxSize / 2}
                         cy={viewBoxSize / 2}
                         r={circleRadius}
-                        strokeWidth="12"
+                        strokeWidth="10"
                         strokeDasharray={`${circleCircumference}, ${circleCircumference}`}
                         strokeDashoffset={`${circleCircumference - (progressPercent / 100) * circleCircumference}`}
                     />
                 </CircularSvg>
                 <ProgressText>
                     {Variation !== undefined ? (
-                        <ProgressVariation className='caption-md-300'>+ {Variation}</ProgressVariation>
+                        <ProgressVariation className='caption-md-300'>{Variation !== null ? '+': undefined } {Variation}</ProgressVariation>
                     ) : (
                         <>
                             <ProgressValue>{currentProgress}</ProgressValue>

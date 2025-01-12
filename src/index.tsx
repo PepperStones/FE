@@ -8,6 +8,7 @@ import App from "./App.tsx";
 import "./styles/index.css";
 import "./styles/text.css";
 import "./styles/color.css";
+import "./styles/utilities.css";
 
 import {
   requestPermissionAndGetToken,
@@ -22,6 +23,7 @@ onForegroundMessage();
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <App />

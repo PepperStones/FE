@@ -49,6 +49,11 @@ border: none;
 border-radius: 15px;
 padding: 16px 20px;
 background-color: var(--sub-20); 
+
+user-select: none; /* 텍스트 선택 방지 */
+-webkit-user-select: none; /* Safari에서 드래그 방지 */
+-moz-user-select: none; /* Firefox에서 드래그 방지 */
+-ms-user-select: none;
 `;
 
 const InputField = styled.input`

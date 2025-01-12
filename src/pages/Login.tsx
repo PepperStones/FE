@@ -12,7 +12,6 @@ import ActLock from '../assets/images/lightgray_lock.png'
 
 import AuthContext from "../context/AuthContext.tsx";
 
-
 function Login() {
     const navigate = useNavigate();
 
@@ -90,30 +89,29 @@ function Login() {
 export default Login;
 
 const LoginScreenContainer = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-padding: 0 15px;
-overflow: hidden;
+  padding: 0 15px;
+  overflow: hidden;
 `;
 
 const Header = styled.div`
+  margin: 111px 0;
 
-margin: 111px 0;
-
-color: var(--gray-100);
+  color: var(--gray-100);
 `;
 
 const InputContainer = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-width: 100%;
+  width: 100%;
 
-gap: 15px;
+  gap: 15px;
 
-margin-bottom: 40px;
+  margin-bottom: 40px;
 `;

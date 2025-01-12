@@ -12,34 +12,38 @@ interface SmallBtnProps {
 
 const SmallBtn = ({ content, onClick, isAvailable, isDarkblue }) => {
     return (
-        <StyledButton
+        <SmallBtnContainer
             className='text-lg-300'
             onClick={onClick}
+            disabled={!isAvailable}
             isAvailable={isAvailable}
             isDarkblue={isDarkblue}
-            disabled={!isAvailable}
-        >{content}</StyledButton>
+        >{content}</SmallBtnContainer>
     )
 }
 
 export default SmallBtn
 
-const StyledButton = styled.button<{ isAvailable: boolean, isDarkblue:boolean }>`
+const SmallBtnContainer = styled.button<{ isAvailable: boolean, isDarkblue: boolean }>`
 display: flex;
 justify-content: center;
 align-items: center;
 
-width: 9.375rem; 
+width: 10.5rem; 
 height: 2.875rem; 
 
 padding: 11px 48px;
-border-radius: 10px;
-background: ${({ isAvailable, isDarkblue }) =>
-    isDarkblue ? 'var(--sub-30)' : (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
+border-radius: 15px;
+background: ${({ isAvailable, isDarkblue }) => isDarkblue ? 'var(--sub-30)' : (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
+border: none;
 
 gap: 10px;
-flex-shrink: 0;
 
-color: ${({ isDarkblue }) => isDarkblue ? 'var(--gray-80)' : 'var(--gray-0'};
+color: ${({ isDarkblue }) => isDarkblue ? 'var(--gray-80)' : 'var(--gray-0)'};
 text-align: center;
+
+user-select: none; /* 텍스트 선택 방지 */
+-webkit-user-select: none; /* Safari에서 드래그 방지 */
+-moz-user-select: none; /* Firefox에서 드래그 방지 */
+-ms-user-select: none;
 `;

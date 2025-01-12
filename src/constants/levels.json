@@ -1,0 +1,14 @@
+[
+  { "level": "F1-I", "required_experience": 0 },
+  { "level": "F1-II", "required_experience": 13500 },
+  { "level": "F2-I", "required_experience": 27000 },
+  { "level": "F2-II", "required_experience": 39000 },
+  { "level": "F2-III", "required_experience": 51000 },
+  { "level": "F3-I", "required_experience": 63000 },
+  { "level": "F3-II", "required_experience": 78000 },
+  { "level": "F3-III", "required_experience": 93000 },
+  { "level": "F4-I", "required_experience": 108000 },
+  { "level": "F4-II", "required_experience": 126000 },
+  { "level": "F4-III", "required_experience": 144000 },
+  { "level": "F5", "required_experience": 162000 }
+]

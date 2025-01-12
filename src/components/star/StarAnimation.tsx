@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 import StarImage from "../../assets/images/my_star.png";
 import tagImage from "../../assets/images/union.png";
+import spaceMan from "../../assets/images/spaceman.png";
 import levelsData from "../../assets/images/data/levels.json";
 
 const starData = [
@@ -98,6 +99,7 @@ const StarAnimation: React.FC<HomePage> = ({
   const originalContainerWidth = 363; // 디자인 기준 너비
   const originalContainerHeight = 800; // 디자인 기준 높이
 
+  const isActiveSpaceMan = true;
   // 사용자와 팀원의 레벨 정보를 별에 배치
   const enhancedStarData = starData.map((star, index) => {
     if (index === 0) {
@@ -261,6 +263,20 @@ const StarAnimation: React.FC<HomePage> = ({
         </SVG>
         {adjustedStarData.map((star) => (
           <React.Fragment key={star.id}>
+            {isActiveSpaceMan && star.id === myStarId && (
+              <SpaceMan
+                src={spaceMan}
+                alt="Space Man"
+                style={{
+                  position: "absolute",
+                  width: `${star.size - 28}px`, // 별 크기보다 약간 크게
+                  height: `${star.size - 26}px`,
+                  left: `${star.x}px`,
+                  top: `${star.y - 12}px`, // 별 위쪽에 위치
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            )}
             <Star
               src={StarImage}
               alt={`Star ${star.id}`}
@@ -381,4 +397,8 @@ const TagText = styled.span`
   top: 35%;
   color: var(--primary-10);
   pointer-events: none;
+`;
+
+const SpaceMan = styled.img`
+  z-index: 1000;
 `;

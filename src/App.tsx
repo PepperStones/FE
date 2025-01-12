@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createGlobalStyle } from 'styled-components';
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 import Login from "./pages/Login.tsx"
 
@@ -24,9 +25,11 @@ const App = () => {
     <>
       <GlobalStyle />
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -10,30 +10,45 @@ import ActID from '../assets/images/lightgray_person.png'
 import Lock from '../assets/images/gray_lock.png'
 import ActLock from '../assets/images/lightgray_lock.png'
 
-function ChatList() {
+import AuthContext from "../context/AuthContext.tsx";
+
+
+function Login() {
     const navigate = useNavigate();
 
-    const [userID, setUserID] = useState('');
-    const [userPWD, setUserPWD] = useState('');
-    const [isLoginAvailable, setIsLoginAvailable] = useState(false);
+    const [userID, setUserID] = useState<string>('');
+    const [userPWD, setUserPWD] = useState<string>('');
+    const [isLoginAvailable, setIsLoginAvailable] = useState<boolean>(false);
+
+    const auth = useContext(AuthContext);
+
+    if (!auth) {
+        throw new Error("AuthProvider is missing.");
+    }
+
+    const handleLogin = async () => {
+        try {
+            await auth.login(userID, userPWD); // 로그인 실행
+
+            if (auth.userRole === "USER") {
+                navigate("/home");
+            } else if (auth.userRole === "ADMIN") {
+                navigate("/member");
+            } else {
+                console.error("Unknown user role:", auth.userRole);
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
+    };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
         setInput(event.target.value);
     };
 
-    const handleLogin = () => {
-        // 로그인 성공 시 /home으로 네비게이트
-        if (isLoginAvailable) {
-            // 여기서 로그인 로직을 추가할 수 있습니다.
-            // 예를 들어, API 호출 후 성공 여부에 따라 네비게이트
-            navigate('/home');
-        }
-    };
-
-
     useEffect(() => {
         setIsLoginAvailable(userID !== '' && userPWD !== '');
-    }, [userID, userPWD]); // userID 또는 userPWD가 변경될 때마다 실행
+    }, [userID, userPWD]);
 
     return (
 
@@ -60,7 +75,7 @@ function ChatList() {
                     onChangeFunc={(e) => handleInputChange(e, setUserPWD)}
                 />
             </InputContainer>
-            
+
             <LargeBtn
                 content="로그인"
                 onClick={handleLogin}
@@ -72,7 +87,7 @@ function ChatList() {
     );
 }
 
-export default ChatList;
+export default Login;
 
 const LoginScreenContainer = styled.div`
 display: flex;

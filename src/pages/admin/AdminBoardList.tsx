@@ -1,7 +1,10 @@
 // AdminBoard.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+
+import { getBoardList, Board } from "../../api/admin/adminBoardApi.ts";
+
 import TopNav from "../../components/nav/TopNav.tsx";
 import SearchFilter from "../../components/filter/SearchFilter.tsx";
 import FooterNav from "../../components/nav/FooterNav.tsx";
@@ -9,86 +12,91 @@ import FooterNav from "../../components/nav/FooterNav.tsx";
 import RightIcon from "../../assets/images/right_arrow.png";
 import PlusIcon from "../../assets/images/add_icon.png";
 
-export const boardListMock = [
-  {
-    id: 1,
-    visibility: "임직원 전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 2,
-    visibility: "음성 1센터",
-    group: 1,
-    title:
-      "AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두ddddddd 줄인ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우 두 줄 인...",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 3,
-    visibility: "임직원 전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 4,
-    visibility: "임직원 전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 5,
-    visibility: "임직원 전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 6,
-    visibility: "임직원 전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 7,
-    visibility: "임직원 전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-];
-
 const AdminBoardList: React.FC = () => {
-  const navigate = useNavigate();
+  const [boards, setBoards] = useState<Board[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const pageRef = useRef<number>(0);
 
   const [search, setSearch] = useState<string>("");
-  const [department, setDepartment] = useState<string>("default");
-  const [group, setGroup] = useState<string>("default");
+  const [centerGrup, setCenterGrup] = useState<string>("default");
+  const [jobGroup, setJobGroup] = useState<string>("default");
+
+  const navigate = useNavigate();
+
+  // 새로운 데이터를 불러오는 함수
+  const loadMoreBoards = async () => {
+    if (loading || !hasMore) {
+      return; // 이미 로딩 중이면 중복 호출 방지
+    }
+
+    setLoading(true); // 로딩 상태 설정
+
+    try {
+      const newBoards = await getBoardList(pageRef.current);
+
+      // 더 이상 불러올 데이터가 없으면 중지
+      if (newBoards.length === 0) {
+        setHasMore(false);
+      } else {
+        setBoards((prevBoards) => [
+          ...prevBoards,
+          ...newBoards.filter(
+            (newBoard) => !prevBoards.some((board) => board.id === newBoard.id)
+          ),
+        ]);
+        pageRef.current += 1; // Ref로 페이지 증가
+        setPage(pageRef.current); // 페이지 증가
+      }
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    loadMoreBoards();
+  });
+
+  // Intersection Observer 설정
+  const lastElementRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(
+      async (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !loading &&
+          hasMore &&
+          pageRef.current === page
+        ) {
+          await loadMoreBoards(); // 데이터 요청
+        } else {
+          console.log(`${page}loadMoreBoards요청 안돼!!!!`);
+        }
+      },
+      { threshold: 0.1 } // 마지막 요소가 100% 보일 때 트리거
+    );
+
+    if (lastElementRef.current) {
+      observer.current.observe(lastElementRef.current);
+    }
+
+    return () => observer.current?.disconnect(); // 컴포넌트 언마운트 시 정리
+  }, [loading, hasMore, boards]);
 
   // 필터링된 게시글 목록 계산
-  const filteredBoardList = boardListMock.filter((board) => {
+  const filteredBoardList = boards.filter((board) => {
     const matchesSearch = board.title
       .toLowerCase()
       .includes(search.toLowerCase());
-    const matchesDepartment =
-      department === "default" || board.visibility === department;
+    const matchesCenterGroup =
+      centerGrup === "default" || board.centerGroup === centerGrup;
 
-    // 그룹 필터링: group이 숫자형이므로 비교 전 숫자로 변환
-    const matchesGroup =
-      group === "default" || board.group === parseInt(group, 10);
+    const matchesGroup = jobGroup === "default" || board.jobGroup === jobGroup;
 
-    return matchesSearch && matchesDepartment && matchesGroup;
+    return matchesSearch && matchesCenterGroup && matchesGroup;
   });
 
   // 뒤로가기 클릭 함수
@@ -100,7 +108,7 @@ const AdminBoardList: React.FC = () => {
     navigate(`/admin-board/${id}`); // 동적으로 URL 이동
   };
 
-  const Center = {
+  const Top = {
     icon: PlusIcon,
     iconWidth: 19,
     iconHeight: 19,
@@ -110,37 +118,43 @@ const AdminBoardList: React.FC = () => {
 
   return (
     <div>
-      <TopNav lefter={null} center={Center} righter={Center} />
+      <TopNav lefter={null} center={Top} righter={Top} />
       <SearchFilter
         search={search}
         setSearch={setSearch}
-        department={department}
-        setDepartment={setDepartment}
-        group={group}
-        setGroup={setGroup}
+        department={centerGrup}
+        setDepartment={setCenterGrup}
+        group={jobGroup}
+        setGroup={setJobGroup}
         title={"제목으로 검색 가능합니다."}
       />
       <BoardList>
         {filteredBoardList.length > 0 ? (
-          filteredBoardList.map((board) => (
-            <BoardItem key={board.id} onClick={() => handleClick(board.id)}>
+          filteredBoardList.map((board, index) => (
+            <BoardItem
+              key={board.id}
+              ref={
+                index === filteredBoardList.length - 1 ? lastElementRef : null
+              } // 마지막 요소에 ref 연결
+              onClick={() => handleClick(board.id)}
+            >
               <BoardContents>
                 <ContentsHead>
                   <BoardVisibility
                     className="caption-sm-300"
-                    visibility={board.visibility}
+                    centerGroup={board.centerGroup}
                   >
-                    {board.visibility}
+                    {board.centerGroup || "전체"}
                   </BoardVisibility>
-                  {board.group && (
+                  {board.jobGroup && (
                     <BoardGroup className="caption-sm-300">
-                      {board.group}그룹
+                      {board.jobGroup}그룹
                     </BoardGroup>
                   )}
                 </ContentsHead>
                 <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
                 <BoardDate className="caption-sm-100">
-                  작성일 {board.creationDate} | 수정일 {board.modificationDate}
+                  작성일 {board.createdAt} | 수정일 {board.updatedAt}
                 </BoardDate>
               </BoardContents>
               <BoardIcon src={RightIcon}></BoardIcon>
@@ -161,7 +175,7 @@ const BoardList = styled.div`
   margin: 0 25px;
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 100px;
+  padding-bottom: 150px; /* 여유 공간 추가 */
 `;
 
 const BoardItem = styled.div`
@@ -211,7 +225,7 @@ const ContentsHead = styled.div`
   align-items: center;
 `;
 
-const BoardVisibility = styled.div<{ visibility: string }>`
+const BoardVisibility = styled.div<{ centerGroup: string }>`
   border-radius: 15px;
   padding: 3px 10px;
 

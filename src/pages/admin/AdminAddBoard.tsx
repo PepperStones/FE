@@ -7,6 +7,8 @@ import LargeBtn from "../../components/button/LargeBtn.tsx";
 
 import BackIcon from "../../assets/images/left_arrow.png";
 
+import { addBoard } from "../../api/admin/adminBoardApi.ts";
+
 const AdminAddBoard: React.FC = () => {
   const navigate = useNavigate();
   const [centerSelect, setCenterSelect] = useState("전체"); // 센터 수정 상태
@@ -41,11 +43,29 @@ const AdminAddBoard: React.FC = () => {
     setContents(textarea.value);
   };
 
-  const handleAddClick = () => {
-    console.log("수정된 제목:", title);
-    console.log("수정된 내용:", contents);
-    console.log("수정된 센터:", centerSelect);
-    console.log("수정된 그룹:", groupSelect);
+  const handleAddClick = async () => {
+    try {
+      const requestBody = {
+        centerGroup: centerSelect, // 값이 없으면 빈 문자열로 설정
+        jobGroup: groupSelect, // 값이 없으면 빈 문자열로 설정
+        title,
+        content: contents,
+      };
+
+      const response = await addBoard(requestBody);
+
+      if (response.code === 200) {
+        alert("게시글이 성공적으로 추가되었습니다!");
+        // 폼 초기화
+        setCenterSelect("");
+        setGroupSelect("");
+        setTitle("");
+        setContents("");
+      }
+    } catch (error) {
+      console.error("Error adding board:", error);
+      alert("게시글 추가 중 오류가 발생했습니다.");
+    }
 
     navigate(`/admin-board`);
   };
@@ -94,9 +114,9 @@ const AdminAddBoard: React.FC = () => {
                 onChange={(e) => setGroupSelect(e.target.value)}
                 style={{ background: "var(--primary-90)" }} // 객체 형태로 스타일 지정
               >
-                <option value="">그룹 없음</option>
-                <option value="1그룹">1그룹</option>
-                <option value="2그룹">2그룹</option>
+                <option value="전체">그룹 없음</option>
+                <option value="1">1그룹</option>
+                <option value="2">2그룹</option>
               </EditSelect>
             )}
           </Category>

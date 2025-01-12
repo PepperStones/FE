@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import StarImg from "../assets/images/my_star.png";
 import MilkyWay from "../assets/images/milky_way.png";
+import spaceMan from "../assets/images/spaceMan.png";
 
 import BottomNav from "../components/nav/FooterNav.tsx";
 

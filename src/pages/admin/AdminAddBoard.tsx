@@ -37,6 +37,9 @@ const AdminAddBoard: React.FC = () => {
     if (value === "전체") {
       setGroupSelect(""); // 그룹 없음
     }
+    if (value === "사업기획팀" || value === "그로스팀" || value === "CX팀") {
+      setGroupSelect("1");
+    }
   };
   const handleInputResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
@@ -93,6 +96,17 @@ const AdminAddBoard: React.FC = () => {
     clickFunc: handleBackIconClick,
   };
 
+  const isActiveGroupSelect = (value) => {
+    if (
+      centerSelect === "전체" ||
+      centerSelect === "사업기획팀" ||
+      centerSelect === "그로스팀" ||
+      centerSelect === "CX팀"
+    ) {
+      return false;
+    } else return true;
+  };
+
   return (
     <div>
       <TopNav lefter={Center} center={Center} righter={null} />
@@ -108,8 +122,13 @@ const AdminAddBoard: React.FC = () => {
               <option value="음성 1센터">음성 1센터</option>
               <option value="음성 2센터">음성 2센터</option>
               <option value="용인백암센터">용인백암센터</option>
+              <option value="남양주센터">남양주센터</option>
+              <option value="파주센터">파주센터</option>
+              <option value="사업기획팀">사업기획팀</option>
+              <option value="그로스팀">그로스팀</option>
+              <option value="CX팀">CX팀</option>
             </EditSelect>
-            {centerSelect !== "전체" && (
+            {isActiveGroupSelect(centerSelect) && (
               <EditSelect
                 className="caption-sm-300"
                 value={groupSelect}

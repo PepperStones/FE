@@ -91,8 +91,8 @@ const AdminBoard: React.FC = () => {
       setEditVisibility("전체");
     }
 
-    if (nullTitle()) {
-      setEditGroup("전체");
+    if (value === "사업기획팀" || value === "그로스팀" || value === "CX팀") {
+      setEditGroup("1");
     }
   };
 
@@ -161,17 +161,20 @@ const AdminBoard: React.FC = () => {
   };
 
   const nullTitle = () => {
-    if (
-      editVisibility === null ||
-      editVisibility === "전체" ||
-      editVisibility === "사회기획팀" ||
-      editVisibility === "그로스팀" ||
-      editVisibility === "CX팀"
-    ) {
+    if (editVisibility === null || editVisibility === "전체") {
       return true;
     } else return false;
   };
 
+  const isActiveSelect = () => {
+    if (
+      editVisibility === "사회기획팀" ||
+      editVisibility === "그로스팀" ||
+      editVisibility === "CX팀"
+    ) {
+      return false;
+    }
+  };
   return (
     <div>
       <TopNav lefter={Center} center={Center} righter={null} />
@@ -211,7 +214,7 @@ const AdminBoard: React.FC = () => {
                   >
                     <option value="전체">그룹 없음</option>
                     <option value="1">1그룹</option>
-                    <option value="2">2그룹</option>
+                    {!isActiveSelect && <option value="2">2그룹</option>}
                   </EditSelect>
                 )
               : boardData.jobGroup && (

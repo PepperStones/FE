@@ -53,7 +53,7 @@ const Home: React.FC = () => {
       isPageOption === 0
         ? `${homeData.data.user.name}의 별`
         : isPageOption === 1
-        ? `${homeData.data.user.jobName}`
+        ? `그룹${homeData.data.user.jobName}`
         : "DOHANDS 은하",
     third:
       isPageOption === 0

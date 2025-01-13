@@ -262,9 +262,8 @@ const ExperiencePoint: React.FC = () => {
     requiredExperience
   );
 
-  const yearProgressPercent = calculateProgressPercent(
-    currentExperience.data.experience.totalExperienceThisYear,
-    9000
+  const yearProgressPercent = Math.floor(
+    (currentExperience.data.experience.totalExperienceThisYear / 9000) * 100
   );
 
   const totalExperiencePercent = Math.floor(totalProgressPercent);

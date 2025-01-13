@@ -5,6 +5,8 @@ import styled, { keyframes, css } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
+import LoadingModal from '../components/loading/Loading.tsx';
+import DefaultModal from '../components/modal/DefaultModal.tsx';
 
 import ProfileImg from '../assets/images/reward/star_skin_1.png'
 import EditIconImg from '../assets/images/circle_pencil.png'
@@ -42,24 +44,30 @@ function Mypage() {
     const navigate = useNavigate();
     const location = useLocation();
     const isFromCustomize = location.state?.fromCustomize || false;
+
     const [myInfo, setMyInfo] = useState<MypageInfoResponse["data"] | null>(null);
     const [starData, setStarData] = useState<StarCustomizationResponse['data'] | null>(null);
 
-    const handleUpdatePwdClick = () => {
-        navigate('/mypage-pwd');
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
+    const handleLogOut = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+
+        navigate('/');
     };
 
-    const handleCustomizingClick = () => {
-        navigate('/mypage-customize');
-    };
+    const handleUpdatePwdClick = () => navigate('/mypage-pwd');
+    const handleCustomizingClick = () => navigate('/mypage-customize');
+    const openLogOutModal = () => setIsLogOutModalOpen(true);
+    const closeLogOutModal = () => setIsLogOutModalOpen(false);
 
-    // 사용자 데이터 로드
     useEffect(() => {
         const loadData = async () => {
             try {
                 const response = await fetchMyInfo();
-                setMyInfo(response.data); // 데이터 저장
-                console.log(response.data);
+                setMyInfo(response.data); // 사용자 정보 저장
+                console.log("My Info:", response.data);
             } catch (error) {
                 console.error("Failed to load my info:", error);
             }
@@ -68,15 +76,21 @@ function Mypage() {
         const loadStarData = async () => {
             try {
                 const response = await fetchStarCustomization();
-                setStarData(response.data);
-                console.log(response.data);
-            } catch (error: any) {
-                console.error('Error loading star customization:', error);
+                setStarData(response.data); // 스타 데이터 저장
+                console.log("Star Data:", response.data);
+            } catch (error) {
+                console.error("Error loading star customization:", error);
             }
         };
 
-        loadData();
-        loadStarData();
+        // 두 비동기 작업을 병렬로 처리
+        const fetchAllData = async () => {
+            setIsLoading(true); // 로딩 시작
+            await Promise.all([loadData(), loadStarData()]); // 두 작업 완료 대기
+            setIsLoading(false); // 로딩 종료
+        };
+
+        fetchAllData();
     }, []);
 
     return (
@@ -128,7 +142,20 @@ function Mypage() {
                     <DetailRight className='text-sm-200'>+ 3500 do</DetailRight>
                 </Evaluation>
 
+                <LogOutContainer>
+                    <LogOut className='caption-md-300' onClick={openLogOutModal}>로그아웃 &gt;</LogOut>
+                </LogOutContainer>
+
             </ProfileInfoContainer>
+
+            <DefaultModal
+                showDefaultModal={isLogOutModalOpen}
+                title="로그아웃 하시겠습니까?"
+                description=""
+                onAcceptFunc={handleLogOut}
+                onUnacceptFunc={closeLogOutModal}
+            />
+            <LoadingModal isOpen={isLoading} />
 
             <FooterNav />
         </MypageContainer>
@@ -276,4 +303,18 @@ justify-content: center;
 align-items: center;
 
 color: var(--primary-80);
+`;
+
+const LogOutContainer = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+
+margin-top: 100px;
+`;
+
+const LogOut = styled.button`
+border: none;
+background: var(--black-20);
+color: var(--gray-50);
 `;

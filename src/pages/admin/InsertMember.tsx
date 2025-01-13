@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import TopNav from '../../components/nav/TopNav.tsx';
-import FooterNav from '../../components/nav/FooterNav.tsx'
 import LargeBtn from '../../components/button/LargeBtn.tsx';
+import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -19,22 +19,59 @@ import LevelImg from '../../assets/images/admin/yellow_diamond_star.png'
 import IdImg from '../../assets/images/admin/yellow_id.png'
 import PwdImg from '../../assets/images/admin/yellow_lock.png'
 
+import { addMember, AddMemberRequest } from '../../api/admin/MemberApi.ts';
 
 function InsertMember() {
     const navigate = useNavigate();
     const [ein, setEin] = useState('');
     const [name, setName] = useState('');
-    const [joinDate, setJoinDate] = useState(null);
+    const [joinDate, setJoinDate] = useState<Date | null>(null);;
     const [department, setDepartment] = useState('');
     const [group, setGroup] = useState('');
     const [level, setLevel] = useState('');
     const [userID, setUserID] = useState('');
     const [userPWD, setUserPWD] = useState('');
+
     const [isInsertAvailable, setIsInsertAvailable] = useState(false);
+    const [isWrongEinErrorModalOpen, setIsWrongEinErrorModalOpen] = useState(false);
+    const [isDuplicateUserIdErrorModalOpen, setIsDuplicateUserIdErrorModalOpen] = useState(false);
 
     // 뒤로가기 클릭 함수
-    const handleBackIconClick = () => {
-        navigate('/member');
+    const handleBackIconClick = () => navigate('/member');
+
+    // 구성원 추가 처리
+    const handleInsertMember = async () => {
+        try {
+            if (!isInsertAvailable) return;
+
+            // 요청 데이터 준비
+            const requestData: AddMemberRequest = {
+                companyNum: ein,
+                name: name,
+                joinDate: joinDate ? joinDate.toISOString().split('T')[0] : "",
+                centerGroup: department,
+                jobGroup: group,
+                level: level,
+                userId: userID,
+                initPassword: userPWD,
+            };
+
+            // 사번 검증 로직
+            if (!/^\d{10}$/.test(ein)) {
+                openWrongEinErrorModal(); // 에러 모달 표시
+                return;
+            }
+
+            // API 호출
+            const isAdded = await addMember(requestData);
+
+            if (isAdded) {
+                alert("구성원이 성공적으로 추가되었습니다.");
+                navigate('/member'); // 목록 페이지로 이동
+            }
+        } catch (error: any) {
+            openDuplicateUserIdErrorModal()
+        }
     };
 
     const Center = {
@@ -45,27 +82,17 @@ function InsertMember() {
         clickFunc: handleBackIconClick
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
-        setInput(event.target.value);
-    };
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => setInput(event.target.value);
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => setInput(event.target.value);
+    const handleDateChange = (date) => setJoinDate(date);
 
-    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
-        setInput(event.target.value);
-    };
-
-    const handleDateChange = (date) => {
-        setJoinDate(date);
-    }
-
-    const handleInsertMember = () => {
-
-        if (isInsertAvailable) {
-            navigate('/member');
-        }
-    };
+    const openWrongEinErrorModal = () => setIsWrongEinErrorModalOpen(true);
+    const closeWrongEinErrorModal = () => setIsWrongEinErrorModalOpen(false);
+    const openDuplicateUserIdErrorModal = () => setIsDuplicateUserIdErrorModalOpen(true);
+    const closeDuplicateUserIdErrorModal = () => setIsDuplicateUserIdErrorModalOpen(false);
 
     useEffect(() => {
-        setIsInsertAvailable(ein !== '' && name !== '' && joinDate !== 'default' && department !== 'default'
+        setIsInsertAvailable(ein !== '' && name !== '' && joinDate !== null && department !== 'default'
             && group !== 'default' && level !== 'default' && userID !== '' && userPWD !== '');
     }, [ein, name, joinDate, department, group, level, userID, userPWD]);
 
@@ -147,10 +174,6 @@ function InsertMember() {
                             <option value="default">직무그룹을 선택해주세요</option>
                             <option value="1">그룹 1</option>
                             <option value="2">그룹 2</option>
-                            <option value="3">그룹 3</option>
-                            <option value="4">그룹 4</option>
-                            <option value="5">그룹 5</option>
-                            <option value="6">그룹 6</option>
                         </DetailSelect>
                     </DetailContent>
                     <DetailContent>
@@ -163,18 +186,18 @@ function InsertMember() {
                             className='text-sm-200'
                         >
                             <option value="default">레벨 직군을 선택해주세요</option>
-                            <option value="1">F1-I</option>
-                            <option value="2">F1-II</option>
-                            <option value="3">F2-I</option>
-                            <option value="4">F2-II</option>
-                            <option value="5">F2-III</option>
-                            <option value="6">F3-I</option>
-                            <option value="7">F3-II</option>
-                            <option value="8">F3-III</option>
-                            <option value="9">F4-I</option>
-                            <option value="10">F4-II</option>
-                            <option value="11">F4-II</option>
-                            <option value="12">F5</option>
+                            <option value="F1-I">F1-I</option>
+                            <option value="F1-II">F1-II</option>
+                            <option value="F2-I">F2-I</option>
+                            <option value="F2-II">F2-II</option>
+                            <option value="F2-III">F2-III</option>
+                            <option value="F3-I">F3-I</option>
+                            <option value="F3-II">F3-II</option>
+                            <option value="F3-III">F3-III</option>
+                            <option value="F4-I">F4-I</option>
+                            <option value="F4-II">F4-II</option>
+                            <option value="F4-III">F4-III</option>
+                            <option value="F5">F5</option>
                         </DetailSelect>
                     </DetailContent>
                     <DetailContent>
@@ -210,7 +233,18 @@ function InsertMember() {
                 />
             </ProfileInfoContainer>
 
-            <FooterNav isAdmin={true} />
+            <DefaultErrorModal
+                showDefaultErrorModal={isWrongEinErrorModalOpen}
+                errorMessage='사번을 잘못 입력하셨습니다.'
+                onAcceptFunc={closeWrongEinErrorModal}
+            />
+
+            <DefaultErrorModal
+                showDefaultErrorModal={isDuplicateUserIdErrorModalOpen}
+                errorMessage='이미 사용 중인 아이디입니다.'
+                onAcceptFunc={closeDuplicateUserIdErrorModal}
+            />
+
         </MypageContainer>
 
     );
@@ -229,7 +263,7 @@ display: flex;
 flex-direction: column;
 
 padding: 20px;
-gap: 200px;
+gap: 130px;
 `;
 
 const ProfileDetailContainer = styled.div`

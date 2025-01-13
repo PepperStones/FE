@@ -11,7 +11,7 @@ import ActID from "../assets/images/lightgray_person.png";
 import Lock from "../assets/images/gray_lock.png";
 import ActLock from "../assets/images/lightgray_lock.png";
 
-import { login } from "../api/user/authApi.ts";
+import { login } from "../api/user/AuthApi.ts";
 import { registerFcmToken } from "../api/user/registerFcmTokenAPI.ts";
 
 import {
@@ -25,8 +25,7 @@ function Login() {
   const [userID, setUserID] = useState<string>("");
   const [userPWD, setUserPWD] = useState<string>("");
   const [isLoginAvailable, setIsLoginAvailable] = useState<boolean>(false);
-  const [isLoginFailModalOpen, setIsLoginFailModalOpen] =
-    useState<boolean>(false);
+  const [isLoginFailModalOpen, setIsLoginFailModalOpen] = useState<boolean>(false);
 
   // Function to handle login
   const handleLogin = async () => {
@@ -122,7 +121,7 @@ function Login() {
       />
 
       <NoticeModal
-        showDefaultModal={isLoginFailModalOpen}
+        showNoticeModal={isLoginFailModalOpen}
         title="로그인 실패"
         description="아이디와 비밀번호를 다시 입력해주세요."
         onAcceptFunc={closeLoginFailModal}

@@ -1,46 +1,80 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
 
 import SmallBtn from '../button/SmallBtn.tsx';
 
 interface DefaultModalProps {
-    showDefaultModal: boolean;
-    title: string;
-    description: string;
-    onAcceptFunc: () => void;
-    onUnacceptFunc: () => void;
+  showDefaultModal: boolean;
+  title: string;
+  description: string;
+  onAcceptFunc: () => void;
+  onUnacceptFunc: () => void;
 }
 
-const DefaultModal: React.FC<DefaultModalProps> = ({ showDefaultModal, title, description, onAcceptFunc, onUnacceptFunc }) => {
-    if (!showDefaultModal) return null;
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
-    return (
-        <Overlay>
-            <Content>
-                <Title className='title-sm-300'>{title}</Title>
-                <Description className='caption-md-300'>{description}</Description>
-                <ButtonContainer>
-                    <SmallBtn
-                        content="취소"
-                        onClick={onUnacceptFunc}
-                        isAvailable={true}
-                        isDarkblue={true}
-                    />
-                    <SmallBtn
-                        content="확인"
-                        onClick={onAcceptFunc}
-                        isAvailable={true}
-                        isDarkblue={false}
-                    />
-                </ButtonContainer>
-            </Content>
-        </Overlay>
-    );
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const DefaultModal: React.FC<DefaultModalProps> = ({ showDefaultModal, title, description, onAcceptFunc, onUnacceptFunc }) => {
+  const [isClosing, setIsClosing] = useState(false);
+
+  if (!showDefaultModal) return null;
+
+  const handleUnacceptClick = () => {
+    setIsClosing(true); // 페이드아웃 애니메이션 시작
+    setTimeout(() => {
+      setIsClosing(false); // 상태 초기화
+      onUnacceptFunc(); // 애니메이션 종료 후 닫기 함수 호출
+    }, 150); // 애니메이션 시간과 동일하게 설정
+  };
+
+  const handleAcceptClick = () => {
+    setIsClosing(true); // 페이드아웃 애니메이션 시작
+    setTimeout(() => {
+      setIsClosing(false); // 상태 초기화
+      onAcceptFunc(); // 애니메이션 종료 후 닫기 함수 호출
+    }, 150); // 애니메이션 시간과 동일하게 설정
+  };
+
+  return (
+    <Overlay>
+      <Content isClosing={isClosing}>
+        <Title className='title-sm-300'>{title}</Title>
+        <Description className='caption-md-300'>{description}</Description>
+        <ButtonContainer>
+          <SmallBtn
+            content="취소"
+            onClick={handleUnacceptClick}
+            isAvailable={true}
+            isDarkblue={true}
+          />
+          <SmallBtn
+            content="확인"
+            onClick={onAcceptFunc}
+            isAvailable={true}
+            isDarkblue={false}
+          />
+        </ButtonContainer>
+      </Content>
+    </Overlay>
+  );
 };
 
 export default DefaultModal;
-
-// Styled Components
 
 const Overlay = styled.div`
   position: fixed;
@@ -55,7 +89,7 @@ const Overlay = styled.div`
   z-index: 10000;
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ isClosing: boolean }>`
   width: 20.1875rem;
   background-color: var(--sub-20);
   border-radius: 10px;
@@ -63,6 +97,8 @@ const Content = styled.div`
   padding: 15px;
 
   text-align: center;
+
+  animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.2s ease-in-out;
 `;
 
 const Title = styled.h2`

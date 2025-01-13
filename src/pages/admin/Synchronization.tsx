@@ -5,8 +5,10 @@ import styled from 'styled-components';
 import TopNav from '../../components/nav/TopNav.tsx';
 import FooterNav from '../../components/nav/FooterNav.tsx'
 import DefaultModal from '../../components/modal/DefaultModal.tsx';
+import LoadingModal from '../../components/loading/Loading.tsx'
+import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
 
-import { syncData, SyncType } from '../../api/admin/SynchronizationApi.ts'; // API 함수 및 타입 임포트
+import { syncData, SyncType } from '../../api/admin/SynchronizationApi.ts';
 
 function Synchronization() {
     const Center = {
@@ -20,6 +22,11 @@ function Synchronization() {
     const [isLeaderSynchroModalOpen, setIsLeaderSynchroModalOpen] = useState(false);
     const [isProjectSynchroModalOpen, setIsProjectSynchroModalOpen] = useState(false);
     const [isEvaluationSynchroModalOpen, setIsEvaluationSynchroModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [isFailModalOpen, setIsFailModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const openAllSynchroModal = () => setIsAllSynchroModalOpen(true);
     const closeAllSynchroModal = () => setIsAllSynchroModalOpen(false);
@@ -36,15 +43,27 @@ function Synchronization() {
     const openEvaluationSynchroModal = () => setIsEvaluationSynchroModalOpen(true);
     const closeEvaluationSynchroModal = () => setIsEvaluationSynchroModalOpen(false);
 
-    // 동기화 실행 함수
+    const openSuccessModal = () => setIsSuccessModalOpen(true);
+    const closeSuccessModal = () => setIsSuccessModalOpen(false);
+
+    const openFailModal = () => setIsFailModalOpen(true);
+    const closeFailModal = () => setIsFailModalOpen(false);
+
+    // 동기화 실행
     const handleSync = async (type: SyncType, closeModal: () => void) => {
         try {
+            setIsLoading(true); // 로딩 시작
             const message = await syncData(type); // API 호출
-            console.log("success synchro: ", type);
-        } catch (error: any) { 
-            console.log(error.message); // 에러 메시지 설정
+            setErrorMessage(message);
+
+            if (message === "동기화가 성공적으로 완료되었습니다.") {
+                openSuccessModal(); // Open success modal only on success
+            }
+        } catch (error: any) {
+            openFailModal();
         } finally {
-            closeModal(); // 모달 닫기
+            setIsLoading(false);
+            closeModal();
         }
     };
 
@@ -88,7 +107,7 @@ function Synchronization() {
                 showDefaultModal={isJobGroupSynchroModalOpen}
                 title='직무별 퀘스트를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={() => handleSync("job", closeAllSynchroModal)}
+                onAcceptFunc={() => handleSync("job", closeJobGroupSynchroModal)}
                 onUnacceptFunc={closeJobGroupSynchroModal}
             />
 
@@ -96,7 +115,7 @@ function Synchronization() {
                 showDefaultModal={isLeaderSynchroModalOpen}
                 title='리더부여 퀘스트를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={() => handleSync("leader", closeAllSynchroModal)}
+                onAcceptFunc={() => handleSync("leader", closeLeaderSynchroModal)}
                 onUnacceptFunc={closeLeaderSynchroModal}
             />
 
@@ -104,7 +123,7 @@ function Synchronization() {
                 showDefaultModal={isProjectSynchroModalOpen}
                 title='전사 프로젝트를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={() => handleSync("project", closeAllSynchroModal)}
+                onAcceptFunc={() => handleSync("project", closeProjectSynchroModal)}
                 onUnacceptFunc={closeProjectSynchroModal}
             />
 
@@ -112,8 +131,22 @@ function Synchronization() {
                 showDefaultModal={isEvaluationSynchroModalOpen}
                 title='인사평가를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={() => handleSync("evaluation", closeAllSynchroModal)}
+                onAcceptFunc={() => handleSync("evaluation", closeEvaluationSynchroModal)}
                 onUnacceptFunc={closeEvaluationSynchroModal}
+            />
+
+            <LoadingModal isOpen={isLoading} />
+
+            <DefaultErrorModal
+                showDefaultErrorModal={isSuccessModalOpen}
+                errorMessage='동기화가 성공적으로 완료되었습니다!'
+                onAcceptFunc={closeSuccessModal}
+            />
+
+            <DefaultErrorModal
+                showDefaultErrorModal={isFailModalOpen}
+                errorMessage={errorMessage}
+                onAcceptFunc={closeFailModal}
             />
 
             <FooterNav isAdmin={true} />

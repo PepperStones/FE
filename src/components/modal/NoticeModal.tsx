@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import MediumBtn from '../button/MediumBtn.tsx';
 
 interface NoticeModalProps {
-  showDefaultModal: boolean;
+  showNoticeModal: boolean;
   title: string;
   description: string;
   onAcceptFunc: () => void;
 }
 
-const NoticeModal: React.FC<NoticeModalProps> = ({ showDefaultModal, title, description, onAcceptFunc }) => {
-  if (!showDefaultModal) return null;
+const NoticeModal: React.FC<NoticeModalProps> = ({ showNoticeModal, title, description, onAcceptFunc }) => {
+  if (!showNoticeModal) return null;
 
   return (
     <Overlay>

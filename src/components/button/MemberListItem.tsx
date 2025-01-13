@@ -10,9 +10,9 @@ interface MemberItemProps {
 interface data {
     id: number;     // member ID
     name: string;       // member name
-    ein: number;        // member employee number
-    group: number;      // 그룹 넘버
-    department: string;     // 부서 이름
+    companyNum: number;        // member employee number
+    jobGroup: number;      // 그룹 넘버
+    centerGroup: string;     // 부서 이름
 }
 */
 
@@ -24,17 +24,17 @@ const MemberListItem = ({ data, onClick }) => {
                 <NameContainer className='text-md-300'>
                     {data.name}
                     <TextDivider>|</TextDivider>
-                    <EIN className='caption-sm-200 '>{data.ein}</EIN>
+                    <EIN className='caption-sm-200 '>{data.companyNum}</EIN>
                 </NameContainer>
 
-                <Group className='caption-sm-300'>그룹 {data.group}</Group>
+                <Group className='caption-sm-300'>그룹 {data.jobGroup}</Group>
             </PersonInfo>
 
             <Divider />
 
             <DepartmentInfo>
                 <DepartmentText className='caption-sm-300'>소속</DepartmentText>
-                <Department className='caption-md-200'>{data.department}</Department>
+                <Department className='caption-md-200'>{data.centerGroup}</Department>
             </DepartmentInfo>
         </ResultContentItems>
     )

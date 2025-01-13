@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import TopNav from '../../components/nav/TopNav.tsx';
-import FooterNav from '../../components/nav/FooterNav.tsx'
 import LargeBtn from '../../components/button/LargeBtn.tsx';
 import SmallBtn from '../../components/button/SmallBtn.tsx';
 import DefaultModal from '../../components/modal/DefaultModal.tsx';
+import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -23,47 +23,112 @@ import DeactIdImg from '../../assets/images/admin/gray_id.png'
 import PwdImg from '../../assets/images/admin/yellow_lock.png'
 import DeactPwdImg from '../../assets/images/admin/gray_lock.png'
 
+import { fetchMemberDetail, updateMemberDetail, deleteMemberDetail, MemberDetailResponse } from '../../api/admin/MemberApi.ts';
+
 function MemberDetail() {
     const navigate = useNavigate();
-    const location = useLocation(); // URL에서 전달된 state 데이터 가져오기
-    const member = location.state; // 전달된 quest 데이터
+    const { id } = useParams<{ id: string }>();
+    const [member, setMember] = useState<MemberDetailResponse["data"] | null>(null);
 
-    const [ein, setEin] = useState(member.ein);
-    const [name, setName] = useState(member.name);
-    const [joinDate, setJoinDate] = useState(member.joinDate);
-    const [department, setDepartment] = useState(member.department);
-    const [group, setGroup] = useState(member.group);
-    const [level, setLevel] = useState(member.level);
-    const [userID, setUserID] = useState(member.userID);
-    const [initPWD, setInitPWD] = useState(member.initPWD);
-    const [userPWD, setUserPWD] = useState(member.userPWD);
+    // 구성원 정보 가져오기
+    useEffect(() => {
+        const loadMemberDetail = async () => {
+            try {
+                console.log("user_id: ", id);
+                if (!id) throw new Error("유효하지 않은 사용자 ID입니다.");
+                const response = await fetchMemberDetail(Number(id));
+                setMember(response.data);
+                console.log(response.data);
+
+                // 필드 초기값 설정
+                setEin(response.data.companyNum || "");
+                setName(response.data.name || "");
+                setJoinDate(new Date(response.data.joinDate) || null);
+                setDepartment(response.data.centerGroup || "default");
+                setGroup(response.data.jobGroup || "default");
+                setLevel(response.data.level || "default");
+                setUserID(response.data.userId || "");
+                setInitPWD(response.data.initPassword || "");
+                setUserPWD(response.data.password || "");
+            } catch (error: any) {
+                console.error("Error fetching member detail:", error);
+                console.log(error.message || "구성원 정보를 불러오는 데 실패했습니다.");
+            }
+        };
+
+        loadMemberDetail();
+    }, [id]);
+
+    const [ein, setEin] = useState<string>(""); // 사번
+    const [name, setName] = useState<string>(""); // 이름
+    const [joinDate, setJoinDate] = useState<Date | null>(null); // 입사일 (Date 타입)
+    const [department, setDepartment] = useState<string>("default"); // 소속
+    const [group, setGroup] = useState<string>("default"); // 직무 그룹
+    const [level, setLevel] = useState<string>("default"); // 레벨
+    const [userID, setUserID] = useState<string>(""); // 아이디
+    const [initPWD, setInitPWD] = useState<string>(""); // 초기 비밀번호
+    const [userPWD, setUserPWD] = useState<string>(""); // 변경 비밀번호
 
     const [isModifyAvailable, setIsModifyAvailable] = useState(false);
     const [isEditable, setIsEditable] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isWrongEinErrorModalOpen, setIsWrongEinErrorModalOpen] = useState(false);
 
     // 뒤로가기 클릭 함수
-    const handleBackIconClick = () => {
-        navigate('/member');
-    };
+    const handleBackIconClick = () => navigate('/member');
 
     // 수정 버튼 클릭 시 수정 가능 상태로 전환
-    const handleEditClick = () => {
-        setIsEditable(true);
+    const handleEditClick = () => setIsEditable(true);
+
+    // 삭제 처리
+    const handleDeleteClick = async () => {
+        try {
+            if (!id) throw new Error("유효하지 않은 사용자 ID입니다.");
+
+            const isDeleted = await deleteMemberDetail(Number(id)); // API 호출
+
+            if (isDeleted) {
+                navigate("/member"); // 목록 페이지로 이동
+            }
+
+        } catch (error: any) {
+            console.error("Error deleting member detail:", error);
+        }
     };
 
-    // 삭제 처리 함수
-    const handleDeleteClick = () => {
+    // 수정 처리
+    const handleModifyClick = async () => {
+        try {
+            if (!id) throw new Error("유효하지 않은 사용자 ID입니다.");
 
-        navigate('/member'); // 삭제 후 목록 페이지로 이동
+            // 수정 데이터 준비
+            const updatedData = {
+                companyNum: ein,
+                name: name,
+                joinDate: joinDate,
+                centerGroup: department,
+                jobGroup: group,
+                level: level,
+            };
+
+            // 사번 검증 로직
+            if (!/^\d{10}$/.test(ein)) {
+                openWrongEinErrorModal(); // 에러 모달 표시
+                return;
+            }
+
+            const isUpdated = await updateMemberDetail(Number(id), updatedData);
+
+            if (isUpdated) {
+                setIsEditable(false);
+            }
+        } catch (error: any) {
+            console.error("Error modifying member detail:", error);
+            console.log(error.message || "구성원 정보 수정 중 오류가 발생했습니다.");
+        }
     };
 
-    // 수정 처리 함수
-    const handleModifyClick = () => {
-
-        navigate('/member'); // 수정 후 목록 페이지로 이동
-    };
-
+    // Nav item
     const Center = {
         icon: BackIcon,
         iconWidth: 9,
@@ -72,25 +137,14 @@ function MemberDetail() {
         clickFunc: handleBackIconClick
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
-        setInput(event.target.value);
-    };
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => setInput(event.target.value);
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => setInput(event.target.value);
+    const handleDateChange = (date) => setJoinDate(date);
 
-    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => {
-        setInput(event.target.value);
-    };
-
-    const handleDateChange = (date) => {
-        setJoinDate(date);
-    }
-
-    const openDeleteModal = () => {
-        setIsDeleteModalOpen(true);
-    };
-
-    const closeDeleteModal = () => {
-        setIsDeleteModalOpen(false);
-    };
+    const openDeleteModal = () => setIsDeleteModalOpen(true);
+    const closeDeleteModal = () => setIsDeleteModalOpen(false);
+    const openWrongEinErrorModal = () => setIsWrongEinErrorModalOpen(true);
+    const closeWrongEinErrorModal = () => setIsWrongEinErrorModalOpen(false);
 
     useEffect(() => {
         setIsModifyAvailable(ein !== '' && name !== '' && joinDate !== 'default' && department !== 'default'
@@ -293,7 +347,13 @@ function MemberDetail() {
                 onUnacceptFunc={closeDeleteModal}
             />
 
-            <FooterNav isAdmin={true} />
+            <DefaultErrorModal
+                showDefaultErrorModal={isWrongEinErrorModalOpen}
+                errorMessage='사번을 잘못 입력하셨습니다.'
+                onAcceptFunc={closeWrongEinErrorModal}
+            />
+
+
         </MypageContainer>
 
     );
@@ -312,7 +372,7 @@ display: flex;
 flex-direction: column;
 
 padding: 20px;
-gap: 20px;
+gap: 100px;
 `;
 
 const ProfileDetailContainer = styled.div`

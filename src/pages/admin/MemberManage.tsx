@@ -9,93 +9,7 @@ import Member from "../../components/button/MemberListItem.tsx";
 
 import AddPersonIcon from "../../assets/images/admin/white_user_add.png";
 
-interface Member {
-    id: number;
-    name: string;
-    ein: number;
-    group: number;
-    department: string;
-    joinDate: string;
-    level: string;
-    userID: string;
-    initPWD: string;
-    userPWD: string;
-}
-
-const memberItem: Member[] = [
-    {
-        id: 1,
-        name: "서준",
-        ein: 4824,
-        group: 1,
-        department: "음성 1센터",
-        joinDate: "2022-01-15",
-        level: "F1-I",
-        userID: "seojoon01",
-        initPWD: "1234",
-        userPWD: "password123"
-    },
-    {
-        id: 2,
-        name: "홍승리",
-        ein: 5864,
-        group: 1,
-        department: "음성 1센터",
-        joinDate: "2022-01-15",
-        level: "F1-I",
-        userID: "hongseung02",
-        initPWD: "1234",
-        userPWD: "secure456"
-    },
-    {
-        id: 3,
-        name: "최지훈",
-        ein: 5392,
-        group: 2,
-        department: "음성 2센터",
-        joinDate: "2022-01-15",
-        level: "F1-I",
-        userID: "choijihoon03",
-        initPWD: "1234",
-        userPWD: "mypassword789"
-    },
-    {
-        id: 4,
-        name: "김정윤",
-        ein: 4046,
-        group: 4,
-        department: "남양주센터",
-        joinDate: "2022-01-15",
-        level: "F1-I",
-        userID: "kimjungyoon04",
-        initPWD: "1234",
-        userPWD: "pass1234"
-    },
-    {
-        id: 5,
-        name: "조은향",
-        ein: 9807,
-        group: 5,
-        department: "남양주센터",
-        joinDate: "2022-01-15",
-        level: "F1-I",
-        userID: "joeunhyang05",
-        initPWD: "1234",
-        userPWD: "admin5678"
-    },
-    {
-        id: 6,
-        name: "박준석",
-        ein: 9807,
-        group: 5,
-        department: "CX팀",
-        joinDate: "2022-01-15",
-        level: "F1-I",
-        userID: "parkjunseok06",
-        initPWD: "1234",
-        userPWD: "intern123"
-    }
-];
+import { fetchMemberList, MemberListResponse } from '../../api/admin/MemberApi.ts';
 
 function MemberManage() {
   const navigate = useNavigate();
@@ -104,19 +18,37 @@ function MemberManage() {
   const [department, setDepartment] = useState<string>("default");
   const [group, setGroup] = useState<string>("default");
 
-  const handleMemberClick = (member: Member) => {
-    navigate(`/member/${member.id}`, { state: member }); // quest 데이터를 state로 전달
+  const [members, setMembers] = useState<MemberListResponse["data"]>([]); // 멤버 리스트 상태
+
+  // 멤버 데이터 가져오기
+  useEffect(() => {
+    const loadMembers = async () => {
+      try {
+        const response = await fetchMemberList(); // API 호출
+        setMembers(response.data); // 멤버 리스트 설정
+        console.log("members: ", response.data);
+      } catch (error: any) {
+        console.error("Error fetching member list:", error);
+        console.log(error.message || "멤버 데이터를 불러오는 데 실패했습니다.");
+      } 
+    };
+
+    loadMembers();
+  }, []);
+
+  const handleMemberClick = (member: MemberListResponse["data"][0]) => {
+    navigate(`/member/${member.id}`); // URL에 member.id만 포함
   };
 
   // 필터링된 멤버 리스트 계산
-  const filteredMembers = memberItem.filter((member) => {
+  const filteredMembers = members.filter((member) => {
     const matchesSearch =
       member.name.toLowerCase().includes(search.toLowerCase()) ||
-      member.ein.toString().includes(search);
+      member.companyNum.toString().includes(search);
     const matchesDepartment =
-      department === "default" || member.department === department;
+      department === "default" || member.centerGroup === department;
     const matchesGroup =
-      group === "default" || member.group === parseInt(group);
+      group === "default" || member.jobGroup === group;
 
     return matchesSearch && matchesDepartment && matchesGroup;
   });
@@ -138,6 +70,7 @@ function MemberManage() {
       <TopNav lefter={null} center={NavItem} righter={NavItem} />
 
       <SearchFilter
+        title="이름, 사번으로 검색 가능합니다."
         search={search}
         setSearch={setSearch}
         department={department}
@@ -154,6 +87,7 @@ function MemberManage() {
             onClick={() => handleMemberClick(member)}
           />
         ))}
+
         <div style={{ height: "60px" }}></div>
       </ResultContainer>
 

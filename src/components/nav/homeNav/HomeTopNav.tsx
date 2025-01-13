@@ -17,13 +17,13 @@ import RightArrow from "../../../assets/images/right_arrow.png";
 
 import levelData from "../../../constants/levels.json";
 
-interface UserData {
-  username: string;
+interface User {
+  name: string;
   level: string;
   centerName: string;
   jobName: string;
   recentExperience: number;
-  totalAccumulatedExperience: number;
+  totalExperienceThisYear: number;
 }
 
 interface HomeTopNavProps {
@@ -34,7 +34,7 @@ interface HomeTopNavProps {
   };
   isPopupOpen: boolean; // 팝업 상태 전달
   togglePopup: () => void; // 팝업 토글 함수 전달
-  userData: UserData; // 사용자 데이터 전달
+  userData: User; // 사용자 데이터 전달
   isPageOption: number; // isPageOption 추가
   handleIconPage: () => void;
 }
@@ -95,7 +95,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
   };
 
   const { level, requiredExperience } = getCurrentLevel(
-    userData.totalAccumulatedExperience
+    userData.totalExperienceThisYear
   );
 
   const calculateProgressPercent = (current: number, max: number) => {
@@ -104,12 +104,12 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
   };
 
   const progressPercent = calculateProgressPercent(
-    userData.totalAccumulatedExperience,
+    userData.totalExperienceThisYear,
     requiredExperience
   );
 
   const experiencePercent = Math.floor(
-    (userData.totalAccumulatedExperience / requiredExperience) * 100
+    (userData.totalExperienceThisYear / requiredExperience) * 100
   );
 
   return (
@@ -191,7 +191,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
             <MyExp>
               <ExpHead>
                 <TotalExp className="text-lg-300">
-                  {userData.totalAccumulatedExperience}
+                  {userData.totalExperienceThisYear}
                   <MaxExp className="caption-md-300">
                     / {requiredExperience}
                   </MaxExp>

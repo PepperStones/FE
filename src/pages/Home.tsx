@@ -5,47 +5,55 @@ import styled from "styled-components";
 
 import StarImg from "../assets/images/my_star.png";
 import MilkyWay from "../assets/images/milky_way.png";
+import StarAnimation from "../components/star/StarAnimation.tsx";
 import spaceMan from "../assets/images/spaceMan.png";
 
 import BottomNav from "../components/nav/FooterNav.tsx";
-
 import HomeTopNav from "../components/nav/homeNav/HomeTopNav.tsx";
-import StarAnimation from "../components/star/StarAnimation.tsx";
 
-export const myMock = [
-  {
-    username: "서준",
-    level: "F1-I",
-    centerName: "음성 2센터",
-    jobName: "개발팀",
-    recentExperience: Number(1300),
-    totalAccumulatedExperience: Number(5000),
-  },
-];
+import { fetchHome, HomeResponse } from "../api/user/HomeApi.ts";
 
 const Home: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPageOption, setIsPageOption] = useState(0);
+  const [homeData, setHomeData] = useState<HomeResponse>();
   // 0 == 나의 별
   // 1 == 팀 별자리
   // 2 == 두핸즈 은하
 
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const response = await fetchHome();
+        setHomeData(response);
+      } catch (error) {
+        console.error("Error fetching Home:", error);
+      }
+    };
+
+    fetchHomeData();
+  }, []);
+
   const togglePopup = () => {
     setIsPopupOpen((prev) => !prev);
   };
+
+  if (!homeData) {
+    return <div>No data available</div>;
+  }
 
   const hometitle = {
     first:
       isPageOption === 0
         ? "오늘도 빛나는"
         : isPageOption === 1
-        ? `${myMock[0].centerName}의`
+        ? `${homeData.data.user.centerName}의`
         : "빛나는 열정이 모여",
     second:
       isPageOption === 0
-        ? `${myMock[0].username}의 별`
+        ? `${homeData.data.user.name}의 별`
         : isPageOption === 1
-        ? `${myMock[0].jobName}`
+        ? `${homeData.data.user.jobName}`
         : "DOHANDS 은하",
     third:
       isPageOption === 0
@@ -75,7 +83,7 @@ const Home: React.FC = () => {
         hometitle={hometitle}
         isPopupOpen={isPopupOpen}
         togglePopup={togglePopup}
-        userData={myMock[0]}
+        userData={homeData.data.user}
         isPageOption={isPageOption} // isPageOption 전달
         handleIconPage={handleIconPage}
       />
@@ -87,6 +95,7 @@ const Home: React.FC = () => {
         isPageOption={isPageOption}
         isPopupOpen={isPopupOpen}
         setIsPageOption={setIsPageOption}
+        home={homeData}
       ></StarAnimation>
       <BottomNav />
     </HomeContainer>

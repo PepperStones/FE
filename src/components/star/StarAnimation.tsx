@@ -6,6 +6,7 @@ import StarImage from "../../assets/images/my_star.png";
 import tagImage from "../../assets/images/union.png";
 import spaceMan from "../../assets/images/spaceman.png";
 import levelsData from "../../assets/images/data/levels.json";
+import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
 
 const starData = [
   { id: 1, x: 120, y: 600, size: 30 },
@@ -34,21 +35,43 @@ const lineData = [
   { x1: 170, y1: 299, x2: 350, y2: 400 },
 ];
 
-// Mock 데이터
-const mockData = {
-  user: {
-    name: "홍길동",
-    level: "F5",
-    centerName: "서울센터",
-    jobName: "개발팀",
-    recentExperience: 150,
-    totalExperienceThisYear: 12500,
-  },
-  team: {
-    count: 4,
-    levels: ["F2-II", "F3-III", "F5", "F5"],
-  },
-};
+// // Mock 데이터
+// const mockData = {
+//   user: {
+//     name: "홍길동",
+//     level: "F5",
+//     centerName: "서울센터",
+//     jobName: "개발팀",
+//     recentExperience: 150,
+//     totalExperienceThisYear: 12500,
+//   },
+//   team: {
+//     count: 4,
+//     levels: ["F2-II", "F3-III", "F5", "F5"],
+//   },
+// };
+
+export interface Home {
+  code: Number;
+  data: {
+    user: User;
+    team: Team;
+  };
+}
+
+export interface User {
+  name: string;
+  level: string;
+  centerName: string;
+  jobName: string;
+  recentExperience: number;
+  totalExperienceThisYear: number;
+}
+
+export interface Team {
+  count: number;
+  levels: string[];
+}
 
 interface HomePage {
   handleIconPage: () => void;
@@ -57,6 +80,7 @@ interface HomePage {
   isPopupOpen: boolean;
   isPageOption: number;
   setIsPageOption: (value: number) => void;
+  home: Home;
 }
 
 // 광량 계산 함수
@@ -86,6 +110,7 @@ const StarAnimation: React.FC<HomePage> = ({
   handleNextPage,
   isPopupOpen,
   setIsPageOption,
+  home,
 }) => {
   const myStarId = 1; // "내 별"의 ID
 
@@ -99,20 +124,54 @@ const StarAnimation: React.FC<HomePage> = ({
   const originalContainerWidth = 363; // 디자인 기준 너비
   const originalContainerHeight = 800; // 디자인 기준 높이
 
-  const isActiveSpaceMan = true;
+  const [isActiveSpaceMan, setIsActiveSpaceMan] = useState(false);
+  const [isActiveBubble, setIsActiveBubble] = useState(false); // 말풍선 활성화 상태
+  const timerRef = useRef<NodeJS.Timeout | null>(null); // 타이머 참조
+  const [bubblePosition, setBubblePosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null); // 말풍선 위치
+  const [loading, setLoading] = useState(false);
+
+  const handleBubbleClick = async (x: number, y: number) => {
+    if (!loading) {
+      setLoading(true); // 로딩 상태 활성화
+      setIsActiveBubble(true); // 말풍선 활성화
+      setBubblePosition({ x, y }); // 말풍선 위치 저장
+      console.log("말풍선 활성화");
+
+      // 5초 대기
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      setIsActiveBubble(false); // 말풍선 비활성화
+      console.log("말풍선 꺼짐");
+
+      setLoading(false); // 로딩 상태 비활성화
+    }
+  };
+
+  // useEffect(() => {
+  //   return () => {
+  //     // 컴포넌트가 언마운트될 때 타이머 초기화
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current);
+  //     }
+  //   };
+  // }, []);
+
   // 사용자와 팀원의 레벨 정보를 별에 배치
   const enhancedStarData = starData.map((star, index) => {
     if (index === 0) {
       // 1번 별은 항상 사용자
       return {
         ...star,
-        level: mockData.user.level,
+        level: home.data.user.level,
         isActive: true, // 활성화 상태
-        opacity: calculateOpacityByLevel(mockData.user.level),
+        opacity: calculateOpacityByLevel(home.data.user.level),
       };
     } else {
       // 나머지 별에 팀원 정보 배치
-      const teamLevel = mockData.team.levels[index - 1] || null; // 팀원 레벨 또는 null
+      const teamLevel = home.data.team.levels[index] || null; // 팀원 레벨 또는 null
       return {
         ...star,
         level: teamLevel,
@@ -187,6 +246,11 @@ const StarAnimation: React.FC<HomePage> = ({
       console.log("Setting isPageOption to 0");
       setIsPageOption(0);
     }
+
+    if (isPageOption === 0 && isPopupOpen) {
+      setIsActiveSpaceMan(!isActiveSpaceMan);
+    }
+    handleBubbleClick();
   };
 
   const getAnimationValues = (containerSize: {
@@ -232,6 +296,7 @@ const StarAnimation: React.FC<HomePage> = ({
       <StarContainer
         as={motion.div}
         style={{
+          position: "absolute",
           transformOrigin: `${myStar?.x}px ${myStar?.y}px`, // 줌 기준 설정
         }}
         animate={getAnimationValues(containerSize)}
@@ -264,18 +329,36 @@ const StarAnimation: React.FC<HomePage> = ({
         {adjustedStarData.map((star) => (
           <React.Fragment key={star.id}>
             {isActiveSpaceMan && star.id === myStarId && (
-              <SpaceMan
-                src={spaceMan}
-                alt="Space Man"
+              <SpaceManContiner
                 style={{
                   position: "absolute",
-                  width: `${star.size - 28}px`, // 별 크기보다 약간 크게
-                  height: `${star.size - 26}px`,
+                  width: "20px", // 별 크기보다 약간 크게
+                  height: `10px`,
                   left: `${star.x}px`,
-                  top: `${star.y - 12}px`, // 별 위쪽에 위치
+                  top: `${star.y - 10}px`, // 별 위쪽에 위치
                   transform: "translate(-50%, -50%)",
                 }}
-              />
+                onClick={handleBubbleClick}
+              >
+                {isActiveBubble && (
+                  <SpaceManBubble style={{}}>
+                    <img src={Bubble_Icon} alt="" />
+                    <div>
+                      <p>힘드시죠? </p>
+                      <p>항상 고생해주셔서 감사합니다!</p>
+                    </div>
+                  </SpaceManBubble>
+                )}
+
+                <SpaceMan
+                  src={spaceMan}
+                  alt="Space Man"
+                  style={{
+                    width: `${star.size - 28}px`, // 별 크기보다 약간 크게
+                    height: `${star.size - 26}px`,
+                  }}
+                />
+              </SpaceManContiner>
             )}
             <Star
               src={StarImage}
@@ -350,6 +433,7 @@ const Container = styled.div`
   height: 100vh;
   background-color: rgba(0, 0, 0, 0);
   overflow: hidden;
+  // border: 1px solid rgb(117, 64, 64);
 `;
 
 const StarContainer = styled(motion.div)`
@@ -365,6 +449,8 @@ const Star = styled.img<{ size: number }>`
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;
   transform: translate(-50%, -50%);
+
+  // border: 1px solid rgb(117, 113, 64);
 `;
 
 const SVG = styled.svg`
@@ -399,6 +485,56 @@ const TagText = styled.span`
   pointer-events: none;
 `;
 
-const SpaceMan = styled.img`
+const SpaceManContiner = styled.div`
+  width: 1px;
+  height: 1px;
+
+  // border: 1px solid rgb(117, 113, 64);
+  z-index: 1000;
+
+  gap: 0.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const SpaceMan = styled.img``;
+
+const SpaceManBubble = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  > img {
+    object-fit: cover; /* 이미지 크기 조정 */
+    width: 9px;
+  }
+  > div {
+    position: absolute;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center; /* 텍스트를 중앙 정렬 */
+
+    padding-top: 0.28px;
+
+    > p {
+      color: white; /* 텍스트 색상 */
+      font-size: 0.5px; /* 텍스트 크기 */
+      font-weight: bold; /* 텍스트 굵기 */
+      z-index: 1; /* 텍스트를 이미지 위에 표시 */
+      text-align: center; /* 텍스트를 중앙 정렬 */
+
+      color: var(--Primary-primary-10, #59543a);
+    }
+  }
+`;
+
+const SpaceManButton = styled.div`
+  width: 20px;
+  height: 20px;
+  background: rgba(217, 17, 17, 0);
+  margin: auto;
   z-index: 1000;
 `;

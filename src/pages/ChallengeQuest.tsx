@@ -8,58 +8,31 @@ import QuestRewardBtn from "../components/button/QuestRewardBtn.tsx";
 import BackIcon from "../assets/images/left_arrow.png";
 import PalmTree from "../assets/images/reward/star_deco_1.png";
 
-const progress = {
-  progressContent: "도전과제 진행률",
-  currentProgress: 1341,
-  maxProgress: 30000,
-};
-
-// QuestRewardBtn에 필요한 데이터 배열
-const questData = [
-  {
-    title: "앱 둘러보기 도전!",
-    content: "홈 탭에 접속해서 우리 팀 별자리를 확인해보세요!",
-    rewardImg: PalmTree,
-    isAvailable: true,
-    isDone: false,
-    progress,
-  },
-  {
-    title: "친구 초대 도전!",
-    content: "팀원 한 명을 초대해보세요!",
-    rewardImg: PalmTree,
-    isAvailable: false,
-    isDone: false,
-    progress,
-  },
-  {
-    title: "첫 메시지 보내기!",
-    content: "팀 채팅방에서 첫 메시지를 전송해보세요!",
-    rewardImg: PalmTree,
-    isAvailable: true,
-    isDone: true,
-    progress,
-  },
-  {
-    title: "별 꾸미기 시작!",
-    content: "별 꾸미기 탭에서 첫 아이템을 추가해보세요!",
-    rewardImg: PalmTree,
-    isAvailable: true,
-    isDone: false,
-    progress,
-  },
-  {
-    title: "도전 과제 완료하기!",
-    content: "모든 도전을 완료하고 보상을 받아보세요!",
-    rewardImg: PalmTree,
-    isAvailable: false,
-    isDone: false,
-    progress,
-  },
-];
+import { fetchChallenges, Challenge } from "../api/user/ChallengeApi.ts";
 
 function ChallengeQuest() {
   const navigate = useNavigate();
+
+  const [challenges, setChallenges] = useState<Challenge[]>([]); // 도전 과제 데이터 상태
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+
+  // 도전 과제 데이터를 가져오는 함수
+  useEffect(() => {
+    const loadChallenges = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetchChallenges(); 
+        setChallenges(data); // 상태에 데이터 저장
+        console.log("challenges: ", challenges);
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadChallenges();
+  }, []);
 
   const handleBackIconClick = () => {
     navigate("/home");
@@ -83,18 +56,33 @@ function ChallengeQuest() {
           을 획득해보세요!
         </QuestTitle>
 
-        {questData.map((quest, index) => (
-          <QuestRewardBtn
-            key={index} // 고유한 key 값
-            title={quest.title}
-            content={quest.content}
-            rewardImg={quest.rewardImg}
-            isAvailable={quest.isAvailable}
-            isDone={quest.isDone}
-            progress={quest.progress}
-            onClick={null} // 클릭 이벤트 추가 가능
-          />
-        ))}
+        {isLoading ? (
+          <p>로딩 중...</p>
+        ) : (
+          challenges.map((challenge) => (
+            <QuestRewardBtn
+              key={challenge.challengesId} // 고유한 key 값
+              title={challenge.name}
+              content={challenge.description}
+              rewardImg={PalmTree} // 보상 이미지 (임시)
+              isAvailable={challenge.challengeProgress.completed} // 완료되지 않은 경우 활성화
+              isDone={challenge.challengeProgress.receive} // 완료 여부
+              progress={{
+                progressContent: `${challenge.challengeProgress.currentCount}/${challenge.requiredCount}`,
+                currentProgress: challenge.challengeProgress.currentCount,
+                maxProgress: challenge.requiredCount,
+              }}
+              onClick={() =>
+                alert(
+                  challenge.challengeProgress.completed
+                    ? "이미 완료된 도전 과제입니다."
+                    : "도전 과제를 진행하세요!"
+                )
+              }
+            />
+          ))
+        )}
+
       </QuestContainer>
     </ChallengeQuestContainer>
   );

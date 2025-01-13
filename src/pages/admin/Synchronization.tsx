@@ -6,6 +6,8 @@ import TopNav from '../../components/nav/TopNav.tsx';
 import FooterNav from '../../components/nav/FooterNav.tsx'
 import DefaultModal from '../../components/modal/DefaultModal.tsx';
 
+import { syncData, SyncType } from '../../api/admin/SynchronizationApi.ts'; // API 함수 및 타입 임포트
+
 function Synchronization() {
     const Center = {
         text: "동기화",
@@ -19,68 +21,31 @@ function Synchronization() {
     const [isProjectSynchroModalOpen, setIsProjectSynchroModalOpen] = useState(false);
     const [isEvaluationSynchroModalOpen, setIsEvaluationSynchroModalOpen] = useState(false);
 
-    const openAllSynchroModal = () => {
-        setIsAllSynchroModalOpen(true);
-    };
+    const openAllSynchroModal = () => setIsAllSynchroModalOpen(true);
+    const closeAllSynchroModal = () => setIsAllSynchroModalOpen(false);
 
-    const closeAllSynchroModal = () => {
-        setIsAllSynchroModalOpen(false);
-    };
-    
-    const openJobGroupSynchroModal = () => {
-        setIsJobGroupSynchroModalOpen(true);
-    };
+    const openJobGroupSynchroModal = () => setIsJobGroupSynchroModalOpen(true);
+    const closeJobGroupSynchroModal = () => setIsJobGroupSynchroModalOpen(false);
 
-    const closeJobGroupSynchroModal = () => {
-        setIsJobGroupSynchroModalOpen(false);
-    };
+    const openLeaderSynchroModal = () => setIsLeaderSynchroModalOpen(true);
+    const closeLeaderSynchroModal = () => setIsLeaderSynchroModalOpen(false);
 
-    const openLeaderSynchroModal = () => {
-        setIsLeaderSynchroModalOpen(true);
-    };
+    const openProjectSynchroModal = () => setIsProjectSynchroModalOpen(true);
+    const closeProjectSynchroModal = () => setIsProjectSynchroModalOpen(false);
 
-    const closeLeaderSynchroModal= () => {
-        setIsLeaderSynchroModalOpen(false);
-    };
+    const openEvaluationSynchroModal = () => setIsEvaluationSynchroModalOpen(true);
+    const closeEvaluationSynchroModal = () => setIsEvaluationSynchroModalOpen(false);
 
-    const openProjectSynchroModal = () => {
-        setIsProjectSynchroModalOpen(true);
-    };
-
-    const closeProjectSynchroModal = () => {
-        setIsProjectSynchroModalOpen(false);
-    };
-
-    const openEvaluationSynchroModal = () => {
-        setIsEvaluationSynchroModalOpen(true);
-    };
-
-    const closeEvaluationSynchroModal = () => {
-        setIsEvaluationSynchroModalOpen(false);
-    };
-
-    const AllSynchro = () => {
-        
-        closeAllSynchroModal();
-    };
-
-    const JobGroupSynchro = () => {
-        
-        closeJobGroupSynchroModal();
-    };
-
-    const LeaderSynchro = () => {
-        
-        closeLeaderSynchroModal();
-    };
-
-    const ProjectSynchro = () => {
-        
-        closeProjectSynchroModal();
-    };
-
-    const EvaluationSynchro = () => {
-        closeEvaluationSynchroModal();
+    // 동기화 실행 함수
+    const handleSync = async (type: SyncType, closeModal: () => void) => {
+        try {
+            const message = await syncData(type); // API 호출
+            console.log("success synchro: ", type);
+        } catch (error: any) { 
+            console.log(error.message); // 에러 메시지 설정
+        } finally {
+            closeModal(); // 모달 닫기
+        }
     };
 
     return (
@@ -115,15 +80,15 @@ function Synchronization() {
                 showDefaultModal={isAllSynchroModalOpen}
                 title='전체 동기화를 진행하시겠습니까?'
                 description={description}
-                onAcceptFunc={AllSynchro}
+                onAcceptFunc={() => handleSync("all", closeAllSynchroModal)}
                 onUnacceptFunc={closeAllSynchroModal}
             />
-            
+
             <DefaultModal
                 showDefaultModal={isJobGroupSynchroModalOpen}
                 title='직무별 퀘스트를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={JobGroupSynchro}
+                onAcceptFunc={() => handleSync("job", closeAllSynchroModal)}
                 onUnacceptFunc={closeJobGroupSynchroModal}
             />
 
@@ -131,7 +96,7 @@ function Synchronization() {
                 showDefaultModal={isLeaderSynchroModalOpen}
                 title='리더부여 퀘스트를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={LeaderSynchro}
+                onAcceptFunc={() => handleSync("leader", closeAllSynchroModal)}
                 onUnacceptFunc={closeLeaderSynchroModal}
             />
 
@@ -139,7 +104,7 @@ function Synchronization() {
                 showDefaultModal={isProjectSynchroModalOpen}
                 title='전사 프로젝트를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={ProjectSynchro}
+                onAcceptFunc={() => handleSync("project", closeAllSynchroModal)}
                 onUnacceptFunc={closeProjectSynchroModal}
             />
 
@@ -147,7 +112,7 @@ function Synchronization() {
                 showDefaultModal={isEvaluationSynchroModalOpen}
                 title='인사평가를 동기화 하시겠습니까?'
                 description={description}
-                onAcceptFunc={EvaluationSynchro}
+                onAcceptFunc={() => handleSync("evaluation", closeAllSynchroModal)}
                 onUnacceptFunc={closeEvaluationSynchroModal}
             />
 

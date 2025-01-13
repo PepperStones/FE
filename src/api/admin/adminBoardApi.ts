@@ -1,5 +1,5 @@
 // src/api/adminBoardApi.ts
-import axios from "../axiosInstance.ts";
+import axios from "axios";
 
 //게시글 목록 인터페이스
 export interface Board {

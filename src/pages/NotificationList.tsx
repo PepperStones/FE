@@ -1,5 +1,5 @@
 // NotificationList.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
@@ -12,86 +12,80 @@ import grayChartIcon from "../assets/images/gray_hugeicons_chart-evaluation.png"
 
 import TopNav from "../components/nav/TopNav.tsx";
 import AlertItem from "../components/button/AlertItem.tsx";
+import {
+  fetchNotifications,
+  Notification,
+  markNotificationAsRead,
+} from "../api/user/notificationApi.ts";
 
-export const notificationsMock = [
-  {
-    id: 1,
-    title: "신규 경험치(do) 획득!",
-    icon: starIcon,
-    message:
-      "500 do를 획득하셨습니다. 더 자세한 내용은 홈 탭 > 최근 획득 경험치에서 확인해보세요.",
-    date: "2025.01.06",
-    isRead: false,
-  },
-  {
-    id: 2,
-    title: "신규 게시글 등록!",
-    icon: pinIcon,
-    message:
-      "신규 게시글이 등록되었습니다. 게시판 탭에서 등록된 내용을 확인해보세요.",
-    date: "2025.01.06.",
-    isRead: false,
-  },
-  {
-    id: 3,
-    title: "상반기 인사평가 완료!",
-    icon: chartIcon,
-    message:
-      "상반기 인사평가가 등록되었습니다. 홈 탭 > 최근 획득 경험치에서 부여 경험치를 확인해보세요.",
-    date: "2025.01.06.",
-    isRead: false,
-  },
-  {
-    id: 4,
-    title: "신규 경험치(do) 획득!",
-    icon: grayStarIcon,
-    message:
-      "500 do를 획득하셨습니다. 더 자세한 내용은 홈 탭 > 최근 획득 경험치에서 확인해보세요.",
-    date: "2025.01.06",
-    isRead: true,
-  },
-  {
-    id: 5,
-    title: "신규 게시글 등록!",
-    icon: pinIcon,
-    message:
-      "신규 게시글이 등록되었습니다. 게시판 탭에서 등록된 내용을 확인해보세요.",
-    date: "2025.01.06.",
-    isRead: true,
-  },
-  {
-    id: 6,
-    title: "상반기 인사평가 완료!",
-    icon: grayChartIcon,
-    message:
-      "상반기 인사평가가 등록되었습니다. 홈 탭 > 최근 획득 경험치에서 부여 경험치를 확인해보세요.",
-    date: "2025.01.06.",
-    isRead: true,
-  },
-];
+interface ExtendedNotification extends Notification {
+  icon: string;
+}
 
 const NotificationList: React.FC = () => {
-  const [notifications, setNotifications] = useState(notificationsMock);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  // 알림 클릭 시 확인 상태로 변경 및 페이지 이동
-  const handleNotificationClick = (id: number, title: string) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
+  const getIconByTitle = (title: string, open: boolean): string => {
+    if (open) return grayStarIcon; // 읽은 알림은 기본적으로 회색 아이콘
 
-    // title에 따라 다른 페이지로 이동
-    switch (title) {
-      case "신규 경험치(do) 획득!":
+    if (title.startsWith("신규 경험치")) {
+      return starIcon;
+    } else if (title.startsWith("신규 게시글")) {
+      return pinIcon;
+    } else if (title.startsWith("상반기 인사평가")) {
+      return chartIcon;
+    } else {
+      return starIcon; // 기본 아이콘
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchNotifications();
+
+        const updatedNotifications = data.map((data) => ({
+          ...data,
+          icon: getIconByTitle(data.title, data.open),
+        }));
+
+        setNotifications(updatedNotifications);
+      } catch (err: any) {
+        setError(err.message || "알림 데이터를 불러오는 데 실패했습니다.");
+      }
+    };
+
+    fetchData();
+  }, [notifications]);
+
+  // 알림 클릭 시 확인 상태로 변경 및 페이지 이동
+  const handleNotificationClick = async (id: number, title: string) => {
+    try {
+      // 알림 읽음 상태로 변경
+      const response = await markNotificationAsRead(id);
+
+      // 상태 업데이트
+      setNotifications((prev) =>
+        prev.map((notification) =>
+          notification.pushId === response.data.pushId
+            ? { ...notification, open: response.data.open }
+            : notification
+        )
+      );
+
+      if (title.startsWith("신규 경험치")) {
         navigate("/experience-point?tab=receipt");
-        break;
-      case "신규 게시글 등록!":
+      } else if (title.startsWith("신규 게시글")) {
         navigate("/board");
-        break;
+      } else if (title.startsWith("도전과제")) {
+        navigate("/challenge");
+      }
+    } catch (error: any) {
+      console.error("알림 클릭 처리 실패:", error.message);
+      setError(error.message || "알림 상태 변경 중 오류가 발생했습니다.");
     }
   };
 
@@ -110,13 +104,13 @@ const NotificationList: React.FC = () => {
   return (
     <Container>
       <TopNav lefter={NavItem} center={NavItem} righter={null} />
-      <Notification_list>
-        {notificationsMock.map((notification) => (
+      <Notificationlist>
+        {notifications.map((notification) => (
           <AlertItem
-            key={notification.id}
-            isRead={notification.isRead}
+            key={notification.pushId}
+            isRead={notification.open}
             onClick={() =>
-              handleNotificationClick(notification.id, notification.title)
+              handleNotificationClick(notification.pushId, notification.title)
             }
           >
             <NoticeContent>
@@ -125,32 +119,33 @@ const NotificationList: React.FC = () => {
                 <NoticeHead>
                   <NotificationTitle
                     className="text-md-200"
-                    isRead={notification.isRead}
+                    isRead={notification.open}
                   >
                     {notification.title}
                   </NotificationTitle>
                   <NotificationDate
                     className="caption-sm-100"
-                    isRead={notification.isRead}
+                    isRead={notification.open}
                   >
-                    {notification.date}
+                    {notification.createdAt}
                   </NotificationDate>
                 </NoticeHead>
 
                 <NotificationMessage
                   className="caption-md-100"
-                  isRead={notification.isRead}
+                  isRead={notification.open}
                 >
-                  {notification.message}
+                  {notification.content}
                 </NotificationMessage>
               </Notice>
             </NoticeContent>
           </AlertItem>
         ))}
+
         <Footer className="text-sm-100">
           알림은 30일 이후 순차적으로 지워집니다
         </Footer>
-      </Notification_list>
+      </Notificationlist>
     </Container>
   );
 };
@@ -163,7 +158,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const Notification_list = styled.div`
+const Notificationlist = styled.div`
   margin: auto;
   flex: 1;
   overflow-y: auto;

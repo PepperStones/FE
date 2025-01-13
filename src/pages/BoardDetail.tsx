@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -6,36 +6,32 @@ import TopNav from "../components/nav/TopNav.tsx";
 import BottomNav from "../components/nav/FooterNav.tsx";
 
 import LeftIcon from "../assets/images/left_arrow.png";
-
-export const boardListMock = [
-  {
-    id: 1,
-    visibility: "전체",
-    group: null,
-    title:
-      "AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인dddddddddddd",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-    contents:
-      "AAA 프로젝트 신설 안내 AAAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인vv줄인 경우두 줄인AA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두 줄인 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우두 줄인v",
-  },
-  {
-    id: 2,
-    visibility: "음성 1센터",
-    group: "1그룹",
-    title: "ddddd",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-    contents: "dd",
-  },
-];
+import { getBoardDetail, BoardDetail } from "../api/user/boardApi.ts";
 
 const BoardPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
 
+  const [boardData, setBoardData] = useState<BoardDetail | null>(null); // 게시글 데이터
+
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  const boardData = boardListMock.find((board) => board.id === Number(id)); // 데이터 검색
+  // API 호출하여 게시글 데이터 가져오기
+  useEffect(() => {
+    const fetchBoardData = async () => {
+      if (!id) return;
+
+      try {
+        const boardDetail = await getBoardDetail(Number(id));
+        setBoardData(boardDetail);
+      } catch (error) {
+        console.error("Error fetching board detail:", error);
+        alert("게시글을 불러오는 데 실패했습니다.");
+        navigate("/admin-board"); // 오류 발생 시 목록 페이지로 이동
+      }
+    };
+
+    fetchBoardData();
+  }, [id, navigate]);
 
   if (!boardData) {
     return <div>게시글을 찾을 수 없습니다.</div>;
@@ -60,25 +56,24 @@ const BoardPage: React.FC = () => {
           <Category>
             <BoardVisibility
               className="caption-sm-300"
-              visibility={boardData.visibility}
+              visibility={boardData.centerGroup}
             >
-              {boardData.visibility}
+              {boardData.centerGroup || "전체"}
             </BoardVisibility>
-            {boardData.group && (
+            {boardData.jobGroup && (
               <BoardGroup className="caption-sm-300">
-                {boardData.group}
+                {boardData.jobGroup}그룹
               </BoardGroup>
             )}
           </Category>
           <BoardTitle className="text-sm-200">{boardData.title}</BoardTitle>
           <BoardDate className="caption-sm-100">
-            작성일 {boardData.creationDate} | 수정일{" "}
-            {boardData.modificationDate}
+            작성일 {boardData.createdAt} | 수정일 {boardData.updatedAt}
           </BoardDate>
         </Head>
         <DivLine></DivLine>
         <MainContents className="caption-md-100">
-          {boardData.contents}
+          {boardData.content}
         </MainContents>
       </BoardContainer>
 
@@ -137,10 +132,10 @@ const BoardVisibility = styled.div<{ visibility: string }>`
   padding: 3px 10px;
 
   background: ${(props) =>
-    props.visibility === "전체" ? "var(--accent-70)" : "var(--primary-70)"};
+    props.visibility === null ? "var(--accent-70)" : "var(--primary-70)"};
 
   color: ${(props) =>
-    props.visibility === "전체" ? "var(--accent-10)" : "var(--primary-10)"};
+    props.visibility === null ? "var(--accent-10)" : "var(--primary-10)"};
 `;
 
 const BoardGroup = styled.div`

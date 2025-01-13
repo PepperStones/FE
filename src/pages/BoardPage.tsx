@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -7,72 +7,83 @@ import BottomNav from "../components/nav/FooterNav.tsx";
 
 import RightIcon from "../assets/images/right_arrow.png";
 
-export const boardListMock = [
-  {
-    id: 1,
-    visibility: "전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 2,
-    visibility: "음성 1센터",
-    group: "1그룹",
-    title:
-      "AAA 프로젝트 신설 안내 AAA 프로젝트 신설인데 두ddddddd 줄인ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ 경우두 줄인 경우 두 줄인 경우 두 줄인 경우두 줄인 경우 두 줄 인...",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 3,
-    visibility: "전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 4,
-    visibility: "전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 5,
-    visibility: "전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 6,
-    visibility: "전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-  {
-    id: 7,
-    visibility: "전체",
-    group: null,
-    title: "AAA 프로젝트 신설 안내 AAA 프로젝트 신설",
-    creationDate: "2025.01.01",
-    modificationDate: "2025.01.06",
-  },
-];
+import { getBoardList, Board } from "../api/user/boardApi.ts";
 
 const BoardPage: React.FC = () => {
+  const [boards, setBoards] = useState<Board[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const pageRef = useRef<number>(0);
+
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   const handleClick = (id: number) => {
     navigate(`/board/${id}`); // 동적으로 URL 이동
   };
+
+  // 새로운 데이터를 불러오는 함수
+  const loadMoreBoards = async () => {
+    if (loading || !hasMore) {
+      return; // 이미 로딩 중이면 중복 호출 방지
+    }
+
+    setLoading(true); // 로딩 상태 설정
+
+    try {
+      const newBoards = await getBoardList(pageRef.current);
+
+      // 더 이상 불러올 데이터가 없으면 중지
+      if (newBoards.length === 0) {
+        setHasMore(false);
+      } else {
+        setBoards((prevBoards) => [
+          ...prevBoards,
+          ...newBoards.filter(
+            (newBoard) => !prevBoards.some((board) => board.id === newBoard.id)
+          ),
+        ]);
+        pageRef.current += 1; // Ref로 페이지 증가
+        setPage(pageRef.current); // 페이지 증가
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadMoreBoards();
+  });
+
+  // Intersection Observer 설정
+  const lastElementRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(
+      async (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          !loading &&
+          hasMore &&
+          pageRef.current === page
+        ) {
+          await loadMoreBoards(); // 데이터 요청
+        } else {
+          console.log(`${page}loadMoreBoards요청 안돼!!!!`);
+        }
+      },
+      { threshold: 0.1 } // 마지막 요소가 100% 보일 때 트리거
+    );
+
+    if (lastElementRef.current) {
+      observer.current.observe(lastElementRef.current);
+    }
+
+    return () => observer.current?.disconnect(); // 컴포넌트 언마운트 시 정리
+  }, [loading, hasMore, boards]);
 
   const NavItem = {
     icon: null,
@@ -86,25 +97,25 @@ const BoardPage: React.FC = () => {
     <Container>
       <TopNav lefter={null} center={NavItem} righter={null} />
       <BoardList>
-        {boardListMock.map((board) => (
+        {boards.map((board) => (
           <BoardItem key={board.id} onClick={() => handleClick(board.id)}>
             <BoardContents>
               <ContentsHead>
                 <BoardVisibility
                   className="caption-sm-300"
-                  visibility={board.visibility}
+                  visibility={board.centerGroup}
                 >
-                  {board.visibility}
+                  {board.centerGroup || "전체"}
                 </BoardVisibility>
-                {board.group && (
+                {board.jobGroup && (
                   <BoardGroup className="caption-sm-300">
-                    {board.group}
+                    {board.jobGroup}그룹
                   </BoardGroup>
                 )}
               </ContentsHead>
               <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
               <BoardDate className="caption-sm-100">
-                작성일 {board.creationDate} | 수정일 {board.modificationDate}
+                작성일 {board.createdAt} | 수정일 {board.updatedAt}
               </BoardDate>
             </BoardContents>
             <BoardIcon src={RightIcon}></BoardIcon>
@@ -179,10 +190,10 @@ const BoardVisibility = styled.div<{ visibility: string }>`
   padding: 3px 10px;
 
   background: ${(props) =>
-    props.visibility === "전체" ? "var(--accent-70)" : "var(--primary-70)"};
+    props.visibility === null ? "var(--accent-70)" : "var(--primary-70)"};
 
   color: ${(props) =>
-    props.visibility === "전체" ? "var(--accent-10)" : "var(--primary-10)"};
+    props.visibility === null ? "var(--accent-10)" : "var(--primary-10)"};
 `;
 
 const BoardGroup = styled.div`

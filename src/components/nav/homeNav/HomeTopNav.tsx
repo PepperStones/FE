@@ -56,7 +56,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
   });
 
   const [progressState, setProgressState] = useState(0); // ProgressBar 상태
-
+  const MAX_PERCENT = 100;
   const leftIconSrc =
     isPageOption === 0
       ? FirstIconImg
@@ -128,16 +128,22 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
 
   const calculateProgressPercent = (current: number, max: number) => {
     if (max === 0) return 0; // Avoid division by zero
-    return (current / max) * 100;
+
+    const cal = (current / max) * 100;
+    if (cal > MAX_PERCENT) {
+      return MAX_PERCENT;
+    } else {
+      return Math.floor(cal);
+    }
   };
 
   const progressPercent = calculateProgressPercent(
     userData.totalExperienceThisYear,
-    requiredExperience
+    9000
   );
 
   const experiencePercent = Math.floor(
-    (userData.totalExperienceThisYear / requiredExperience) * 100
+    (userData.totalExperienceThisYear / 9000) * 100
   );
 
   return (

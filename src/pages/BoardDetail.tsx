@@ -8,9 +8,12 @@ import BottomNav from "../components/nav/FooterNav.tsx";
 import LeftIcon from "../assets/images/left_arrow.png";
 import { getBoardDetail, BoardDetail } from "../api/user/boardApi.ts";
 
+import { DateUtil } from "../utils/DateUtil.ts";
+
+// const formattedDate = DateUtil.formatDate("2025-01-12T04:07:29.928354");
+
 const BoardPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
-
   const [boardData, setBoardData] = useState<BoardDetail | null>(null); // 게시글 데이터
 
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -36,6 +39,9 @@ const BoardPage: React.FC = () => {
   if (!boardData) {
     return <div>게시글을 찾을 수 없습니다.</div>;
   }
+
+  const formattedCreatedAt = DateUtil.formatDate(boardData.createdAt);
+  const formattedUpdatedAt = DateUtil.formatDate(boardData.updatedAt);
 
   const NavItem = {
     icon: LeftIcon,
@@ -68,7 +74,7 @@ const BoardPage: React.FC = () => {
           </Category>
           <BoardTitle className="text-sm-200">{boardData.title}</BoardTitle>
           <BoardDate className="caption-sm-100">
-            작성일 {boardData.createdAt} | 수정일 {boardData.updatedAt}
+            작성일 {formattedCreatedAt} | 수정일 {formattedUpdatedAt}
           </BoardDate>
         </Head>
         <DivLine></DivLine>

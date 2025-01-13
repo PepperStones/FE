@@ -8,7 +8,7 @@ import SmallBtn from "../../components/button/SmallBtn.tsx";
 import BackIcon from "../../assets/images/left_arrow.png";
 
 import DefaultModal from "../../components/modal/DefaultModal.tsx";
-
+import { DateUtil } from "../../utils/DateUtil.ts";
 import {
   getBoardDetail,
   BoardDetail,
@@ -232,7 +232,8 @@ const AdminBoard: React.FC = () => {
           )}
 
           <BoardDate className="caption-sm-100">
-            작성일 {boardData.createdAt} | 수정일 {boardData.updatedAt}
+            작성일 {DateUtil.formatDate(boardData.createdAt)} | 수정일{" "}
+            {DateUtil.formatDate(boardData.updatedAt)}
           </BoardDate>
         </Head>
         <DivLine></DivLine>

@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from "../axiosInstance.ts";
+
 import { SERVER_URL } from "../../constants/ServerURL.js";
 
 /*register*/
@@ -19,14 +20,13 @@ interface SendNotificationResponse {
 
 /*open*/
 
-
 // FCM 토큰 등록 API 함수
 export const registerFcmToken = async (
-  token: RegisterTokenQuery
+  token: string
 ): Promise<RegisterTokenResponse> => {
   try {
     const response = await axios.post<RegisterTokenResponse>(
-      `/notification/register`,
+      "/notification/register",
       null, // Body가 필요 없으므로 null
       {
         params: { token },
@@ -41,6 +41,8 @@ export const registerFcmToken = async (
     throw new Error(error.response?.data || "FCM 토큰 등록 실패");
   }
 };
+
+
 
 export const sendNotification = async (
   title: string,

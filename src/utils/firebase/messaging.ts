@@ -32,7 +32,7 @@ export const requestPermissionAndGetToken = async () => {
         vapidKey,
       });
       if (token) {
-        console.log("FCM Token:", token);
+        // console.log("FCM Token:", token);
         return token;
         // 서버로 토큰 전송 가능
       } else {

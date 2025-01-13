@@ -45,7 +45,14 @@ jobs:
           REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
           REACT_APP_FIREBASE_VAPID_KEY: ${{ secrets.REACT_APP_FIREBASE_VAPID_KEY }}
           REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
-        run: npm run build
+        run: |
+         npm run build
+         echo "Build directory contents:"
+         ls -la build/
+         echo "Checking specific files:"
+         ls -la build/asset-manifest.json || echo "asset-manifest.json not found"
+         ls -la build/service-worker.js || echo "service-worker.js not found"
+         ls -la build/service-worker.js.map || echo "service-worker.js.map not found"
         
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

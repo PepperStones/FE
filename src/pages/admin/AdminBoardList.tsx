@@ -38,12 +38,12 @@ const AdminBoardList: React.FC = () => {
       const newBoards = await getBoardList(pageRef.current);
 
       // 더 이상 불러올 데이터가 없으면 중지
-      if (newBoards.length === 0) {
+      if (newBoards.data.length === 0) {
         setHasMore(false);
       } else {
         setBoards((prevBoards) => [
           ...prevBoards,
-          ...newBoards.filter(
+          ...newBoards.data.filter(
             (newBoard) => !prevBoards.some((board) => board.id === newBoard.id)
           ),
         ]);

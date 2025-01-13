@@ -69,6 +69,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
   useEffect(() => {
     // 상태가 변경될 때 로컬 스토리지에 저장
     localStorage.setItem("infoTagState", JSON.stringify(infoTagState));
+    console.log(levelData);
   }, [infoTagState]);
 
   const handleHideInfoTag = () => {
@@ -77,25 +78,52 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       [`page${isPageOption}`]: false,
     }));
   };
+  // F 데이터를 저장할 배열
+  const savedData: Array<{ level: string; total_experience: number }> = [];
+
+  // F 데이터를 저장 및 반환하는 함수
+  const saveData = (
+    levelString: string
+  ): Array<{ level: string; total_experience: number }> => {
+    const groupKey = levelString[0]; // "F1-I" → "F"
+
+    // 그룹 데이터 가져오기
+    const groupData = levelData[groupKey];
+
+    if (!groupData) {
+      throw new Error(`No data found for group ${groupKey}`);
+    }
+
+    groupData.forEach((data) => {
+      savedData.push(data);
+    });
+
+    // 반환
+    return savedData;
+  };
 
   // 현재 레벨 확인 함수
-  const getCurrentLevel = (totalExp: number) => {
-    for (let i = levelData.length - 1; i >= 0; i--) {
-      if (totalExp >= levelData[i].required_experience) {
+  const getCurrentLevel = (
+    totalExp: number,
+    levelDataArray: Array<{ level: string; total_experience: number }>
+  ) => {
+    for (let i = levelDataArray.length - 1; i >= 0; i--) {
+      if (totalExp >= (levelDataArray[i].total_experience || 0)) {
         return {
-          level: levelData[i].level,
-          requiredExperience: levelData[i + 1].required_experience,
+          level: levelDataArray[i].level,
+          requiredExperience: levelDataArray[i + 1].total_experience,
         };
       }
     }
     return {
-      level: levelData[0].level,
-      requiredExperience: levelData[1].required_experience,
+      level: levelDataArray[0].level,
+      requiredExperience: levelDataArray[1].total_experience,
     };
   };
 
   const { level, requiredExperience } = getCurrentLevel(
-    userData.totalExperienceThisYear
+    userData.totalExperienceThisYear,
+    saveData(userData.level)
   );
 
   const calculateProgressPercent = (current: number, max: number) => {
@@ -192,9 +220,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
               <ExpHead>
                 <TotalExp className="text-lg-300">
                   {userData.totalExperienceThisYear}
-                  <MaxExp className="caption-md-300">
-                    / {requiredExperience}
-                  </MaxExp>
+                  <MaxExp className="caption-md-300">/ 9,000</MaxExp>
                 </TotalExp>
                 <Percent className="text-lg-300">{experiencePercent}%</Percent>
               </ExpHead>

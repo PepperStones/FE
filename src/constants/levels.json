@@ -1,14 +1,130 @@
-[
-  { "level": "F1-I", "required_experience": 0 },
-  { "level": "F1-II", "required_experience": 13500 },
-  { "level": "F2-I", "required_experience": 27000 },
-  { "level": "F2-II", "required_experience": 39000 },
-  { "level": "F2-III", "required_experience": 51000 },
-  { "level": "F3-I", "required_experience": 63000 },
-  { "level": "F3-II", "required_experience": 78000 },
-  { "level": "F3-III", "required_experience": 93000 },
-  { "level": "F4-I", "required_experience": 108000 },
-  { "level": "F4-II", "required_experience": 126000 },
-  { "level": "F4-III", "required_experience": 144000 },
-  { "level": "F5", "required_experience": 162000 }
-]
+{
+  "F": [
+    {
+      "level": "F1-I",
+      "total_experience": 0
+    },
+    {
+      "level": "F1-II",
+      "total_experience": 13500
+    },
+    {
+      "level": "F2-I",
+      "total_experience": 27000
+    },
+    {
+      "level": "F2-II",
+      "total_experience": 39000
+    },
+    {
+      "level": "F2-III",
+      "total_experience": 51000
+    },
+    {
+      "level": "F3-I",
+      "total_experience": 63000
+    },
+    {
+      "level": "F3-II",
+      "total_experience": 78000
+    },
+    {
+      "level": "F3-III",
+      "total_experience": 93000
+    },
+    {
+      "level": "F4-I",
+      "total_experience": 108000
+    },
+    {
+      "level": "F4-II",
+      "total_experience": 126000
+    },
+    {
+      "level": "F4-III",
+      "total_experience": 144000
+    },
+    {
+      "level": "F5",
+      "total_experience": 162000
+    }
+  ],
+  "B": [
+    {
+      "level": "B1",
+      "total_experience": 0
+    },
+    {
+      "level": "B2",
+      "total_experience": 24000
+    },
+    {
+      "level": "B3",
+      "total_experience": 52000
+    },
+    {
+      "level": "B4",
+      "total_experience": 78000
+    },
+    {
+      "level": "B5",
+      "total_experience": 117000
+    },
+    {
+      "level": "B6",
+      "total_experience": 169000
+    }
+  ],
+  "G": [
+    {
+      "level": "G1",
+      "total_experience": 0
+    },
+    {
+      "level": "G2",
+      "total_experience": 24000
+    },
+    {
+      "level": "G3",
+      "total_experience": 52000
+    },
+    {
+      "level": "G4",
+      "total_experience": 78000
+    },
+    {
+      "level": "G5",
+      "total_experience": 117000
+    },
+    {
+      "level": "G6",
+      "total_experience": 169000
+    }
+  ],
+  "T": [
+    {
+      "level": "T1",
+      "total_experience": null
+    },
+    {
+      "level": "T2",
+      "total_experience": null
+    },
+    {
+      "level": "T3",
+      "total_experience": null
+    },
+    {
+      "level": "T4",
+      "total_experience": null
+    },
+    {
+      "level": "T5",
+      "total_experience": null
+    },
+    {
+      "level": "T6",
+      "total_experience": null
+    }
+  ]
+}

@@ -29,6 +29,8 @@ jobs:
       - name: Install npm Dependencies
         run: |
          npm install
+         npm list typescript
+         npm list @types/node
          npm ls workbox-webpack-plugin
  
       - name: Build

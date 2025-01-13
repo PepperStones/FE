@@ -41,7 +41,7 @@ const AdminBoard: React.FC = () => {
 
       try {
         const boardDetail = await getBoardDetail(Number(id));
-        setBoardData(boardDetail);
+        setBoardData(boardDetail.data);
       } catch (error) {
         console.error("Error fetching board detail:", error);
         alert("게시글을 불러오는 데 실패했습니다.");

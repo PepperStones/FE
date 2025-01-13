@@ -205,24 +205,56 @@ const ExperiencePoint: React.FC = () => {
     navigate(`/experience-point?tab=${newTab}`);
   };
 
+  // 그룹 레벨 경험치 데이터를 저장할 배열
+  const savedData: Array<{
+    level: string;
+    total_experience: number;
+  }> = [];
+
+  // 해당 그룹 레벨 경험치 를 저장 및 반환하는 함수
+  const saveData = (
+    levelString: string
+  ): Array<{ level: string; total_experience: number }> => {
+    const groupKey = levelString[0]; // "F1-I" → "F"
+
+    // 그룹 데이터 가져오기
+    const groupData = levelData[groupKey];
+
+    if (!groupData) {
+      throw new Error(`No data found for group ${groupKey}`);
+    }
+
+    groupData.forEach((data) => {
+      savedData.push(data);
+    });
+    console.log("savedData : ", savedData);
+    // 반환
+    return savedData;
+  };
+
   // 현재 레벨 확인 함수
-  const getCurrentLevel = (totalExp: number) => {
-    for (let i = levelData.length - 1; i >= 0; i--) {
-      if (totalExp >= levelData[i].required_experience) {
+  const getCurrentLevel = (
+    totalExp: number,
+    levelDataArray: Array<{ level: string; total_experience: number }>
+  ) => {
+    for (let i = levelDataArray.length - 1; i >= 0; i--) {
+      if (totalExp >= levelDataArray[i].total_experience) {
         return {
-          level: levelData[i].level,
-          requiredExperience: levelData[i + 1].required_experience,
+          level: levelDataArray[i + 1].level,
+          requiredExperience: levelDataArray[i + 1].total_experience,
         };
       }
     }
+
     return {
-      level: levelData[0].level,
-      requiredExperience: levelData[1].required_experience,
+      level: levelDataArray[0].level,
+      requiredExperience: levelDataArray[1].total_experience,
     };
   };
 
   const { level, requiredExperience } = getCurrentLevel(
-    totalAccumulatedExperience
+    totalAccumulatedExperience,
+    saveData(currentExperience.data.user.level)
   );
 
   const totalProgressPercent = calculateProgressPercent(

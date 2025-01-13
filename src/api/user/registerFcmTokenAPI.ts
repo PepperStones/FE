@@ -1,7 +1,5 @@
 import axios from "../axiosInstance.ts";
 
-import { SERVER_URL } from "../../constants/ServerURL.js";
-
 /*register*/
 interface RegisterTokenQuery {
   token: string; // FCM 토큰
@@ -41,8 +39,6 @@ export const registerFcmToken = async (
     throw new Error(error.response?.data || "FCM 토큰 등록 실패");
   }
 };
-
-
 
 export const sendNotification = async (
   title: string,

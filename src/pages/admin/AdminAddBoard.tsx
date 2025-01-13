@@ -9,6 +9,8 @@ import BackIcon from "../../assets/images/left_arrow.png";
 
 import { addBoard } from "../../api/admin/adminBoardApi.ts";
 
+import { DateUtil } from "../../utils/DateUtil.ts";
+
 const AdminAddBoard: React.FC = () => {
   const navigate = useNavigate();
   const [centerSelect, setCenterSelect] = useState("전체"); // 센터 수정 상태

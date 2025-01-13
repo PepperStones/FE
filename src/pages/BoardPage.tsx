@@ -8,6 +8,7 @@ import BottomNav from "../components/nav/FooterNav.tsx";
 import RightIcon from "../assets/images/right_arrow.png";
 
 import { getBoardList, Board } from "../api/user/boardApi.ts";
+import { DateUtil } from "../utils/DateUtil.ts";
 
 const BoardPage: React.FC = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -115,7 +116,8 @@ const BoardPage: React.FC = () => {
               </ContentsHead>
               <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
               <BoardDate className="caption-sm-100">
-                작성일 {board.createdAt} | 수정일 {board.updatedAt}
+                작성일 {DateUtil.formatDate(board.createdAt)} | 수정일{" "}
+                {DateUtil.formatDate(board.updatedAt)}
               </BoardDate>
             </BoardContents>
             <BoardIcon src={RightIcon}></BoardIcon>

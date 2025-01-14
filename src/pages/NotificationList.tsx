@@ -63,6 +63,13 @@ const NotificationList: React.FC = () => {
 
   // 알림 클릭 시 확인 상태로 변경 및 페이지 이동
   const handleNotificationClick = async (id: number, title: string) => {
+    if (title.startsWith("신규 경험치")) {
+      navigate("/experience-point?tab=receipt");
+    } else if (title.startsWith("신규 게시글")) {
+      navigate("/board");
+    } else if (title.startsWith("도전과제")) {
+      navigate("/challenge");
+    }
     try {
       // 알림 읽음 상태로 변경
       const response = await markNotificationAsRead(id);
@@ -75,14 +82,6 @@ const NotificationList: React.FC = () => {
             : notification
         )
       );
-
-      if (title.startsWith("신규 경험치")) {
-        navigate("/experience-point?tab=receipt");
-      } else if (title.startsWith("신규 게시글")) {
-        navigate("/board");
-      } else if (title.startsWith("도전과제")) {
-        navigate("/challenge");
-      }
     } catch (error: any) {
       console.error("알림 클릭 처리 실패:", error.message);
       setError(error.message || "알림 상태 변경 중 오류가 발생했습니다.");

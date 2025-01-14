@@ -51,6 +51,7 @@ export const onForegroundMessage = (): void => {
     console.log("포그라운드 메시지 수신:", payload);
 
     if (document.hidden) {
+      console.log("백그라운드 상태에서는 알림을 표시하지 않습니다.");
       return;
     }
 
@@ -58,27 +59,29 @@ export const onForegroundMessage = (): void => {
 
     // 알림 데이터
     const { title, body, icon } = payload.notification || {};
+    const timestamp = payload.data?.timestamp || Date.now().toString();
 
     // 브라우저 알림 표시
     if (Notification.permission === "granted") {
       try {
-        const timestamp = payload.data?.timestamp || Date.now().toString();
-        const lastNotificationTimestamp = localStorage.getItem('lastNotificationTimestamp');
+        const lastNotificationTime  = localStorage.getItem('lastNotificationTime');
 
-        if (lastNotificationTimestamp && 
-          parseInt(timestamp) - parseInt(lastNotificationTimestamp) < 1000) {
-          console.log("중복 알림 감지됨, 무시합니다다.");
+        if (lastNotificationTime  && 
+          (parseInt(timestamp) - parseInt(lastNotificationTime) < 1000)) {
+          console.log("중복 알림 감지됨, 무시합니다.");
           return;
         }
 
-        localStorage.setItem('lastNotificationTimestamp', timestamp);
+        localStorage.setItem('lastNotificationTime', timestamp);
 
-        console.log("알림 권한이 허용되었습니다.");
-        new Notification(title || "Default Title", {
+        const notificationOptions: NotificationOptions = {
           body: body || "Default Body",
           icon: icon || "/favicon.ico",
-          tag: timestamp,
-        });
+          tag: timestamp  // tag만 사용하여 동일 시간대의 알림 대체
+        };
+
+        new Notification(title || "Default Title", notificationOptions);
+        
         console.log("푸시 알림 표시 성공");
       } catch (error) {
         console.log("푸시 알림 표시 실패");

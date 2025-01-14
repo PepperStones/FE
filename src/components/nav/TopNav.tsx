@@ -11,9 +11,9 @@ interface lefter {
 }
 */
 
-const TopNav = ({ lefter, center, righter }) => {
+const TopNav = ({ lefter, center, righter, isAdmin = false }) => {
   return (
-    <NavContainer>
+    <NavContainer isAdmin={isAdmin}>
       <ImageContainer onClick={lefter ? lefter.clickFunc : undefined}>
         {lefter ? (
           lefter.icon ? (
@@ -53,7 +53,7 @@ const TopNav = ({ lefter, center, righter }) => {
 
 export default TopNav;
 
-const NavContainer = styled.nav`
+const NavContainer = styled.nav<{ isAdmin: boolean }>`
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -61,7 +61,7 @@ const NavContainer = styled.nav`
 
   position: sticky;
   top: 0;
-  background: var(--bg-10);
+  background: ${({ isAdmin }) => isAdmin ? "var(--gray-0)" : "var(--black-20)"};
   height: 71px;
   border-bottom: 1px solid var(--gray-10);
 

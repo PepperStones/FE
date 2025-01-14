@@ -6,36 +6,52 @@ import TopNav from "../components/nav/TopNav.tsx";
 import QuestRewardBtn from "../components/button/QuestRewardBtn.tsx";
 
 import BackIcon from "../assets/images/left_arrow.png";
-import PalmTree from "../assets/images/reward/star_deco_1.png";
+import PalmTree from "../assets/images/reward/star_skin_3.png";
 
-import { fetchChallenges, Challenge } from "../api/user/ChallengeApi.ts";
+import { fetchChallenges, receiveChallengeReward, Challenge } from "../api/user/ChallengeApi.ts";
 
 function ChallengeQuest() {
   const navigate = useNavigate();
 
   const [challenges, setChallenges] = useState<Challenge[]>([]); // 도전 과제 데이터 상태
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 
-  // 도전 과제 데이터를 가져오는 함수
+  const handleBackIconClick = () => navigate("/home");
+
+  // 도전과제 리스트업 API
   useEffect(() => {
     const loadChallenges = async () => {
       try {
-        setIsLoading(true);
-        const data = await fetchChallenges(); 
+        const data = await fetchChallenges();
         setChallenges(data); // 상태에 데이터 저장
         console.log("challenges: ", challenges);
       } catch (error) {
         console.log(error.message);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     loadChallenges();
   }, []);
 
-  const handleBackIconClick = () => {
-    navigate("/home");
+  // 아이템 받기 API
+  const handleReceiveRewardClick = async (challengeProgressId: number) => {
+    try {
+
+      console.log("challengeProgressId: ", challengeProgressId);
+      const response = await receiveChallengeReward(Number(challengeProgressId)); // 보상 수령 API 호출
+
+      // 성공적으로 수령한 경우 상태 업데이트
+      setChallenges((prevChallenges) =>
+        prevChallenges.map((challenge) =>
+          challenge.challengeProgress.challengeProgressId === challengeProgressId
+            ? { ...challenge, challengeProgress: { ...challenge.challengeProgress, receive: true } }
+            : challenge
+        )
+      );
+
+      alert("아이템을 성공적으로 수령했습니다!");
+    } catch (error: any) {
+      alert(error.message || "아이템 수령에 실패했습니다.");
+    }
   };
 
   const NavItem = {
@@ -56,32 +72,22 @@ function ChallengeQuest() {
           을 획득해보세요!
         </QuestTitle>
 
-        {isLoading ? (
-          <p>로딩 중...</p>
-        ) : (
-          challenges.map((challenge) => (
-            <QuestRewardBtn
-              key={challenge.challengesId} // 고유한 key 값
-              title={challenge.name}
-              content={challenge.description}
-              rewardImg={PalmTree} // 보상 이미지 (임시)
-              isAvailable={challenge.challengeProgress.completed} // 완료되지 않은 경우 활성화
-              isDone={challenge.challengeProgress.receive} // 완료 여부
-              progress={{
-                progressContent: `${challenge.challengeProgress.currentCount}/${challenge.requiredCount}`,
-                currentProgress: challenge.challengeProgress.currentCount,
-                maxProgress: challenge.requiredCount,
-              }}
-              onClick={() =>
-                alert(
-                  challenge.challengeProgress.completed
-                    ? "이미 완료된 도전 과제입니다."
-                    : "도전 과제를 진행하세요!"
-                )
-              }
-            />
-          ))
-        )}
+        {challenges.map((challenge) => (
+          <QuestRewardBtn
+            key={challenge.challengesId} // 고유한 key 값
+            title={challenge.name}
+            content={challenge.description}
+            rewardImg={PalmTree} // 보상 이미지 (임시)
+            isAvailable={challenge.challengeProgress.completed} // 완료되지 않은 경우 활성화
+            isDone={challenge.challengeProgress.receive} // 완료 여부
+            progress={{
+              progressContent: `${challenge.challengeProgress.currentCount}/${challenge.requiredCount}`,
+              currentProgress: challenge.challengeProgress.currentCount,
+              maxProgress: challenge.requiredCount,
+            }}
+            onClick={() => handleReceiveRewardClick(challenge.challengeProgress.challengeProgressId)}
+          />
+        ))}
 
       </QuestContainer>
     </ChallengeQuestContainer>
@@ -107,6 +113,6 @@ const QuestTitle = styled.div`
   color: var(--gray-60);
 
   span {
-    color: var(--gray-80);
+    color: var(--orange-80);
   }
 `;

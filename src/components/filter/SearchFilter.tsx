@@ -30,10 +30,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     setSearch(event.target.value);
   };
 
-  const handleSearchButtonClick = () => {
-    console.log(`Searching for: ${search}`);
-  };
-
   const handleDepartmentChange = (event) => {
     setDepartment(event.target.value);
     setGroup("default"); // 소속 변경 시 그룹 초기화
@@ -55,33 +51,35 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           value={search}
           onChange={handleSearch}
         />
-        <SearchButton onClick={handleSearchButtonClick}>
+        <SearchButton>
           <SearchIcon src={SearchIconImg} />
         </SearchButton>
       </SearchBar>
 
       <FilterSelectContainer>
-        <FilterSelect
-          value={department}
-          onChange={handleDepartmentChange}
-          className={department !== "default" ? "active" : ""}
-        >
-          <option value="default">소속</option>
-          <option value="음성 1센터">음성 1센터</option>
-          <option value="음성 2센터">음성 2센터</option>
-          <option value="용인백암센터">용인백암센터</option>
-          <option value="남양주센터">남양주센터</option>
-          <option value="파주센터">파주센터</option>
-          <option value="사업기획팀">사업기획팀</option>
-          <option value="그로스팀">그로스팀</option>
-          <option value="CX팀">CX팀</option>
-          <FilterFilterIcon
+        <FilterSelector>
+          <FilterSelect
+            value={department}
+            onChange={handleDepartmentChange}
+            className={department !== "default" ? "active" : ""}
+          >
+            <option value="default">소속</option>
+            <option value="음성 1센터">음성 1센터</option>
+            <option value="음성 2센터">음성 2센터</option>
+            <option value="용인백암센터">용인백암센터</option>
+            <option value="남양주센터">남양주센터</option>
+            <option value="파주센터">파주센터</option>
+            <option value="사업기획팀">사업기획팀</option>
+            <option value="그로스팀">그로스팀</option>
+            <option value="CX팀">CX팀</option>
+          </FilterSelect>
+          <FilterFilterIcon1
             src={department !== "default" ? ActSelectIcon : SelectIcon}
           />
-        </FilterSelect>
-        \
+        </FilterSelector>
+
         {department === "default" ? undefined : (
-          <>
+          <FilterSelector>
             <FilterSelect
               value={group}
               onChange={handleGroupChange}
@@ -90,15 +88,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
               <option value="default">그룹</option>
               <option value="1">그룹 1</option>
               <option value="2">그룹 2</option>
-              <option value="3">그룹 3</option>
-              <option value="4">그룹 4</option>
-              <option value="5">그룹 5</option>
-              <option value="6">그룹 6</option>
-              <FilterFilterIcon
-                src={group !== "default" ? ActSelectIcon : SelectIcon}
-              />
             </FilterSelect>
-          </>
+            <FilterFilterIcon2
+              src={group !== "default" ? ActSelectIcon : SelectIcon}
+            />
+          </FilterSelector>
         )}
       </FilterSelectContainer>
     </SearchFilterContainer>
@@ -111,13 +105,13 @@ const SearchFilterContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  background: var(--sub-10);
+  background: var(--gray-0);
   border-radius: 0 0 15px 15px;
 
   padding: 15px;
 
   position: sticky;
-  top: 71px; /* 화면 상단에 고정 */
+  top: 71px;
   left: 0;
   right: 0;
 `;
@@ -125,13 +119,14 @@ const SearchFilterContainer = styled.div`
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
-  background-color: white;
-  padding: 6px 15px;
-  font-size: 15px;
-
+  
   border-radius: 10px;
-  background: var(--sub-80);
+  background: var(--gray-80);
+
+  margin-bottom: 16px;
+  padding: 6px 15px;
+  
+  font-size: 15px;
 `;
 
 const SearchInput = styled.input`
@@ -139,19 +134,19 @@ const SearchInput = styled.input`
   outline: none;
   flex-grow: 1;
 
-  background: var(--sub-80);
+  background: var(--gray-80);
 
   padding: 11px 15px;
   padding-left: 0px;
 
   &::placeholder {
-    color: var(--sub-60);
+    color: var(--gray-40);
   }
 `;
 
 const SearchButton = styled.button`
   border: none;
-  background: var(--sub-80);
+  background: var(--gray-80);
 `;
 
 const SearchIcon = styled.img`
@@ -166,26 +161,43 @@ const FilterSelectContainer = styled.div`
   gap: 5px;
 `;
 
+const FilterSelector = styled.div`
+position: relative;
+`;
+
 const FilterSelect = styled.select`
   appearance: none;
   border-radius: 30px;
   border: none;
-  background: var(--sub-40);
+  background: var(--gray-20);
 
   padding: 5px 14px;
+  padding-right: 28px;
 
   color: ${({ value }) =>
-    value === "default" ? "var(--sub-80)" : "var(--sub-60)"};
+    value === "default" ? "var(--gray-100)" : "var(--gray-10)"};
 
   &.active {
-    background-color: var(--primary-60);
+    background-color: var(--gray-70);
     color: var(--sub-20);
   }
 `;
 
-const FilterFilterIcon = styled.img`
+const FilterFilterIcon1 = styled.img`
+position: absolute;
+left: 80%;
+top: 40%;
+
   width: 11px;
   height: 7px;
-
-  margin-left: 5px;
 `;
+
+const FilterFilterIcon2 = styled.img`
+position: absolute;
+left: 72%;
+top: 40%;
+
+  width: 11px;
+  height: 7px;
+`;
+

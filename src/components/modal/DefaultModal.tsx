@@ -91,7 +91,7 @@ const Overlay = styled.div`
 
 const Content = styled.div<{ isClosing: boolean }>`
   width: 20.1875rem;
-  background-color: var(--sub-20);
+  background: var(--gray-0);
   border-radius: 10px;
 
   padding: 15px;

@@ -55,7 +55,7 @@ const ResultContentItems = styled.li`
     border: 0.5px solid var(--purple-purple-7);
     border-radius: 10px;
     border-bottom: 1px solid var(--grey-grey-3);
-    background-color: var(--sub-20);
+    background-color: var(--black-50);
 `;
 
 const PersonInfo = styled.div`
@@ -65,22 +65,23 @@ const PersonInfo = styled.div`
     justify-content: space-between;
 
     width: 99%;
+    border: none;
 
     padding: 10px 16px;
 `;
 
 const NameContainer = styled.div`
-color: var(--primary-80);
+color: var(--orange-80);
 `;
 
 const TextDivider = styled.span`
-color: var(--sub-40);
+color: var(--gray-20);
 font-size: 18px;
 margin: 0 9px;
 `;
 
 const EIN = styled.span`
-color: var(--gray-80);
+color: var(--orange-90);
 `;
 
 const Group = styled.div`
@@ -90,18 +91,20 @@ align-items: center;
 
 width: 46px;
 height: 18px;
+border-radius: 30px;
+border: 1px solid #666;
+border-bottom: none;
+background: var(--black-30);
+
 padding: 10px 3px;
 
-color: var(--sub-80);
+color: var(--orange-90);
 text-align: center;
-
-border-radius: 30px;
-background: linear-gradient(to bottom, var(--sub-40), var(--sub-20));
 `;
 
 const Divider = styled.div`
     width: 100%;
-    border-bottom: 0.5px solid var(--sub-60);
+    border-bottom: 0.5px solid var(--gray-40);
 `;
 
 const DepartmentInfo = styled.div`
@@ -114,16 +117,16 @@ const DepartmentInfo = styled.div`
     height: 100%;
     padding: 6px 20px;
     border-radius: 0px 0px 10px 10px;
-    background: var(--sub-30);
+    background: var(--gray-20);
 
     color: var(--accent-90);
 `;
 
 const DepartmentText = styled.div`
-color: var(--grey-grey-6);
+color: var(--orange-100);
 `;
 
 const Department = styled.div`
-    color: var(--grey-grey-7);
+    color: var(--orange-100);
     text-align: right;
 `;

@@ -12,15 +12,15 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
 import BackIcon from '../../assets/images/left_arrow.png'
-import EinImg from '../../assets/images/admin/yellow_ein.png'
-import NameImg from '../../assets/images/admin/yellow_person.png'
-import JoinDateImg from '../../assets/images/admin/yellow_calendar.png'
-import DepartmentImg from '../../assets/images/admin/yellow_house.png'
-import GroupImg from '../../assets/images/admin/yellow_group.png'
-import LevelImg from '../../assets/images/admin/yellow_diamond_star.png'
-import IdImg from '../../assets/images/admin/yellow_id.png'
+import EinImg from '../../assets/images/admin/orange_ein.png'
+import NameImg from '../../assets/images/admin/orange_person.png'
+import JoinDateImg from '../../assets/images/admin/orange_calendar.png'
+import DepartmentImg from '../../assets/images/admin/orange_house.png'
+import GroupImg from '../../assets/images/admin/orange_group.png'
+import LevelImg from '../../assets/images/admin/orange_diamond_star.png'
+import IdImg from '../../assets/images/admin/orange_id.png'
 import DeactIdImg from '../../assets/images/admin/gray_id.png'
-import PwdImg from '../../assets/images/admin/yellow_lock.png'
+import PwdImg from '../../assets/images/admin/orange_lock.png'
 import DeactPwdImg from '../../assets/images/admin/gray_lock.png'
 
 import { fetchMemberDetail, updateMemberDetail, deleteMemberDetail, MemberDetailResponse } from '../../api/admin/MemberApi.ts';
@@ -153,7 +153,7 @@ function MemberDetail() {
 
     return (
         <MypageContainer>
-            <TopNav lefter={Center} center={Center} righter={null} />
+            <TopNav lefter={Center} center={Center} righter={null} isAdmin={true} />
 
             <ProfileInfoContainer>
 
@@ -200,15 +200,25 @@ function MemberDetail() {
                             </DatePicker>
                         </DatePickerWrapper>
                     </DetailContent>
+
                     <DetailContent>
                         <DetailLeft>
-                            <MypageIcon src={DepartmentImg} /><IconDescription className='text-md-200'>소속</IconDescription>
+                            <MypageIcon src={DepartmentImg} />
+                            <IconDescription className="text-md-200">소속</IconDescription>
                         </DetailLeft>
                         <DetailSelect
                             value={department}
-                            onChange={(e) => handleSelectChange(e, setDepartment)}
-                            className='text-sm-200'
+                            onChange={(e) => {
+                                handleSelectChange(e, setDepartment);
+                                const selectedDepartment = e.target.value;
+                                if (["사업기획팀", "그로스팀", "CX팀"].includes(selectedDepartment)) {
+                                    setGroup("1"); // Set group to "그룹 1"
+                                } else {
+                                    setGroup("default"); // Reset group to default for other departments
+                                }
+                            }}
                             disabled={!isEditable}
+                            className="text-sm-200"
                         >
                             <option value="default">소속을 선택해주세요</option>
                             <option value="음성 1센터">음성 1센터</option>
@@ -221,25 +231,27 @@ function MemberDetail() {
                             <option value="CX팀">CX팀</option>
                         </DetailSelect>
                     </DetailContent>
+
                     <DetailContent>
                         <DetailLeft>
-                            <MypageIcon src={GroupImg} /><IconDescription className='text-md-200'>직무그룹</IconDescription>
+                            <MypageIcon src={GroupImg} />
+                            <IconDescription className="text-md-200">직무그룹</IconDescription>
                         </DetailLeft>
                         <DetailSelect
                             value={group}
                             onChange={(e) => handleSelectChange(e, setGroup)}
-                            className='text-sm-200'
-                            disabled={!isEditable}
+                            className="text-sm-200"
+                            disabled={
+                                department === "default" || // Disable if no department is selected
+                                ["사업기획팀", "그로스팀", "CX팀"].includes(department) || !isEditable // Disable for specific departments
+                            }
                         >
                             <option value="default">직무그룹을 선택해주세요</option>
                             <option value="1">그룹 1</option>
                             <option value="2">그룹 2</option>
-                            <option value="3">그룹 3</option>
-                            <option value="4">그룹 4</option>
-                            <option value="5">그룹 5</option>
-                            <option value="6">그룹 6</option>
                         </DetailSelect>
                     </DetailContent>
+
                     <DetailContent>
                         <DetailLeft>
                             <MypageIcon src={LevelImg} /><IconDescription className='text-md-200'>레벨</IconDescription>
@@ -263,6 +275,18 @@ function MemberDetail() {
                             <option value="F4-II">F4-II</option>
                             <option value="F4-III">F4-III</option>
                             <option value="F5">F5</option>
+                            <option value="B1">B1</option>
+                            <option value="B2">B2</option>
+                            <option value="B3">B3</option>
+                            <option value="B4">B4</option>
+                            <option value="B5">B5</option>
+                            <option value="B6">B6</option>
+                            <option value="G1">G1</option>
+                            <option value="G2">G2</option>
+                            <option value="G3">G3</option>
+                            <option value="G4">G4</option>
+                            <option value="G5">G5</option>
+                            <option value="G6">G6</option>
                         </DetailSelect>
                     </DetailContent>
                     <DetailContent>
@@ -300,7 +324,16 @@ function MemberDetail() {
                             <MypageIcon src={isEditable ? DeactPwdImg : PwdImg} />
                             <IconDescription className='text-md-200' isEditable={isEditable}>변경 비밀번호</IconDescription>
                         </DetailLeft>
-                        <DetailInput
+
+                        {initPWD === userPWD ? <DetailInput
+                            type="text"
+                            className='text-sm-200'
+                            placeholder="비밀번호를 입력해주세요."
+                            value="-"
+                            onChange={(e) => handleInputChange(e, setUserPWD)}
+                            disabled={true}
+                            isEditable={isEditable}
+                        /> : <DetailInput
                             type="text"
                             className='text-sm-200'
                             placeholder="비밀번호를 입력해주세요."
@@ -308,7 +341,7 @@ function MemberDetail() {
                             onChange={(e) => handleInputChange(e, setUserPWD)}
                             disabled={true}
                             isEditable={isEditable}
-                        />
+                        />}
                     </DetailContent>
                 </ProfileDetailContainer>
 
@@ -372,13 +405,13 @@ display: flex;
 flex-direction: column;
 
 padding: 20px;
-gap: 100px;
+gap: 250px;
 `;
 
 const ProfileDetailContainer = styled.div`
 
 border-radius: 15px;
-background: var(--sub-20);
+background: var(--black-50);
 `;
 
 const DetailLeft = styled.div`
@@ -394,7 +427,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-background: var(--sub-20);
+background: var(--black-50);
 border: none;
 
 color: var(--gray-60);
@@ -407,10 +440,7 @@ direction: rtl;
 }
 
 &:disabled {
-    background: var(--sub-20); /* 배경색 유지 */
-    color: var(--gray-60); /* 텍스트 색상 유지 */
-    opacity: 1; /* 투명도 제거 */
-
+    color: var(--gray-60);
     color: ${({ isEditable }) => (isEditable ? `var(--gray-20)` : 'var(--gray-60)')};
 }
 
@@ -424,7 +454,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-background: var(--sub-20);
+background: var(--black-50);
 border: none;
 
 color: var(--gray-60);
@@ -432,12 +462,9 @@ text-align: right;
 direction: rtl;
 
 &:disabled {
-    background: var(--sub-20); /* 배경색 유지 */
-    color: var(--gray-60); /* 텍스트 색상 유지 */
-    opacity: 1; /* 투명도 제거 */
+    color: var(--gray-60);
 }
 `;
-
 
 const DetailContent = styled.div`
 display: flex;
@@ -456,8 +483,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-color: var(--primary-80);
-color: ${({ isEditable }) => (isEditable ? `var(--gray-20)` : 'var(--gray-60)')};
+color: var(--orange-90);
+color: ${({ isEditable }) => (isEditable ? `var(--gray-20)` : 'var(--orange-90)')};
 `;
 
 const ButtonContainer = styled.div`
@@ -477,8 +504,8 @@ const DatePickerWrapper = styled.div`
 }
 
 input {
-    background-color: var(--sub-20); /* 인풋 배경색 */
-    color: var(--gray-60); /* 텍스트 색상 */
+    background-color: var(--black-50);
+    color: var(--gray-60);
     border: none;
 
     text-align: right;

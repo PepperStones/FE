@@ -32,9 +32,9 @@ const LargeBtnContainer = styled.button<{ isAvailable: boolean }>`
   border-radius: 15px;
   border: 1px solid
     ${({ isAvailable }) =>
-      isAvailable ? "var(--primary-70)" : "var(--primary-80)"};
+      isAvailable ? "var(--orange-70)" : "var(--orange-90)"};
   background: ${({ isAvailable }) =>
-    isAvailable ? "var(--primary-70)" : "var(--primary-80)"};
+    isAvailable ? "var(--orange-70)" : "var(--orange-90)"};
 
   gap: 6px;
 

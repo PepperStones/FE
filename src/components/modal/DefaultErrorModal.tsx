@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import styled, { keyframes } from 'styled-components';
 
 import errorIcon from '../../assets/images/triangle_caution.png'
+import successIcon from '../../assets/images/admin/success.png'
 
 interface DefaultErrorModalProps {
     showDefaultErrorModal: boolean;
     errorMessage: string;
     onAcceptFunc: () => void;
+    isSuccess?: boolean;
 }
 
 const fadeIn = keyframes`
@@ -27,7 +29,7 @@ const fadeOut = keyframes`
   }
 `;
 
-const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorModal, errorMessage, onAcceptFunc }) => {
+const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorModal, errorMessage, onAcceptFunc, isSuccess = false }) => {
     const [isClosing, setIsClosing] = useState(false);
 
     if (!showDefaultErrorModal && !isClosing) return null;
@@ -43,8 +45,8 @@ const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorM
     return (
         <Overlay onClick={handleOverlayClick}>
             <div style={{ height: '400px' }}></div>
-            <Content isClosing={isClosing}>
-                <ContentIcon src={errorIcon} />
+            <Content isClosing={isClosing} isSuccess={isSuccess}>
+                {isSuccess ? <ContentIcon src={successIcon}/> : <ContentIcon src={errorIcon}/>}
                 <ContentText className='text-sm-300'>{errorMessage}</ContentText>
             </Content>
         </Overlay>
@@ -68,7 +70,7 @@ const Overlay = styled.div`
   z-index: 10000;
 `;
 
-const Content = styled.div <{ isClosing: boolean }>`
+const Content = styled.div <{ isClosing: boolean, isSuccess: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +78,7 @@ const Content = styled.div <{ isClosing: boolean }>`
 
   width: 20.4375rem;
   border-radius: 10px;
-  background: var(--gray-30);
+  background: ${({ isSuccess }) => isSuccess ? "var(--orange-70)" : "var(--gray-20)"};
   box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.30);
 
   gap: 5px;

@@ -11,7 +11,7 @@ import FooterNav from "../../components/nav/FooterNav.tsx";
 
 import RightIcon from "../../assets/images/right_arrow.png";
 import PlusIcon from "../../assets/images/add_icon.png";
-
+import { DateUtil } from "../../utils/DateUtil.ts";
 const AdminBoardList: React.FC = () => {
   const [boards, setBoards] = useState<Board[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -118,7 +118,7 @@ const AdminBoardList: React.FC = () => {
 
   return (
     <div>
-      <TopNav lefter={null} center={Top} righter={Top} />
+      <TopNav lefter={null} center={Top} righter={Top} isAdmin={true}/>
       <SearchFilter
         search={search}
         setSearch={setSearch}
@@ -154,7 +154,8 @@ const AdminBoardList: React.FC = () => {
                 </ContentsHead>
                 <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
                 <BoardDate className="caption-sm-100">
-                  작성일 {board.createdAt} | 수정일 {board.updatedAt}
+                  작성일 {DateUtil.formatDate(board.createdAt)} | 수정일{" "}
+                  {DateUtil.formatDate(board.updatedAt)}
                 </BoardDate>
               </BoardContents>
               <BoardIcon src={RightIcon}></BoardIcon>

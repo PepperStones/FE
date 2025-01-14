@@ -63,10 +63,27 @@ function QuestDetailPage() {
     const [dragStart, setDragStart] = useState(null);
     const rotationRef = useRef(0);
     const [isDragging, setIsDragging] = useState(false);
+    const lastVibrationAngleRef = useRef(0);
+
+    // 햅틱 효과
+    const triggerVibration = (currentAngle: number) => {
+        // Normalize the angle to be within 0-360 degrees
+        const normalizedAngle = (currentAngle % 360 + 360) % 360;
+
+        // Calculate the closest button angle
+        const closestButtonAngle = Math.round(normalizedAngle / angleIncrement) * angleIncrement;
+
+        // Trigger vibration if the rotation crosses a new button angle
+        if (closestButtonAngle !== lastVibrationAngleRef.current) {
+            if (navigator.vibrate) {
+                navigator.vibrate(100); // Vibrate for 100ms
+            }
+            lastVibrationAngleRef.current = closestButtonAngle; // Update last vibration angle
+        }
+    };
 
     // 드래그 시작
     const handleDragStart = (event) => {
-        event.preventDefault();
         setIsDragging(true); // 드래그 상태 활성화
         const clientX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
         setDragStart(clientX);
@@ -75,7 +92,6 @@ function QuestDetailPage() {
     // 드래그 중
     const handleDrag = (event) => {
         if (dragStart !== null) {
-            event.preventDefault();
             const clientX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX;
             const deltaX = clientX - dragStart;
             rotationRef.current += deltaX * -0.5; // 회전값 업데이트
@@ -84,6 +100,7 @@ function QuestDetailPage() {
             if (scrollContainerRef.current) {
                 scrollContainerRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
             }
+            triggerVibration(rotationRef.current);
         }
     };
 
@@ -170,7 +187,14 @@ function QuestDetailPage() {
                 <ViewAllButton className='text-md-300' onClick={() => handleQuestClick(quest)}>
                     <ViewAllText>모든 기록 열람</ViewAllText>
                     <ViewAllIcon className='caption-sm-200'>바로가기 &gt;</ViewAllIcon>
+
+                    <MaxMinDescription className='caption-sm-200 no-drag n-pointer'>
+                        <MaxPoint>Max</MaxPoint>
+                        <MinPoint>Medium</MinPoint>
+                    </MaxMinDescription>
                 </ViewAllButton>
+
+
             </QuestDetailTopContent>
 
             <DonutWrapper
@@ -214,6 +238,7 @@ function QuestDetailPage() {
                                     maxProgress={quest.maxScore || quest.maxPoints}
                                     Variation={questData?.experience || null}
                                     circleRadius={27}
+                                    isQuestDetail={true}
                                 />
                             </ButtonContainer>
                         </CircleComponent>
@@ -251,10 +276,11 @@ gap: 20px
 
 const ViewAllButton = styled.button`
 display: flex;
+position: relative;
 
 border-radius: 15px;
-border: 1px solid var(--sub-40);
-background: var(--sub-20);
+border: none;
+background: var(--black-50);
 
 padding: 13px 20px;
 
@@ -265,7 +291,7 @@ const ViewAllText = styled.span`
 display: flex;
 flex: 1;
 
-color: var(--accent-80);
+color: var(--gray-100);
 `;
 
 const ViewAllIcon = styled.div`
@@ -273,6 +299,28 @@ justify-content: center;
 align-items: center;
 
 color: var(--gray-70);
+`;
+
+const MaxMinDescription = styled.div`
+  position: absolute;
+  top: calc(100% + 38px); /* 버튼 아래로 8px 떨어진 위치 */
+  left: 51%;
+  transform: translateX(-50%);
+  z-index: 100;
+
+  width: auto;
+
+  padding: 10px;
+
+  color: var(--gray-100);
+`;
+
+const MaxPoint = styled.div`
+margin-bottom: 65px;
+`;
+
+const MinPoint = styled.div`
+
 `;
 
 const QuestDetailBottomContent = styled.div`
@@ -321,7 +369,7 @@ const CenterHole = styled.div`
   height: 1400px;
   border-radius: 50%;
 
-  background-color: var(--bg-10); /* 도넛 배경 색 */
+  background-color: var(--black-20); /* 도넛 배경 색 */
   clip-path: circle(150px at center) inset(75px); /* 중앙에 구멍을 만듦 */
   pointer-events: none; /* 클릭 이벤트를 아래로 전달 */
 `;
@@ -331,6 +379,8 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+
+gap: 5px;
 `;
 
 const ShowUnit = styled.div`
@@ -342,7 +392,7 @@ width: 50px;
 border-radius: 15px;
 background: var(--gray-40);
 
-padding: 3px 10px;
+padding: 3px 5px;
 margin-bottom: 10px;
 
 color: var(--gray-0);

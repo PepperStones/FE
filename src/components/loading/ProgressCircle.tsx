@@ -7,10 +7,12 @@ interface progress {
     maxProgress: number;     // Maximum progress value
     Variation?: number;      // 변화량 (optional)
     circleRadius?: number;   // Circle radius (px)
+    isQuestDetail?: boolean;
+    isAllQuest?: boolean;
 }
 */
 
-const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius = 35 }) => {
+const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius = 35, isQuestDetail = false, isAllQuest = false }) => {
     // Calculate progress percentage dynamically
     const calculateProgressPercent = (current: number, max: number) => {
         if (max === 0) return 0; // Avoid division by zero
@@ -40,17 +42,18 @@ const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius 
                         cy={viewBoxSize / 2}
                         r={circleRadius}
                         strokeWidth="10"
+                        isQuestDetail={isQuestDetail}
                         strokeDasharray={`${circleCircumference}, ${circleCircumference}`}
                         strokeDashoffset={`${circleCircumference - (progressPercent / 100) * circleCircumference}`}
                     />
                 </CircularSvg>
                 <ProgressText>
                     {Variation !== undefined ? (
-                        <ProgressVariation className='caption-md-300'>{Variation !== null ? '+': undefined } {Variation}</ProgressVariation>
+                        <ProgressVariation className='text-md-300' isAllQuest={isAllQuest}>{Variation !== null ? '+': undefined } {Variation}</ProgressVariation>
                     ) : (
                         <>
-                            <ProgressValue>{currentProgress}</ProgressValue>
-                            <ProgressMax> /{maxProgress}</ProgressMax>
+                            <ProgressValue className='caption-md-300' >{currentProgress}</ProgressValue>
+                            <ProgressMax className='caption-sm-100'> /{maxProgress}</ProgressMax>
                         </>
                     )}
                 </ProgressText>
@@ -82,12 +85,12 @@ const CircularSvg = styled.svg`
 
 const CircleBackground = styled.circle`
     fill: none;
-    stroke: var(--sub-40); /* Background circle color */
+    stroke: var(--gray-20);
 `;
 
-const CircleProgress = styled.circle`
+const CircleProgress = styled.circle<{isQuestDetail: boolean}>`
     fill: none;
-    stroke: var(--primary-70); /* Progress circle color */
+    stroke: ${({ isQuestDetail }) => isQuestDetail ? "var(--gray-90)" : "var(--orange-70)"}; /* Progress circle color */
     stroke-linecap: round; /* Rounded ends for the progress */
     transition: stroke-dashoffset 0.35s ease; /* Smooth animation */
 `;
@@ -100,12 +103,14 @@ const ProgressText = styled.div`
     text-align: center;
 `;
 
-const ProgressVariation = styled.div`
-color: var(--primary-70);
+const ProgressVariation = styled.div <{isAllQuest:boolean}>`
+font-size: ${({ isAllQuest }) => isAllQuest ? "10px" : "12px"};
+color: var(--orange-90);
 `;
 
 const ProgressValue = styled.span`
-    color: var(--primary-70);
+font-size: 16px;
+color: var(--orange-80);
 `;
 
 const ProgressMax = styled.span`

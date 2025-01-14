@@ -9,7 +9,7 @@ import LoadingModal from '../components/loading/Loading.tsx';
 import DefaultModal from '../components/modal/DefaultModal.tsx';
 
 import ProfileImg from '../assets/images/reward/star_skin_1.png'
-import EditIconImg from '../assets/images/circle_pencil.png'
+import EditIconImg from '../assets/images/orange_circle_pencil.png'
 import DepartmentImg from '../assets/images/yellow_house.png'
 import JoinDateImg from '../assets/images/yellow_calendar.png'
 import LevelImg from '../assets/images/yellow_diamod_star.png'
@@ -54,7 +54,7 @@ function Mypage() {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
 
-        navigate('/');
+        navigate('/login');
     };
 
     const handleUpdatePwdClick = () => navigate('/mypage-pwd');
@@ -226,7 +226,7 @@ color: var(--gray-40);
 const ProfileDetailContainer = styled.div<{ isFromCustomize: boolean }>`
 
 border-radius: 15px;
-background: var(--sub-20);
+background: var(--black-50);
 
 ${({ isFromCustomize }) => isFromCustomize && css`animation: ${fadeIn} 0.5s ease-in-out;`}
 `;
@@ -248,9 +248,8 @@ color: var(--gray-40);
 `;
 
 const FixButton = styled.button`
-
 border: none;
-background: var(--sub-20);
+background: var(--black-50);
 color: var(--gray-100);
 `;
 
@@ -272,7 +271,7 @@ flex-direction: row;
 flex: 1;
 
 border-radius: 15px;
-background: var(--sub-20);
+background: var(--black-50);
 
 padding: 12px 14px;
 
@@ -281,12 +280,13 @@ ${({ isFromCustomize }) => isFromCustomize && css`animation: ${fadeIn} 0.5s ease
 
 const EvaluationTime = styled.div`
 border-radius: 15px;
-border: 1px solid var(--accent-40);
-background: var(--accent-80);
+border: 1px solid #666;
+border-bottom: none;
+background: var(--black-30);
 
 padding: 3px 10px;
 
-color: var(--accent-10);
+color: var(--orange-90);
 `;
 
 const EvaluationDescription = styled.div`
@@ -302,7 +302,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-color: var(--primary-80);
+color: var(--orange-90);
 `;
 
 const LogOutContainer = styled.div`

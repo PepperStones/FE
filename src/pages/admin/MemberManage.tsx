@@ -67,7 +67,7 @@ function MemberManage() {
 
   return (
     <MemberManageContainer>
-      <TopNav lefter={null} center={NavItem} righter={NavItem} />
+      <TopNav lefter={null} center={NavItem} righter={NavItem} isAdmin={true}/>
 
       <SearchFilter
         title="이름, 사번으로 검색 가능합니다."

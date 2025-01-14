@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 
 import TopNav from '../../components/nav/TopNav.tsx';
@@ -11,6 +12,7 @@ import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
 import { syncData, SyncType } from '../../api/admin/SynchronizationApi.ts';
 
 function Synchronization() {
+    const navigate = useNavigate();
     const Center = {
         text: "동기화",
     };
@@ -49,6 +51,17 @@ function Synchronization() {
     const openFailModal = () => setIsFailModalOpen(true);
     const closeFailModal = () => setIsFailModalOpen(false);
 
+    const openLogOutModal = () => setIsLogOutModalOpen(true);
+    const closeLogOutModal = () => setIsLogOutModalOpen(false);
+
+    const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
+    const handleLogOut = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+
+        navigate('/login');
+    };
+
     // 동기화 실행
     const handleSync = async (type: SyncType, closeModal: () => void) => {
         try {
@@ -56,8 +69,10 @@ function Synchronization() {
             const message = await syncData(type); // API 호출
             setErrorMessage(message);
 
-            if (message === "동기화가 성공적으로 완료되었습니다.") {
-                openSuccessModal(); // Open success modal only on success
+            console.log("message: ", message);
+
+            if (message.endsWith("완료되었습니다.")) {
+                openSuccessModal();
             }
         } catch (error: any) {
             openFailModal();
@@ -69,7 +84,7 @@ function Synchronization() {
 
     return (
         <MypageContainer>
-            <TopNav lefter={null} center={Center} righter={null} />
+            <TopNav lefter={null} center={Center} righter={null} isAdmin={true} />
 
 
             <ButtonConatainer className='text-lg-300'>
@@ -135,18 +150,31 @@ function Synchronization() {
                 onUnacceptFunc={closeEvaluationSynchroModal}
             />
 
+            <LogOutContainer>
+                <LogOut className='caption-md-300' onClick={openLogOutModal}>로그아웃 &gt;</LogOut>
+            </LogOutContainer>
+
             <LoadingModal isOpen={isLoading} />
 
             <DefaultErrorModal
                 showDefaultErrorModal={isSuccessModalOpen}
                 errorMessage='동기화가 성공적으로 완료되었습니다!'
                 onAcceptFunc={closeSuccessModal}
+                isSuccess={true}
             />
 
             <DefaultErrorModal
                 showDefaultErrorModal={isFailModalOpen}
                 errorMessage={errorMessage}
                 onAcceptFunc={closeFailModal}
+            />
+
+            <DefaultModal
+                showDefaultModal={isLogOutModalOpen}
+                title="로그아웃 하시겠습니까?"
+                description=""
+                onAcceptFunc={handleLogOut}
+                onUnacceptFunc={closeLogOutModal}
             />
 
             <FooterNav isAdmin={true} />
@@ -171,12 +199,12 @@ gap: 20px;
 padding: 20px;
 `;
 
-const SynchroButton = styled.div`
+const SynchroButton = styled.button`
 display: flex;
 
 border-radius: 15px;
-border: 1px solid var(--sub-40);
-background: linear-gradient(to bottom, var(--sub-40), var(--sub-20));
+border: none;
+background: var(--black-50);
 
 padding: 13px 20px;
 `;
@@ -185,7 +213,7 @@ const SynchroText = styled.span`
 display: flex;
 flex: 1;
 
-color: var(--accent-80);
+color: var(--orange-80);
 `;
 
 const SynchroIcon = styled.div`
@@ -193,6 +221,19 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-color: var(--gray-70);
+color: var(--gray-100);
 `;
 
+const LogOutContainer = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+
+margin-top: 200px;
+`;
+
+const LogOut = styled.button`
+border: none;
+background: var(--black-20);
+color: var(--gray-50);
+`;

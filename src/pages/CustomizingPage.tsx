@@ -84,6 +84,8 @@ function CustomizingPage() {
     const [selectedDeco, setSelectedDeco] = useState<number | null>(null); // 선택된 장식 ID
     const [selectedEffect, setSelectedEffect] = useState<number | null>(null); // 선택된 효과 ID
 
+    const [animate, setAnimate] = useState(false);
+
     useEffect(() => {
         const loadStarData = async () => {
             try {
@@ -127,8 +129,14 @@ function CustomizingPage() {
     };
 
     const handleTabClick = (tabName: string, index: number) => {
-        setActiveTab(tabName); // 클릭된 탭
-        setActiveTabIndex(index); // 활성화된 탭의 인덱스
+        if (activeTab === tabName) return;
+    
+        setAnimate(false); // Reset animation
+        setTimeout(() => {
+            setActiveTab(tabName);
+            setActiveTabIndex(index);
+            setAnimate(true); // Trigger fadeIn animation
+        }, 10); // Small delay to ensure state updates
     };
 
     // 아이템 클릭 이벤트 처리 함수
@@ -181,7 +189,7 @@ function CustomizingPage() {
                     </TabItem>
                 </TabMenu>
 
-                <StarSkinsContainer>
+                <StarSkinsContainer animate={animate} >
                     {tabData[activeTab].map((item) => (
                         <StarSkin
                             key={item.id}
@@ -241,7 +249,6 @@ const TabMenu = styled.div<{ activeIndex: number }>`
     gap: 35px;
     margin-top: 53px;
 
-    /* 슬라이드 애니메이션 */
     &::after {
         content: '';
         position: absolute;
@@ -251,7 +258,7 @@ const TabMenu = styled.div<{ activeIndex: number }>`
         width: 110px; /* 각 탭의 너비 */
         background-color: var(--primary-70);
         transform: translateX(${({ activeIndex }) => `${tabOffsets[activeIndex]}px`});
-        transition: transform 0.2s ease-in-out;
+        transition: transform 0.1s ease-in-out;
     }
 `;
 
@@ -261,14 +268,14 @@ const TabItem = styled.div<{ active?: boolean }>`
     color: ${({ active }) => (active ? 'var(--primary-70)' : 'var(--gray-40)')};
 `;
 
-const StarSkinsContainer = styled.div`
+const StarSkinsContainer = styled.div<{ animate: boolean }>`
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3개씩 한 행에 배치 */
 
     gap: 12px;
     margin-top: 20px;
 
-    animation: ${fadeIn} 0.5s ease-in-out;
+    animation: ${({ animate }) => (animate ? fadeIn : 'none')} 0.5s ease-in-out;
 `;
 
 const StarSkin = styled.div<{ locked?: boolean, selected?: boolean }>`
@@ -277,8 +284,8 @@ const StarSkin = styled.div<{ locked?: boolean, selected?: boolean }>`
     width: 110px;
     height: 110px;
     border-radius: 15px;
-    border: ${({ selected }) => (selected ? '1px solid var(--gray-100)' : '1px solid var(--sub-40)')};
-    background: var(--sub-20);
+    border: ${({ selected }) => (selected ? '1px solid var(--gray-100)' : 'none')};
+    background: var(--gray-10);
 
     padding: 7px;
 
@@ -297,7 +304,6 @@ const LockOverlay = styled.div`
     width: 100%;
     height: 100%;
 
-    background-color: rgba(0, 0, 0, 0.5); /* 어두운 오버레이 */
     backdrop-filter: blur(4px); /* 블러 효과 */
     border-radius: 15px; /* 부모와 동일한 border-radius */
 `;

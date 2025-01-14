@@ -33,7 +33,6 @@ const QuestRewardBtn = ({ title, content, rewardImg, isAvailable, isDone, progre
 
         <QuestRewardBtnContainer
             className='text-md-300'
-            onClick={onClick}
             disabled={!isAvailable}
             isAvailable={isAvailable}
             isDone={isDone}
@@ -64,12 +63,12 @@ const QuestRewardBtn = ({ title, content, rewardImg, isAvailable, isDone, progre
                 ) : isAvailable ? (
                     <MediumBtn
                         content="아이템 받기"
-                        onClick={null}
+                        onClick={onClick}
                         isAvailable={isAvailable}
                     />
                 ) : (
                     <ProgressBar
-                        progressContent={progress.progressContent}
+                        progressContent="도전과제 진행중"
                         currentProgress={progress.currentProgress}
                         maxProgress={progress.maxProgress}
                     />
@@ -86,8 +85,8 @@ export default QuestRewardBtn
 const QuestRewardBtnContainer = styled.button<{ isAvailable: boolean, isDone: boolean }>`
 Width: 22.0625rem;
 border-radius: 15px;
-background: var(--sub-20);
-border: ${({ isDone }) => (isDone ? '1px dashed var(--gray-30)' : '1px solid var(--sub-20)')};
+background: var(--black-50);
+border: none;
 
 padding : 5px;
 
@@ -145,11 +144,15 @@ padding-bottom: 14px;
 `;
 
 const TopContentIconContainer = styled.div<{ isAvailable: boolean }>`
+display: flex;
+justify-content: center;
+align-items: center;
+
 width: 55px;
 height: 55px;
 border-radius: 15px;
-background: var(--sub-30);
-border: 1px solid var(--sub-40);
+background: var(--gray-30);
+border: 1px solid var(--gray-60);
 
 padding: 8px;
 

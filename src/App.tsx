@@ -36,7 +36,7 @@ import AdminBoard from "./pages/admin/AdminBoard.tsx";
 import AdminBoardList from "./pages/admin/AdminBoardList.tsx";
 import AdminAddBoard from "./pages/admin/AdminAddBoard.tsx";
 
-import Synchronization from "./pages/admin/Synchronization.tsx";
+import Setting from "./pages/admin/Setting.tsx";
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -86,7 +86,7 @@ const App = () => {
           <Route path="/admin-board/:id" element={<ProtectedRoute element={<AdminBoard />} />} />
           <Route path="/admin-add-board" element={<ProtectedRoute element={<AdminAddBoard />} />} />
 
-          <Route path="/synchro" element={<ProtectedRoute element={<Synchronization />} />} />
+          <Route path="/setting" element={<ProtectedRoute element={<Setting />} />} />
         </Routes>
 
       </BrowserRouter>

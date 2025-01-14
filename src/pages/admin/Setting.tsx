@@ -9,9 +9,12 @@ import DefaultModal from '../../components/modal/DefaultModal.tsx';
 import LoadingModal from '../../components/loading/Loading.tsx'
 import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
 
+import SynchronizeIcon from '../../assets/images/admin/gray_arrow_cycle.png'
+import LogOutIcon from '../../assets/images/admin/gray_logout.png'
+
 import { syncData, SyncType } from '../../api/admin/SynchronizationApi.ts';
 
-function Synchronization() {
+function Setting() {
     const navigate = useNavigate();
     const Center = {
         text: "동기화",
@@ -88,6 +91,7 @@ function Synchronization() {
 
 
             <ButtonConatainer className='text-lg-300'>
+                <SettingTitle><SettingTitleIcon className='text-lg-300' src={SynchronizeIcon} />동기화</SettingTitle>
                 <SynchroButton onClick={openAllSynchroModal}>
                     <SynchroText>전체 동기화</SynchroText>
                     <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
@@ -107,6 +111,16 @@ function Synchronization() {
                 <SynchroButton onClick={openEvaluationSynchroModal}>
                     <SynchroText>인사평가 동기화</SynchroText>
                     <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
+                </SynchroButton>
+            </ButtonConatainer>
+
+            <SettingDivider />
+
+            <ButtonConatainer className='text-lg-300'>
+                <SettingTitle><SettingTitleIcon className='text-lg-300' src={LogOutIcon} />로그아웃</SettingTitle>
+                <SynchroButton onClick={openLogOutModal}>
+                    <SynchroText>로그아웃</SynchroText>
+                    <SynchroIcon className='caption-sm-200'>&gt;</SynchroIcon>
                 </SynchroButton>
             </ButtonConatainer>
 
@@ -150,10 +164,6 @@ function Synchronization() {
                 onUnacceptFunc={closeEvaluationSynchroModal}
             />
 
-            <LogOutContainer>
-                <LogOut className='caption-md-300' onClick={openLogOutModal}>로그아웃 &gt;</LogOut>
-            </LogOutContainer>
-
             <LoadingModal isOpen={isLoading} />
 
             <DefaultErrorModal
@@ -183,7 +193,7 @@ function Synchronization() {
     );
 }
 
-export default Synchronization;
+export default Setting;
 
 const MypageContainer = styled.div`
 display: flex;
@@ -197,6 +207,22 @@ flex-direction: column;
 
 gap: 20px;
 padding: 20px;
+`;
+
+const SettingTitle = styled.div`
+display: flex;
+align-items: center;
+
+padding: 0 10px;
+
+color: var(--gray-60);
+`;
+
+const SettingTitleIcon = styled.img`
+width: 16px;
+height: 16px;
+
+margin-right: 7px;
 `;
 
 const SynchroButton = styled.button`
@@ -223,6 +249,14 @@ align-items: center;
 
 color: var(--gray-100);
 `;
+
+const SettingDivider = styled.div`
+width: 100%;
+height: 10px;
+
+background: var(--black-30);
+`;
+
 
 const LogOutContainer = styled.div`
 display: flex;

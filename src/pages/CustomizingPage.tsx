@@ -11,16 +11,26 @@ import ProfileImg from '../assets/images/reward/star_skin_1.png'
 
 import Lock from '../assets/images/reward/reward_lock.png'
 
-import StarSkin1 from '../assets/images/reward/star_skin_1.png'
-import StarSkin2 from '../assets/images/reward/star_skin_2.png'
-import StarSkin3 from '../assets/images/reward/star_skin_3.png'
-import StarSkin4 from '../assets/images/reward/star_skin_4.png'
-import StarSkin5 from '../assets/images/reward/star_skin_5.png'
-import StarSkin6 from '../assets/images/reward/star_skin_6.png'
+import StarSkin0 from '../assets/images/reward/star_skin_1.png'
+import StarSkin1 from '../assets/images/reward/star_skin_2.png'
+import StarSkin2 from '../assets/images/reward/star_skin_3.png'
+import StarSkin3 from '../assets/images/reward/star_skin_4.png'
+import StarSkin4 from '../assets/images/reward/star_skin_5.png'
+import StarSkin5 from '../assets/images/reward/star_skin_6.png'
 
+import StarDeco0 from '../assets/images/reward/star_deco_1.png'
 import StarDeco1 from '../assets/images/reward/star_deco_1.png'
+import StarDeco2 from '../assets/images/reward/star_deco_1.png'
+import StarDeco3 from '../assets/images/reward/star_deco_1.png'
+import StarDeco4 from '../assets/images/reward/star_deco_1.png'
+import StarDeco5 from '../assets/images/reward/star_deco_1.png'
 
+import StarEffect0 from '../assets/images/reward/star_effect_1.png'
 import StarEffect1 from '../assets/images/reward/star_effect_1.png'
+import StarEffect2 from '../assets/images/reward/star_effect_1.png'
+import StarEffect3 from '../assets/images/reward/star_effect_1.png'
+import StarEffect4 from '../assets/images/reward/star_effect_1.png'
+import StarEffect5 from '../assets/images/reward/star_effect_1.png'
 
 import { fetchStarCustomization, StarCustomizationResponse, updateStarCustomization } from "../api/user/MypageApi.ts";
 
@@ -42,35 +52,34 @@ const fadeIn = keyframes`
   }
 `;
 
-const tabOffsets = [0, 120, 240]; // 슬라이드 양
-
-// 탭별 데이터
-const tabData = {
-    '별 스킨': [
-        { id: 0, image: StarSkin1, locked: false },
-        { id: 1, image: StarSkin2, locked: false },
-        { id: 2, image: StarSkin3, locked: false },
-        { id: 3, image: StarSkin4, locked: true },
-        { id: 4, image: StarSkin5, locked: true },
-        { id: 5, image: StarSkin6, locked: true },
-    ],
-    '별 장식': [
-        { id: 0, image: StarDeco1, locked: false },
-        { id: 1, image: StarDeco1, locked: true },
-        { id: 2, image: StarDeco1, locked: true },
-        { id: 3, image: StarDeco1, locked: true },
-        { id: 4, image: StarDeco1, locked: true },
-        { id: 5, image: StarDeco1, locked: true },
-    ],
-    '별 효과': [
-        { id: 0, image: StarEffect1, locked: false },
-        { id: 1, image: StarEffect1, locked: true },
-        { id: 2, image: StarEffect1, locked: true },
-        { id: 3, image: StarEffect1, locked: true },
-        { id: 4, image: StarEffect1, locked: true },
-        { id: 5, image: StarEffect1, locked: true },
-    ],
+const starSkinMap: Record<string, string> = {
+    S0: StarSkin0,
+    S1: StarSkin1,
+    S2: StarSkin2,
+    S3: StarSkin3,
+    S4: StarSkin4,
+    S5: StarSkin5,
 };
+
+const starDecoMap: Record<string, string> = {
+    D0: StarDeco0,
+    D1: StarDeco1,
+    D2: StarDeco2,
+    D3: StarDeco3,
+    D4: StarDeco4,
+    D5: StarDeco5,
+};
+
+const starEffectMap: Record<string, string> = {
+    E0: StarEffect0,
+    E1: StarEffect1,
+    E2: StarEffect2,
+    E3: StarEffect3,
+    E4: StarEffect4,
+    E5: StarEffect5,
+};
+
+const tabOffsets = [0, 120, 240]; // 슬라이드 양
 
 function CustomizingPage() {
 
@@ -79,10 +88,11 @@ function CustomizingPage() {
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [starData, setStarData] = useState<StarCustomizationResponse['data'] | null>(null);
 
-    const [profileImg, setProfileImg] = useState(ProfileImg); // 프로필 이미지 URL
-    const [selectedSkin, setSelectedSkin] = useState<number | null>(null); // 선택된 스킨 ID
-    const [selectedDeco, setSelectedDeco] = useState<number | null>(null); // 선택된 장식 ID
-    const [selectedEffect, setSelectedEffect] = useState<number | null>(null); // 선택된 효과 ID
+    const [profileImg, setProfileImg] = useState(ProfileImg); // 프로필 이미지
+    const [selectedSkin, setSelectedSkin] = useState<string | null>(null); // 선택된 스킨 
+    const [selectedDeco, setSelectedDeco] = useState<string | null>(null); // 선택된 장식 
+    const [selectedEffect, setSelectedEffect] = useState<string | null>(null); // 선택된 효과 
+    const [tabData, setTabData] = useState({ '별 스킨': [], '별 장식': [], '별 효과': [],});
 
     const [animate, setAnimate] = useState(false);
 
@@ -91,34 +101,64 @@ function CustomizingPage() {
             try {
                 const response = await fetchStarCustomization();
                 setStarData(response.data);
+                const data = response.data;
 
-                // Map the fetched data to selected IDs
-                const skinMapping: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, S6: 6 };
-                const decoMapping: Record<string, number> = { D0: 0, D1: 1, D2: 2, D3: 3, D4: 4, D5: 5, D6: 6 };
-                const effectMapping: Record<string, number> = { E0: 0, E1: 1, E2: 2, E3: 3, E4: 4, E5: 5, E6: 6 };
+                // Set currently equipped items as strings
+                setSelectedSkin(data.nowSkin); // Example: "S0"
+                setSelectedDeco(data.nowDecoration); // Example: "D0"
+                setSelectedEffect(data.nowEffect); // Example: "E0"
 
-                setSelectedSkin(skinMapping[response.data.skin]);
-                setSelectedDeco(decoMapping[response.data.decoration]);
-                setSelectedEffect(effectMapping[response.data.effect]);
+                // Set initial profile image
+                if (response.data.nowSkin) {
+                    const initialProfileImg = starSkinMap[response.data.nowSkin];
+                    if (initialProfileImg) {
+                        setProfileImg(initialProfileImg);
+                    }
+                }
+
+                // Map API response to tabData structure
+                const skins = [
+                    { id: 0, image: StarSkin0, locked: !data.skins.includes('S0') },
+                    { id: 1, image: StarSkin1, locked: !data.skins.includes('S1') },
+                    { id: 2, image: StarSkin2, locked: !data.skins.includes('S2') },
+                    { id: 3, image: StarSkin3, locked: !data.skins.includes('S3') },
+                    { id: 4, image: StarSkin4, locked: !data.skins.includes('S4') },
+                    { id: 5, image: StarSkin5, locked: !data.skins.includes('S5') },
+                ];
+
+                const decorations = [
+                    { id: 0, image: StarDeco0, locked: !data.decorations.includes('D0') },
+                    { id: 1, image: StarDeco1, locked: !data.decorations.includes('D1') },
+                    { id: 2, image: StarDeco2, locked: !data.decorations.includes('D2') },
+                    { id: 3, image: StarDeco3, locked: !data.decorations.includes('D3') },
+                    { id: 4, image: StarDeco4, locked: !data.decorations.includes('D4') },
+                    { id: 5, image: StarDeco5, locked: !data.decorations.includes('D5') },
+                ];
+
+                const effects = [
+                    { id: 0, image: StarEffect0, locked: !data.effects.includes('E0') },
+                    { id: 1, image: StarEffect1, locked: !data.effects.includes('E1') },
+                    { id: 2, image: StarEffect2, locked: !data.effects.includes('E2') },
+                    { id: 3, image: StarEffect3, locked: !data.effects.includes('E3') },
+                    { id: 4, image: StarEffect4, locked: !data.effects.includes('E4') },
+                    { id: 5, image: StarEffect5, locked: !data.effects.includes('E5') },
+                ];
+
+                // Update tabData
+                setTabData({
+                    '별 스킨': skins,
+                    '별 장식': decorations,
+                    '별 효과': effects,
+                });
 
             } catch (error: any) {
                 console.error('Error loading star customization:', error);
             }
         };
-
         loadStarData();
     }, []);
 
-    useEffect(() => {
-        // 샘플 데이터를 상태에 설정
-        setSelectedSkin(selectedSkin);
-        setSelectedDeco(selectedDeco);
-        setSelectedEffect(selectedEffect);
-    }, []);
-
-    const handleBackIconClick = () => {
-        navigate('/mypage', { state: { fromCustomize: true } });
-    };
+    const handleBackIconClick = () => navigate('/mypage', { state: { fromCustomize: true } });
 
     const NavItem = {
         icon: BackIcon,
@@ -130,7 +170,7 @@ function CustomizingPage() {
 
     const handleTabClick = (tabName: string, index: number) => {
         if (activeTab === tabName) return;
-    
+
         setAnimate(false); // Reset animation
         setTimeout(() => {
             setActiveTab(tabName);
@@ -139,29 +179,51 @@ function CustomizingPage() {
         }, 10); // Small delay to ensure state updates
     };
 
-    // 아이템 클릭 이벤트 처리 함수
     const handleItemClick = async (id: number) => {
         try {
+            let updatedSkin = selectedSkin;
+            let updatedDeco = selectedDeco;
+            let updatedEffect = selectedEffect;
+
             if (activeTab === '별 스킨') {
-                const updatedSkin = `S${id}`;
-                setSelectedSkin(id); // Update selected skin ID
+                updatedSkin = `S${id}`;
+                setSelectedSkin(updatedSkin);
 
-                const response = await updateStarCustomization(updatedSkin, `D${selectedDeco}`, `E${selectedEffect}`);
-                setProfileImg(response.data);
+                // Update profile image for skin
+                const newProfileImg = starSkinMap[updatedSkin];
+                if (newProfileImg) {
+                    setProfileImg(newProfileImg);
+                }
+            } else if (activeTab === '별 장식') {
+                updatedDeco = `D${id}`;
+                setSelectedDeco(updatedDeco);
+
+                // Update profile image for decoration
+                const newProfileImg = starDecoMap[updatedDeco];
+                if (newProfileImg) {
+                    setProfileImg(newProfileImg);
+                }
+            } else if (activeTab === '별 효과') {
+                updatedEffect = `E${id}`;
+                setSelectedEffect(updatedEffect);
+
+                // Update profile image for effect
+                const newProfileImg = starEffectMap[updatedEffect];
+                if (newProfileImg) {
+                    setProfileImg(newProfileImg);
+                }
             }
-            if (activeTab === '별 장식') {
-                const updatedDeco = `D${id}`;
-                setSelectedDeco(id); // Update selected skin ID
 
-                const response = await updateStarCustomization(`S${selectedSkin}`, updatedDeco, `E${selectedEffect}`);
-                setProfileImg(response.data);
-            }
-            if (activeTab === '별 효과') {
-                const updatedEffect = `E${id}`;
-                setSelectedEffect(id); // Update selected skin ID
+            console.log("updatedSkin, updatedDeco, updatedEffect: ", updatedSkin, updatedDeco, updatedEffect);
 
-                const response = await updateStarCustomization(`S${selectedSkin}`, `D${selectedDeco}`, updatedEffect);
-                setProfileImg(response.data);
+            // Make PATCH request to update customization
+            const response = await updateStarCustomization(updatedSkin, updatedDeco, updatedEffect);
+
+            if (response.data.code === 200) {
+                console.log('Customization updated successfully:', response.data.data);
+            } else {
+                console.error('Failed to update customization:', response.data);
+                alert('별 커스터마이징 업데이트에 실패했습니다.');
             }
         } catch (error) {
             console.error('Error updating star customization:', error);
@@ -169,13 +231,23 @@ function CustomizingPage() {
         }
     };
 
+
+    useEffect(() => {
+        if (selectedSkin) {
+            const newProfileImg = starSkinMap[selectedSkin];
+            if (newProfileImg) {
+                setProfileImg(newProfileImg);
+            }
+        }
+    }, [selectedSkin]);
+
     return (
 
         <CustomizingPageContainer>
             <TopNav lefter={NavItem} center={NavItem} righter={null} />
 
             <StarCustomizingContainer>
-                <MainStar src={ProfileImg} alt="메인 별 스킨" />
+                <MainStar key={profileImg} src={profileImg} alt="메인 별 스킨" />
 
                 <TabMenu activeIndex={activeTabIndex}>
                     <TabItem active={activeTab === '별 스킨'} onClick={() => handleTabClick('별 스킨', 0)}>
@@ -189,17 +261,18 @@ function CustomizingPage() {
                     </TabItem>
                 </TabMenu>
 
-                <StarSkinsContainer animate={animate} >
+                <StarSkinsContainer animate={animate}>
                     {tabData[activeTab].map((item) => (
                         <StarSkin
                             key={item.id}
                             selected={
-                                (activeTab === '별 스킨' && selectedSkin === item.id) ||
-                                (activeTab === '별 장식' && selectedDeco === item.id) ||
-                                (activeTab === '별 효과' && selectedEffect === item.id)
+                                (activeTab === '별 스킨' && selectedSkin === `S${item.id}`) ||
+                                (activeTab === '별 장식' && selectedDeco === `D${item.id}`) ||
+                                (activeTab === '별 효과' && selectedEffect === `E${item.id}`)
                             }
                             onClick={() => handleItemClick(item.id)}
-                            locked={item.locked}>
+                            locked={item.locked}
+                        >
                             {item.locked && (
                                 <>
                                     <LockOverlay />

@@ -2,11 +2,13 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { createGlobalStyle } from 'styled-components';
+import ProtectedRoute from "./utils/ProtectedRoute.tsx";
 
+// ⇩⇩⇩ Init Screen Routes ⇩⇩⇩ //
 import Splash from "./pages/Splash.tsx";
-
 import Login from "./pages/Login.tsx";
 
+// ⇩⇩⇩ User Screen Routes ⇩⇩⇩ //
 import NotificationList from "./pages/NotificationList.tsx";
 import ChallengeQuest from "./pages/ChallengeQuest.tsx";
 
@@ -25,10 +27,10 @@ import UpdatePWDPage from "./pages/UpdatePwdPage.tsx";
 import CustomizingPage from "./pages/CustomizingPage.tsx";
 import ExperiencePoint from "./pages/ExperiencePoint.tsx";
 
+// ⇩⇩⇩ Admin Screen Routes ⇩⇩⇩ //
 import MemberManage from "./pages/admin/MemberManage.tsx";
 import MemberDetail from "./pages/admin/MemberDetail.tsx";
 import InsertMember from "./pages/admin/InsertMember.tsx";
-
 
 import AdminBoard from "./pages/admin/AdminBoard.tsx";
 import AdminBoardList from "./pages/admin/AdminBoardList.tsx";
@@ -36,7 +38,6 @@ import AdminAddBoard from "./pages/admin/AdminAddBoard.tsx";
 
 import Synchronization from "./pages/admin/Synchronization.tsx";
 
-// 전역 스타일 정의
 const GlobalStyle = createGlobalStyle`
     * {
         margin: 0;
@@ -59,36 +60,33 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Splash />} />
-
           <Route path="/login" element={<Login />} />
 
-          <Route path="/home" element={<Home />} />
-          <Route path="/notification_list" element={<NotificationList />} />
-          <Route path="/challenge" element={<ChallengeQuest />} />
-          <Route path="/experience-point" element={<ExperiencePoint />} />
+          <Route path="/home" element={<ProtectedRoute element={<Home />} />} />
+          <Route path="/notification_list" element={<ProtectedRoute element={<NotificationList />} />} />
+          <Route path="/challenge" element={<ProtectedRoute element={<ChallengeQuest />} />} />
+          <Route path="/experience-point" element={<ProtectedRoute element={<ExperiencePoint />} />} />
 
-          <Route path="/quest" element={<QuestPage />} />
-          <Route path="/quest/:id" element={<QuestDetailPage />} />
-          <Route path="/quest-all/:id" element={<AllQuestPage />} />
+          <Route path="/quest" element={<ProtectedRoute element={<QuestPage />} />} />
+          <Route path="/quest/:id" element={<ProtectedRoute element={<QuestDetailPage />} />} />
+          <Route path="/quest-all/:id" element={<ProtectedRoute element={<AllQuestPage />} />} />
 
-          <Route path="/board" element={<BoardPage />} />
-          <Route path="/board/:id" element={<BoardDetail />} />
+          <Route path="/board" element={<ProtectedRoute element={<BoardPage />} />} />
+          <Route path="/board/:id" element={<ProtectedRoute element={<BoardDetail />} />} />
 
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/mypage-pwd" element={<UpdatePWDPage />} />
-          <Route path="/mypage-customize" element={<CustomizingPage />} />
+          <Route path="/mypage" element={<ProtectedRoute element={<Mypage />} />} />
+          <Route path="/mypage-pwd" element={<ProtectedRoute element={<UpdatePWDPage />} />} />
+          <Route path="/mypage-customize" element={<ProtectedRoute element={<CustomizingPage />} />} />
 
-          <Route path="/member" element={<MemberManage />} />
-          <Route path="/member/:id" element={<MemberDetail />} />
-          <Route path="/addMember" element={<InsertMember />} />
+          <Route path="/member" element={<ProtectedRoute element={<MemberManage />} />} />
+          <Route path="/member/:id" element={<ProtectedRoute element={<MemberDetail />} />} />
+          <Route path="/addMember" element={<ProtectedRoute element={<InsertMember />} />} />
 
+          <Route path="/admin-board" element={<ProtectedRoute element={<AdminBoardList />} />} />
+          <Route path="/admin-board/:id" element={<ProtectedRoute element={<AdminBoard />} />} />
+          <Route path="/admin-add-board" element={<ProtectedRoute element={<AdminAddBoard />} />} />
 
-          <Route path="/admin-board" element={<AdminBoardList />} />
-          <Route path="/admin-board/:id" element={<AdminBoard />} />
-          <Route path="/admin-add-board" element={<AdminAddBoard />} />
-
-          <Route path="/synchro" element={<Synchronization />} />
-
+          <Route path="/synchro" element={<ProtectedRoute element={<Synchronization />} />} />
         </Routes>
 
       </BrowserRouter>

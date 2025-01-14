@@ -96,7 +96,7 @@ const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  background: var(--sub-10);
+  background: var(--black-50);
   margin: 20px;
   margin-bottom: 100px;
 `;
@@ -117,7 +117,7 @@ const Category = styled.div`
 `;
 
 const BoardTitle = styled.div`
-  color: var(--primary-80);
+  color: var(--orange-90);
 
   display: -webkit-box;
   -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
@@ -138,10 +138,10 @@ const BoardVisibility = styled.div<{ visibility: string }>`
   padding: 3px 10px;
 
   background: ${(props) =>
-    props.visibility === null ? "var(--accent-70)" : "var(--primary-70)"};
+    props.visibility === null ? "var(--orange-60)" : "var(--orange-80)"};
 
   color: ${(props) =>
-    props.visibility === null ? "var(--accent-10)" : "var(--primary-10)"};
+    props.visibility === null ? "var(--orange-90)" : "var(--orange-20)"};
 `;
 
 const BoardGroup = styled.div`

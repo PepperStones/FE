@@ -1,14 +1,14 @@
 //ExperiencePoint.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
+import { formatNumberWithCommas } from "../utils/NumberWithComma.ts";
 import styled from "styled-components";
 
 import TwoButtonTopNav from "../components/nav/TwoButtonTopNav.tsx";
 import BottomNav from "../components/nav/FooterNav.tsx";
 import ExpModal from "../components/modal/ExpModal.tsx";
 
-import StarImage from "../assets/images/star/real_start.png";
+import StarImage from "../assets/images/star/real_star.png";
 
 import {
   getCurrentExperience,
@@ -22,12 +22,12 @@ import BackIcon from "../assets/images/left_arrow.png";
 import companyNumIcon from "../assets/images/hugeicons_id.png";
 import jobNameIcon from "../assets/images/grommet-icons_group.png";
 import centerNameIcon from "../assets/images/lucide_house.png";
-import SpeechBubbleImage from "../assets/images/speech_bubble_1.png";
+import SpeechBubbleImage from "../assets/images/bubble_gray.png";
 import taskIcon from "../assets/images/task_exp.png";
 import leaderIcon from "../assets/images/leader_exp.png";
 import performanceIcon from "../assets/images/hugeicons_chart-evaluation.png";
 import informationIcon from "../assets/images/information_line.png";
-import LevelBubble from "../assets/images/yellow_bubble.png";
+import LevelBubble from "../assets/images/bubble_gray_2.png";
 import levelData from "../constants/levels.json";
 
 // interface User {
@@ -117,7 +117,7 @@ const renderCategory = (categoryName: string, items: RecentExperience[]) => (
             <Div></Div>
             <ReceiptBottom>
               <div className="caption-sm-300">획득 경험치</div>
-              <p>+ {item.experience} do</p>
+              <p>+ {formatNumberWithCommas(item.experience)} do</p>
             </ReceiptBottom>
           </div>
         </RecentExpDiv>
@@ -317,12 +317,19 @@ const ExperiencePoint: React.FC = () => {
             <Head className="text-md-300">
               다음 레벨 까지
               <p className="text-lg-300">
-                {requiredExperience - totalAccumulatedExperience} do
+                {formatNumberWithCommas(
+                  requiredExperience - totalAccumulatedExperience
+                )}{" "}
+                do
               </p>{" "}
               남았어요!
               <img src={informationIcon} alt="" onClick={handleOpenModal}></img>
             </Head>
-            <ExpModal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <ExpModal
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              user={currentExperience.data.user}
+            />
             <Exp>
               <div className="text-sm-200 ">
                 총 누적 경험치{" "}
@@ -339,12 +346,14 @@ const ExperiencePoint: React.FC = () => {
                 {" "}
                 <ExpNum>
                   <h1 className="text-lg-300">
-                    {totalAccumulatedExperience} do
+                    {formatNumberWithCommas(totalAccumulatedExperience)} do
                   </h1>
-                  <p className="caption-md-300">/ {requiredExperience}</p>
+                  <p className="caption-md-300">
+                    / {formatNumberWithCommas(requiredExperience)}
+                  </p>
                 </ExpNum>
                 <Percent className="text-lg-300">
-                  {totalExperiencePercent}%
+                  {formatNumberWithCommas(totalExperiencePercent)}%
                 </Percent>
               </BarCount>
             </Exp>
@@ -358,7 +367,9 @@ const ExperiencePoint: React.FC = () => {
                 {" "}
                 <ExpNum>
                   <h1 className="text-lg-300">
-                    {currentExperience.data.experience.totalExperienceThisYear}{" "}
+                    {formatNumberWithCommas(
+                      currentExperience.data.experience.totalExperienceThisYear
+                    )}{" "}
                     do
                   </h1>
                   <p className="caption-md-300">/ 중위평균 9,000</p>
@@ -391,13 +402,15 @@ const ExperiencePoint: React.FC = () => {
                 {" "}
                 <ExpNum>
                   <h1 className="text-lg-300">
-                    {
+                    {formatNumberWithCommas(
                       currentExperience.data.experience
                         .accumulatedExperienceLastYear
-                    }{" "}
+                    )}{" "}
                     do
                   </h1>
-                  <p className="caption-md-300">/ {requiredExperience}</p>
+                  <p className="caption-md-300">
+                    / {formatNumberWithCommas(requiredExperience)}
+                  </p>
                 </ExpNum>
                 <Percent className="text-lg-300">
                   {calculateProgressPercent(
@@ -503,7 +516,7 @@ const My = styled.div`
   gap: 25px;
 
   border-radius: 15px;
-  background: var(--sub-20);
+  background: var(--black-50);
 
   z-index: 0; /* 텍스트 위에 표시되지 않도록 뒤로 보냄 */
 `;
@@ -540,7 +553,7 @@ const SpeechBubble = styled.div`
   position: relative;
 
   justify-content: right;
-  color: var(--sub-20);
+  color: var(--black-70);
   position: relative;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -615,7 +628,7 @@ const Head = styled.div`
   margin-bottom: 10px;
 
   > p {
-    color: var(--primary-primary-70-main, #fff0a5);
+    color: var(--orange-80);
   }
   > img {
     width: 18px;
@@ -626,7 +639,7 @@ const Exp = styled.div`
   width: 100%;
   height: 98px;
   border-radius: 15px;
-  background: var(--Sub-sub-20, #262d46);
+  background: var(--black-50);
 
   margin-bottom: 15px;
   padding: 14px;
@@ -679,7 +692,7 @@ const BarCount = styled.div`
 const BarFill = styled.div<{ progress: number }>`
   width: ${(props) => props.progress}%;
   height: 9px;
-  background: var(--primary-70);
+  background-color: var(--orange-70);
   border-radius: 13px; /* 모서리 둥글게 */
 
   transition: width 0.3s ease; /* 애니메이션 효과 */
@@ -694,7 +707,7 @@ const Circle = styled.div<{ position: number }>`
 
   width: 13px;
   height: 13px;
-  background-color: var(--primary-70);
+  background-color: var(--orange-70);
   border: none;
   border-radius: 50%; /* 원형 */
 `;
@@ -709,12 +722,12 @@ const ExpNum = styled.div`
 
   color: var(--Grayscale-gray-40, #999);
   > h1 {
-    color: var(--primary-70);
+    color: var(--orange-70);
   }
 `;
 
 const Percent = styled.span`
-  color: var(--primary-70);
+  color: var(--orange-70);
 `;
 
 const ReceiptExpContainer = styled.div`
@@ -733,7 +746,7 @@ const RecentExpDiv = styled.div`
   width: 353px;
   height: 107px;
   border-radius: 15px;
-  background: var(--Sub-sub-20, #262d46);
+  background: var(--black-50);
 
   margin-bottom: 12px;
 `;
@@ -758,7 +771,7 @@ const ReceiptHead = styled.div`
         height: 16px;
       }
       > h1 {
-        color: var(--Primary-primary-80, #fffae3);
+        color: var(--orange-100);
       }
     }
     > p {
@@ -796,10 +809,10 @@ const ReceiptBottom = styled.div`
     padding: 3px 10px;
     align-items: center;
     border-radius: 15px;
-    border: 1px solid var(--Accent-accent-40, #89a7b4);
-    background: var(--Accent-accent-80, #e9f5fa);
 
-    color: var(--Accent-accent-10, #404e54);
+    background: var(--orange-60);
+
+    color: var(--orange-90);
     text-align: center;
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
   }

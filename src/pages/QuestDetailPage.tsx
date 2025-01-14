@@ -395,9 +395,9 @@ const DonutWrapper = styled.div`
   align-items: center;
 
   position: absolute; /* 페이지 내 특정 위치에 고정 */
-top: 40%;
+top: 40.5%;
 left: -140%;
-transform: translate(-50%, -50%);
+
 
   width: 1500px;
   height: 1500px;
@@ -453,8 +453,6 @@ const CircleComponent = styled.div`
     width: 40px; /* 버튼 크기 */
     height: 40px; /* 버튼 크기 */
     border-radius: 50%;
-
-    margin-right: 10px;
 
     display: flex;
     justify-content: center;

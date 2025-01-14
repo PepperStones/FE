@@ -8,7 +8,21 @@ import QuestRewardBtn from "../components/button/QuestRewardBtn.tsx";
 import BackIcon from "../assets/images/left_arrow.png";
 import PalmTree from "../assets/images/reward/star_skin_3.png";
 
+import StarSkin1 from "../assets/images/reward/star_skin_2.png";
+import StarSkin2 from "../assets/images/reward/star_skin_3.png";
+import StarSkin3 from "../assets/images/reward/star_skin_4.png";
+import StarSkin4 from "../assets/images/reward/star_skin_5.png";
+import StarSkin5 from "../assets/images/reward/star_skin_6.png";
+
 import { fetchChallenges, receiveChallengeReward, Challenge } from "../api/user/ChallengeApi.ts";
+
+const rewardImageMap: Record<string, string> = {
+  S1: StarSkin1,
+  S2: StarSkin2,
+  S3: StarSkin3,
+  S4: StarSkin4,
+  S5: StarSkin5,
+};
 
 function ChallengeQuest() {
   const navigate = useNavigate();
@@ -35,9 +49,12 @@ function ChallengeQuest() {
   // 아이템 받기 API
   const handleReceiveRewardClick = async (challengeProgressId: number) => {
     try {
+      console.log("Sending challengeProgressId:", challengeProgressId);
 
-      console.log("challengeProgressId: ", challengeProgressId);
-      const response = await receiveChallengeReward(Number(challengeProgressId)); // 보상 수령 API 호출
+      // API 호출
+      const response = await receiveChallengeReward(challengeProgressId);
+
+      console.log("Response data:", response);
 
       // 성공적으로 수령한 경우 상태 업데이트
       setChallenges((prevChallenges) =>
@@ -50,6 +67,7 @@ function ChallengeQuest() {
 
       alert("아이템을 성공적으로 수령했습니다!");
     } catch (error: any) {
+      console.error("Error receiving reward:", error);
       alert(error.message || "아이템 수령에 실패했습니다.");
     }
   };
@@ -77,7 +95,7 @@ function ChallengeQuest() {
             key={challenge.challengesId} // 고유한 key 값
             title={challenge.name}
             content={challenge.description}
-            rewardImg={PalmTree} // 보상 이미지 (임시)
+            rewardImg={rewardImageMap[challenge.itemValue]} // 보상 이미지 (임시)
             isAvailable={challenge.challengeProgress.completed} // 완료되지 않은 경우 활성화
             isDone={challenge.challengeProgress.receive} // 완료 여부
             progress={{

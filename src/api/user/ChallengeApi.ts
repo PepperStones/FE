@@ -5,6 +5,7 @@ export interface Challenge {
     challengesId: number;
     name: string;
     description: string;
+    itemValue: string;
     requiredCount: number;
     challengeProgress: {
         challengeProgressId: number;
@@ -14,7 +15,7 @@ export interface Challenge {
     };
 }
 
-// API 호출 함수
+// 도전과제 리스트업 API
 export const fetchChallenges = async (): Promise<Challenge[]> => {
     try {
         const response = await axios.get<{ code: number; data: Challenge[] }>(
@@ -26,6 +27,8 @@ export const fetchChallenges = async (): Promise<Challenge[]> => {
                 },
             }
         );
+
+        console.log("response.data.data: ", response.data.data);
 
         if (response.data.code !== 200) {
             throw new Error("도전 과제 데이터를 불러오는 데 실패했습니다.");
@@ -40,22 +43,19 @@ export const fetchChallenges = async (): Promise<Challenge[]> => {
 
 export const receiveChallengeReward = async (challengeProgressId: number) => {
     try {
-      const response = await axios.patch(
-        `${process.env.REACT_APP_API_BASE_URL}/challenge/receive`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Replace with your token logic
-            'Content-Type': 'application/json',
-          },
-          params: {
-            challengeProgressId,
-          },
-        }
-      );
-      console.log(response.data);
-
-      return response.data;
+        const response = await axios.patch(
+            `${process.env.REACT_APP_API_BASE_URL}/challenge/receive/${challengeProgressId}`,
+            null, // No body needed
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return response.data;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to receive reward.');
+        console.error("Error receive challenges:", error);
+        throw new Error(error.response?.data?.message);
     }
-  };
+};

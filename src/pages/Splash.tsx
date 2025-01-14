@@ -30,35 +30,48 @@ const sparkle = keyframes`
 `;
 
 function Splash() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      const accessToken = localStorage.getItem('accessToken'); // Check for accessToken
-      const userRole = localStorage.getItem('userRole'); // Check for userRole
-  
+  useEffect(() => {
+    const handleNavigation = () => {
+      const accessToken = localStorage.getItem('accessToken'); // 토큰 확인
+      const userRole = localStorage.getItem('userRole'); // 사용자 역할 확인
+
       if (accessToken) {
+        // 사용자 역할에 따라 경로 설정
         if (userRole === 'USER') {
           navigate('/home');
         } else if (userRole === 'ADMIN') {
           navigate('/member');
+        } else {
+          const timer = setTimeout(() => {
+            navigate('/login');
+          }, 4500);
+
+          return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
         }
       } else {
+        // 토큰이 없으면 스플래시 화면 후 로그인 페이지로 이동
         const timer = setTimeout(() => {
           navigate('/login');
         }, 4500);
-        return () => clearTimeout(timer);
+
+        return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
       }
-    }, [navigate]);
+    };
 
-    return (
-        <SplashContainer>
+    handleNavigation(); // 네비게이션 실행
+  }, [navigate]); // navigate를 의존성으로 추가
 
-            <SplashContentContainer>
-                <SplashContent src={SplashImg} />
-            </SplashContentContainer>
+  return (
+    <SplashContainer>
 
-        </SplashContainer>
-    );
+      <SplashContentContainer>
+        <SplashContent src={SplashImg} />
+      </SplashContentContainer>
+
+    </SplashContainer>
+  );
 }
 
 export default Splash;

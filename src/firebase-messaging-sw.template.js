@@ -19,11 +19,16 @@ importScripts(
   const messaging = firebase.messaging();
   
   messaging.onBackgroundMessage((payload) => {
+    if (!document.hidden) return;
+
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
+
+    const timestamp = payload.data?.timestamp || Date.now().toString();
     const notificationTitle = payload.notification?.title || 'Default Title';
     const notificationOptions = {
       body: payload.notification?.body || 'Default Body',
       icon: payload.notification?.icon || '/default-icon.png',
+      tag: timestamp,
     };
   
     self.registration.showNotification(notificationTitle, notificationOptions);

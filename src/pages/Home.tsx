@@ -59,7 +59,7 @@ const Home: React.FC = () => {
       isPageOption === 0
         ? `을 보러 오셨군요!`
         : isPageOption === 1
-        ? `자리가 빛나고 있어요!`
+        ? `^^ 자리가 빛나고 있어요!`
         : "를 밝히고 있어요!",
   };
 

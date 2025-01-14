@@ -77,7 +77,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       [`page${isPageOption}`]: false,
     }));
   };
-  
+
   // F 데이터를 저장할 배열
   const savedData: Array<{ level: string; total_experience: number }> = [];
 
@@ -157,6 +157,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
               handleIconPage();
               handleHideInfoTag(); // InfoTag 숨김
             }}
+            style={{ width: "22px", height: "22px" }}
           />
           {/* InfoTag 표시 여부 */}
           {infoTagState[`page${isPageOption}`] && (
@@ -179,6 +180,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
             onClick={() => {
               navigate("/challenge");
             }}
+            style={{ width: "16px", height: "20px" }}
           />
         </Center>
 
@@ -187,6 +189,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
             src={RightIconImg}
             alt="Right Icon"
             onClick={() => navigate("/notification_list")}
+            style={{ width: "20px", height: "22px" }}
           />
         </Right>
       </TopNav>
@@ -323,10 +326,7 @@ const Right = styled.div`
   justify-content: right; /* 중앙 정렬 */
 `;
 
-const NavIcon = styled.img`
-  width: 22px;
-  height: 22px;
-`;
+const NavIcon = styled.img``;
 
 const Title = styled.div`
   display: flex;

@@ -168,12 +168,7 @@ export const addBoard = async (
 
     return response.data;
   } catch (error: any) {
-    if (error.response) {
-      // 서버에서 반환된 에러 응답
-      return error.response.data;
-    }
-
-    // 기타 에러 (네트워크 문제 등)
-    throw new Error("An unexpected error occurred while adding the board.");
+    console.error("게시글 삭제 실패:", error);
+    throw error; // 에러를 상위에서 처리하도록 던짐
   }
 };

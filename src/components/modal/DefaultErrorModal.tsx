@@ -9,6 +9,7 @@ interface DefaultErrorModalProps {
     errorMessage: string;
     onAcceptFunc: () => void;
     isSuccess?: boolean;
+    isOverlayBlack?: boolean;
 }
 
 const fadeIn = keyframes`
@@ -29,7 +30,7 @@ const fadeOut = keyframes`
   }
 `;
 
-const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorModal, errorMessage, onAcceptFunc, isSuccess = false }) => {
+const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorModal, errorMessage, onAcceptFunc, isSuccess = false, isOverlayBlack = false }) => {
     const [isClosing, setIsClosing] = useState(false);
 
     if (!showDefaultErrorModal && !isClosing) return null;
@@ -43,25 +44,26 @@ const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorM
     };
 
     return (
-        <Overlay onClick={handleOverlayClick}>
-            <div style={{ height: '400px' }}></div>
+        <Overlay onClick={handleOverlayClick} OverlayBlack = {isOverlayBlack}>
+            {isOverlayBlack ? undefined : <div style={{ height: '400px' }}></div>}
             <Content isClosing={isClosing} isSuccess={isSuccess}>
                 {isSuccess ? <ContentIcon src={successIcon}/> : <ContentIcon src={errorIcon}/>}
                 <ContentText className='text-sm-300'>{errorMessage}</ContentText>
             </Content>
+            {isOverlayBlack ? <div style={{ height: '620px' }}></div> : undefined}
         </Overlay>
     );
 };
 
 export default DefaultErrorModal;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{OverlayBlack:boolean}>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: ${({ OverlayBlack }) => OverlayBlack ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)"};
   display: flex;
   justify-content: center;
   align-items: center;

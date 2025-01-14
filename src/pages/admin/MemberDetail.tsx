@@ -84,13 +84,8 @@ function MemberDetail() {
     const handleDeleteClick = async () => {
         try {
             if (!id) throw new Error("유효하지 않은 사용자 ID입니다.");
-
-            const isDeleted = await deleteMemberDetail(Number(id)); // API 호출
-
-            if (isDeleted) {
-                navigate("/member"); // 목록 페이지로 이동
-            }
-
+            const isDeleted = await deleteMemberDetail(Number(id));
+            if (isDeleted) navigate("/member");
         } catch (error: any) {
             console.error("Error deleting member detail:", error);
         }

@@ -61,6 +61,7 @@ function Setting() {
     const handleLogOut = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userRole');
 
         navigate('/login');
     };

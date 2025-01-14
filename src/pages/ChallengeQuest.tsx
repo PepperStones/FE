@@ -4,10 +4,9 @@ import styled from "styled-components";
 
 import TopNav from "../components/nav/TopNav.tsx";
 import QuestRewardBtn from "../components/button/QuestRewardBtn.tsx";
+import DefaultErrorModal from "../components/modal/DefaultErrorModal.tsx";
 
 import BackIcon from "../assets/images/left_arrow.png";
-import PalmTree from "../assets/images/reward/star_skin_3.png";
-
 import StarSkin1 from "../assets/images/reward/star_skin_2.png";
 import StarSkin2 from "../assets/images/reward/star_skin_3.png";
 import StarSkin3 from "../assets/images/reward/star_skin_4.png";
@@ -26,10 +25,12 @@ const rewardImageMap: Record<string, string> = {
 
 function ChallengeQuest() {
   const navigate = useNavigate();
-
-  const [challenges, setChallenges] = useState<Challenge[]>([]); // 도전 과제 데이터 상태
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const handleBackIconClick = () => navigate("/home");
+  const openSuccessModal = () => setIsSuccessModalOpen(true);
+  const closeSuccessModal = () => setIsSuccessModalOpen(false);
 
   // 도전과제 리스트업 API
   useEffect(() => {
@@ -65,7 +66,7 @@ function ChallengeQuest() {
         )
       );
 
-      alert("아이템을 성공적으로 수령했습니다!");
+      openSuccessModal();
     } catch (error: any) {
       console.error("Error receiving reward:", error);
       alert(error.message || "아이템 수령에 실패했습니다.");
@@ -108,6 +109,15 @@ function ChallengeQuest() {
         ))}
 
       </QuestContainer>
+
+      <DefaultErrorModal
+        showDefaultErrorModal={isSuccessModalOpen}
+        errorMessage='도전과제 성공! 새로운 아이템을 확인해보세요!'
+        onAcceptFunc={closeSuccessModal}
+        isSuccess={true}
+        isOverlayBlack={true}
+      />
+
     </ChallengeQuestContainer>
   );
 }

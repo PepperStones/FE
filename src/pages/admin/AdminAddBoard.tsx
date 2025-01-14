@@ -109,7 +109,7 @@ const AdminAddBoard: React.FC = () => {
 
   return (
     <div>
-      <TopNav lefter={Center} center={Center} righter={null} isAdmin={true}/>
+      <TopNav lefter={Center} center={Center} righter={null} isAdmin={true} />
       <BoardContainer>
         <Head>
           <Category>
@@ -133,7 +133,10 @@ const AdminAddBoard: React.FC = () => {
                 className="caption-sm-300"
                 value={groupSelect}
                 onChange={(e) => setGroupSelect(e.target.value)}
-                style={{ background: "var(--primary-90)" }} // 객체 형태로 스타일 지정
+                style={{
+                  background: "var(--orange-80)",
+                  color: "var(--orange-20)",
+                }} // 객체 형태로 스타일 지정
               >
                 <option value="전체">그룹 없음</option>
                 <option value="1">1그룹</option>
@@ -174,7 +177,7 @@ const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  background: var(--sub-10);
+  background: var(--black-50);
   margin: 20px;
   margin-bottom: 20px;
 `;
@@ -198,11 +201,11 @@ const Category = styled.div`
 const EditSelect = styled.select`
   padding: 5px 10px;
   font-size: 16px;
-  border: 1px solid var(--sub-40);
+  border: none;
 
   border-radius: 15px;
-  background: var(--sub-80);
-  color: var(--sub-20);
+  background: var(--orange-60);
+  color: var(--orange-90);
 
   &:focus {
     outline: none;
@@ -215,10 +218,10 @@ const EditInput = styled.input`
   width: 100%;
   margin-top: 5px;
   font-size: 16px;
-  border: 1px solid var(--sub-10);
+  border: none;
   border-radius: 5px;
 
-  background: var(--sub-10); /* 배경 색상 */
+  background: var(--black-50); /* 배경 색상 */
   color: var(--primary-80); /* 텍스트 색상 */
 
   &:focus {
@@ -232,10 +235,10 @@ const EditTextarea = styled.textarea`
   height: 100%;
   padding: 14px;
   font-size: 16px;
-  border: 1px solid var(--sub-10);
+  border: none;
   border-radius: 5px;
 
-  background: var(--sub-10); /* 배경 색상 */
+  background: var(--black-50); /* 배경 색상 */
   color: var(--primary-80); /* 텍스트 색상 */
 
   &:focus {

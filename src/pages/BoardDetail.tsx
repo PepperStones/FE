@@ -138,10 +138,10 @@ const BoardVisibility = styled.div<{ visibility: string }>`
   padding: 3px 10px;
 
   background: ${(props) =>
-    props.visibility === null ? "var(--accent-70)" : "var(--primary-70)"};
+    props.visibility === null ? "var(--orange-60)" : "var(--orange-80)"};
 
   color: ${(props) =>
-    props.visibility === null ? "var(--accent-10)" : "var(--primary-10)"};
+    props.visibility === null ? "var(--orange-90)" : "var(--orange-20)"};
 `;
 
 const BoardGroup = styled.div`

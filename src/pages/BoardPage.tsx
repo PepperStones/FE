@@ -98,31 +98,37 @@ const BoardPage: React.FC = () => {
     <Container>
       <TopNav lefter={null} center={NavItem} righter={null} />
       <BoardList>
-        {boards.map((board) => (
-          <BoardItem key={board.id} onClick={() => handleClick(board.id)}>
-            <BoardContents>
-              <ContentsHead>
-                <BoardVisibility
-                  className="caption-sm-300"
-                  visibility={board.centerGroup}
-                >
-                  {board.centerGroup || "전체"}
-                </BoardVisibility>
-                {board.jobGroup && (
-                  <BoardGroup className="caption-sm-300">
-                    {board.jobGroup}그룹
-                  </BoardGroup>
-                )}
-              </ContentsHead>
-              <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
-              <BoardDate className="caption-sm-100">
-                작성일 {DateUtil.formatDate(board.createdAt)} | 수정일{" "}
-                {DateUtil.formatDate(board.updatedAt)}
-              </BoardDate>
-            </BoardContents>
-            <BoardIcon src={RightIcon}></BoardIcon>
-          </BoardItem>
-        ))}
+        {boards.length !== 0 ? (
+          boards.map((board) => (
+            <BoardItem key={board.id} onClick={() => handleClick(board.id)}>
+              <BoardContents>
+                <ContentsHead>
+                  <BoardVisibility
+                    className="caption-sm-300"
+                    visibility={board.centerGroup}
+                  >
+                    {board.centerGroup || "전체"}
+                  </BoardVisibility>
+                  {board.jobGroup && (
+                    <BoardGroup className="caption-sm-300">
+                      {board.jobGroup}그룹
+                    </BoardGroup>
+                  )}
+                </ContentsHead>
+                <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
+                <BoardDate className="caption-sm-100">
+                  작성일 {DateUtil.formatDate(board.createdAt)} | 수정일{" "}
+                  {DateUtil.formatDate(board.updatedAt)}
+                </BoardDate>
+              </BoardContents>
+              <BoardIcon src={RightIcon}></BoardIcon>
+            </BoardItem>
+          ))
+        ) : (
+          <p style={{ color: "var(--gray-50)" }} className="text-sm-100">
+            등록된 글이 없습니다.
+          </p>
+        )}
       </BoardList>
       <BottomNav />
     </Container>
@@ -192,10 +198,10 @@ const BoardVisibility = styled.div<{ visibility: string }>`
   padding: 3px 10px;
 
   background: ${(props) =>
-    props.visibility === null ? "var(--accent-70)" : "var(--primary-70)"};
+    props.visibility === null ? "var(--orange-60)" : "var(--orange-80)"};
 
   color: ${(props) =>
-    props.visibility === null ? "var(--accent-10)" : "var(--primary-10)"};
+    props.visibility === null ? "var(--orange-90)" : "var(--orange-20)"};
 `;
 
 const BoardGroup = styled.div`

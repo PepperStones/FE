@@ -91,7 +91,7 @@ const Container = styled.nav`
 
   position: sticky;
   top: 0;
-  background: var(--bg-10);
+  background: var(--black-20);
   z-index: 1000;
 
   border-bottom: 1px solid var(--gray-10);
@@ -150,8 +150,8 @@ const Option = styled.div`
   text-align: center;
 
   &.active {
-    color: var(--primary-70); /* 활성화된 텍스트 색상 */
-    border-bottom: 1px solid var(--primary-70);
+    color: var(--orange-80); /* 활성화된 텍스트 색상 */
+    border-bottom: 1px solid var(--orange-80);
   }
 
   &.disable {

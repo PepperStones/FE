@@ -34,12 +34,12 @@ height: 2.875rem;
 
 padding: 11px 48px;
 border-radius: 15px;
-background: ${({ isAvailable, isDarkblue }) => isDarkblue ? 'var(--sub-30)' : (isAvailable ? 'var(--primary-70)' : 'var(--primary-80)')};
+background: ${({ isAvailable, isDarkblue }) => isDarkblue ? 'var(--gray-20)' : (isAvailable ? 'var(--orange-70)' : 'var(--orange-90)')};
 border: none;
 
 gap: 10px;
 
-color: ${({ isDarkblue }) => isDarkblue ? 'var(--gray-80)' : 'var(--gray-0)'};
+color: ${({ isAvailable, isDarkblue }) => isDarkblue ? 'var(--gray-80)' : (isAvailable ? 'var(--gray-100)' : 'var(--gray-40)')};
 text-align: center;
 
 user-select: none; /* 텍스트 선택 방지 */

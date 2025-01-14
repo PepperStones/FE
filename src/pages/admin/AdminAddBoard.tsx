@@ -95,7 +95,7 @@ const AdminAddBoard: React.FC = () => {
 
   return (
     <div>
-      <TopNav lefter={Center} center={Center} righter={null} />
+      <TopNav lefter={Center} center={Center} righter={null} isAdmin={true}/>
       <BoardContainer>
         <Head>
           <Category>

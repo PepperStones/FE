@@ -30,8 +30,8 @@ height: 3rem;
 
 padding: 15px 0px;
 border-radius: 15px;
-border: 1px solid ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--gray-30)')};
-background: ${({ isAvailable }) => (isAvailable ? 'var(--primary-70)' : 'var(--gray-30)')};
+border: 1px solid ${({ isAvailable }) => (isAvailable ? 'var(--orange-70)' : 'var(--orange-90)')};
+background: ${({ isAvailable }) => (isAvailable ? 'var(--orange-70)' : 'var(--orange-90)')};
 
 gap: 6px;
 

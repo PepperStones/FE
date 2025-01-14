@@ -118,7 +118,7 @@ const AdminBoardList: React.FC = () => {
 
   return (
     <div>
-      <TopNav lefter={null} center={Top} righter={Top} />
+      <TopNav lefter={null} center={Top} righter={Top} isAdmin={true}/>
       <SearchFilter
         search={search}
         setSearch={setSearch}

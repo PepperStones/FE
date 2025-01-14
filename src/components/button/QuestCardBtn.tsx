@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import ProgressCircle from '../loading/ProgressCircle.tsx'
 
 import UnitIcon from '../../assets/images/clock_cycle.png'
-import PaperIcon from '../../assets/images/yellow_paper.png'
+import PaperIcon from '../../assets/images/orange_paper.png'
+import PersonPrizeIcon from '../../assets/images/orange_person_prize.png'
 import RateIcon from '../../assets/images/percentage-circle.png'
 
 /* Props 정보
@@ -32,7 +33,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
             <QuestHeader>
                 <QuestTitleWrapper className='no-drag'>
                     <QuestLeftContent>
-                        <QuestIcon src={PaperIcon} alt="퀘스트 아이콘" />
+                        {title === '직무별' ? <QuestIcon src={PaperIcon} alt="퀘스트 아이콘" /> : <QuestIcon src={PersonPrizeIcon} alt="퀘스트 아이콘" />}
                         <QuestTitle className='text-sm-200'>{title} 퀘스트</QuestTitle>
                         <QuestSubtitle className='text-lg-300'>{subtitle}</QuestSubtitle>
                     </QuestLeftContent>
@@ -49,6 +50,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                             maxProgress={progress.maxProgress}
                             Variation={progress.Variable}
                             circleRadius={progress.circleRadius}
+                            isQuestDetail={false}
                         />
                     </ProgressCircleContainer>
 
@@ -67,9 +69,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                         </ConditionContainer>
 
                         <>
-                            <GetPurpose className='caption-sm-300'
-                                onClick={onClick}
-                            >
+                            <GetPurpose className='caption-sm-300'>
                                 <GetPurposeIcon src={UnitIcon} />
                                 {unit} 단위 테스트
                                 {title !== '직무별' && (
@@ -128,15 +128,15 @@ height: 16px;
 `;
 
 const QuestTitle = styled.div`
-color: var(--primary-80);    
+color: var(--orange-100);    
 `;
 
 const QuestSubtitle = styled.div`
-color: var(--primary-70);
+color: var(--orange-80);
 `;
 
 const QuestCardContainer = styled.div`
-    background-color: var(--sub-20);
+    background-color: var(--black-50);
     border-radius: 15px;
     padding: 12px 18px;
 
@@ -152,7 +152,7 @@ gap: 13px;
 `;
 
 const QuestDivider = styled.div`
-border: 1px solid var(--sub-40);
+border: 1px solid var(--gray-10);
 `;
 
 
@@ -178,7 +178,7 @@ gap: 8px;
 
 const ConditionTitle = styled.div`
 border-radius: 15px;
-background: var(--sub-80);
+background: var(--gray-60);
 
 padding: 3px 10px;
 
@@ -193,7 +193,7 @@ const DownwardTriangle = styled.div`
   height: 0;
   border-left: 6px solid transparent; /* Adjust size */
   border-right: 6px solid transparent; /* Adjust size */
-  border-top: 6px solid var(--sub-80); /* Color of the triangle */
+  border-top: 6px solid var(--gray-60); /* Color of the triangle */
   
   position: absolute; /* Positioning relative to parent */
   left: 50%; /* Center horizontally */
@@ -216,13 +216,14 @@ align-items: center;
 
 width: fit-content;
 border-radius: 15px;
-border: 1px solid var(--sub-40);
-background: linear-gradient(to bottom, var(--sub-40), var(--sub-20));
+border: none;
+border-top: 1px solid #666;
+background: var(--black-30);
 
 padding: 7px 10px;
 margin-top: 7px;
 
-color: var(--sub-80);
+color: var(--gray-70);
 `;
 
 const GetPurposeIcon = styled.img`
@@ -234,7 +235,7 @@ margin-right: 6px;
 
 const PercentageDivider = styled.div`
 height: 10px;
-border: 0.5px solid var(--sub-40);
+border: 0.5px solid var(--gray-20);
 
 margin: 0 10px;
 `;

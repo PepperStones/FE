@@ -142,7 +142,7 @@ const LoginScreenContainer = styled.div`
 `;
 
 const Header = styled.div`
-  margin: 111px 0;
+  margin: 150px 0;
 
   color: var(--gray-100);
 `;

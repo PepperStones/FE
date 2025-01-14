@@ -38,7 +38,7 @@ function AllQuestPage() {
             try {
                 setIsLoading(true);
                 const response = await fetchQuestDetail(quest.type, Number(quest.id));
-                
+
                 console.log("response: ", response);
 
                 setQuestDetails(response);
@@ -74,10 +74,14 @@ function AllQuestPage() {
             // Find the corresponding quest data for this unit
             const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
 
-            // Calculate currentProgress dynamically
             const currentProgress = questData
-                ? (questData.experience / (quest.maxScore || quest.maxPoints || 100)) * 100
+                ? Math.min(
+                    (questData.experience / (quest.maxScore || quest.maxPoints || 100)) * 100,
+                    quest.maxScore || quest.maxPoints // Cap at 100
+                )
                 : 0;
+
+            console.log("currentProgress && index : ", currentProgress, "/", quest.maxScore || quest.maxPoints, " and ", index);
 
             return (
                 <GridItem key={index} className="no-drag">
@@ -86,10 +90,12 @@ function AllQuestPage() {
                         {questDetails?.data.period === 'WEEKLY' ? '주차' : '월'}
                     </ShowUnit>
                     <ProgressCircle
-                        currentProgress={currentProgress || null}
+                        currentProgress={currentProgress}
                         maxProgress={quest.maxScore || quest.maxPoints}
-                        Variation={questData?.experience || null} 
-                        circleRadius={22}
+                        Variation={questData?.experience || null}
+                        circleRadius={21}
+                        isQuestDetail={true}
+                        isAllQuest={true}
                     />
                 </GridItem>
             );
@@ -145,7 +151,7 @@ function AllQuestPage() {
                 </GridContainer>
             </QuestDetailBottomContent>
 
-            {quest.unit === '주' ? <div style={{ height: '100px' }}></div> : quest.unit === '월' ? undefined : undefined}
+            {questDetails?.data.period === 'WEEKLY' ? <div style={{ height: '100px' }}></div> : questDetails?.data.period === 'MONTHLY' ? undefined : undefined}
 
             <FooterNav />
         </QuestDetailPageContainer >
@@ -186,11 +192,10 @@ display: grid;
 grid-template-columns: repeat(5, 1fr); /* Create 10 columns */
 grid-template-rows: ${({ isWeekly }) => (isWeekly ? 'repeat(10, 1fr)' : 'repeat(3, 1fr)')}; /* Rows based on isWeekly */
 
-width: 100%; /* Adjust width as needed */
-background-color: var(--sub-20);
+width: 100%;
+background-color: var(--black-50);
 border-radius: 15px;
 
-gap: 10px; /* Space between grid items */
 padding: 15px; /* Optional padding */
 `;
 
@@ -200,14 +205,12 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 
-width: 100%; /* Full width of the grid cell */
-aspect-ratio: 1 / 1; /* Make each cell a square */
+width: 100%;
 
- /* Example background color */
 border-radius: 8px; /* Optional rounded corners */
 color: var(--accent-80); /* Text color */
-font-size: 14px; /* Adjust text size as needed */
-font-weight: bold;
+
+margin-bottom: 15px;
 `;
 
 const ShowUnit = styled.div`

@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
 
 import MediumBtn from '../button/MediumBtn.tsx';
 
@@ -9,13 +9,40 @@ interface NoticeModalProps {
   description: string;
   onAcceptFunc: () => void;
 }
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
 
 const NoticeModal: React.FC<NoticeModalProps> = ({ showNoticeModal, title, description, onAcceptFunc }) => {
-  if (!showNoticeModal) return null;
+  const [isClosing, setIsClosing] = useState(false);
+
+  if (!showNoticeModal && !isClosing) return null;
+
+  const handleOverlayClick = () => {
+    setIsClosing(true); // 페이드아웃 애니메이션 시작
+    setTimeout(() => {
+      setIsClosing(false); // 상태 초기화
+      onAcceptFunc(); // 애니메이션 종료 후 닫기 함수 호출
+    }, 150); // 애니메이션 시간과 동일하게 설정
+  };
 
   return (
-    <Overlay>
-      <Content>
+    <Overlay onClick={handleOverlayClick}>
+      <Content isClosing={isClosing}>
         <Title className='title-sm-300'>{title}</Title>
         <Description className='caption-md-300'>{description}</Description>
         <ButtonContainer>
@@ -47,7 +74,7 @@ const Overlay = styled.div`
   z-index: 10000;
 `;
 
-const Content = styled.div`
+const Content = styled.div <{ isClosing: boolean }>`
   width: 20.1875rem;
   background-color: var(--sub-20);
   border-radius: 10px;
@@ -55,6 +82,8 @@ const Content = styled.div`
   padding: 25px;
 
   text-align: center;
+
+  animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.2s ease-in-out;
 `;
 
 const Title = styled.h2`

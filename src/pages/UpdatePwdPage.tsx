@@ -166,8 +166,6 @@ function UpdatePwdPage() {
 
             </UpdatePasswordContainer>
 
-
-
             <FooterNav />
         </UpdatePasswordPageContainer>
     );
@@ -212,7 +210,7 @@ display: flex;
 flex-direction: row;
 
 gap: 9px;
-margin-top: 100px;
+margin-top: 240px;
 `;
 
 const ShakingInputContainer = styled.div<{ isShake: boolean }>`

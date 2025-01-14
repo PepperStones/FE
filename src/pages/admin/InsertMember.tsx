@@ -10,14 +10,14 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
 import BackIcon from '../../assets/images/left_arrow.png'
-import EinImg from '../../assets/images/admin/yellow_ein.png'
-import NameImg from '../../assets/images/admin/yellow_person.png'
-import JoinDateImg from '../../assets/images/admin/yellow_calendar.png'
-import DepartmentImg from '../../assets/images/admin/yellow_house.png'
-import GroupImg from '../../assets/images/admin/yellow_group.png'
-import LevelImg from '../../assets/images/admin/yellow_diamond_star.png'
-import IdImg from '../../assets/images/admin/yellow_id.png'
-import PwdImg from '../../assets/images/admin/yellow_lock.png'
+import EinImg from '../../assets/images/admin/orange_ein.png'
+import NameImg from '../../assets/images/admin/orange_person.png'
+import JoinDateImg from '../../assets/images/admin/orange_calendar.png'
+import DepartmentImg from '../../assets/images/admin/orange_house.png'
+import GroupImg from '../../assets/images/admin/orange_group.png'
+import LevelImg from '../../assets/images/admin/orange_diamond_star.png'
+import IdImg from '../../assets/images/admin/orange_id.png'
+import PwdImg from '../../assets/images/admin/orange_lock.png'
 
 import { addMember, AddMemberRequest } from '../../api/admin/MemberApi.ts';
 
@@ -98,7 +98,7 @@ function InsertMember() {
 
     return (
         <MypageContainer>
-            <TopNav lefter={Center} center={Center} righter={null} />
+            <TopNav lefter={Center} center={Center} righter={null} isAdmin={true} />
 
             <ProfileInfoContainer>
 
@@ -142,14 +142,24 @@ function InsertMember() {
                             </DatePicker>
                         </DatePickerWrapper>
                     </DetailContent>
+
                     <DetailContent>
                         <DetailLeft>
-                            <MypageIcon src={DepartmentImg} /><IconDescription className='text-md-200'>소속</IconDescription>
+                            <MypageIcon src={DepartmentImg} />
+                            <IconDescription className="text-md-200">소속</IconDescription>
                         </DetailLeft>
                         <DetailSelect
                             value={department}
-                            onChange={(e) => handleSelectChange(e, setDepartment)}
-                            className='text-sm-200'
+                            onChange={(e) => {
+                                handleSelectChange(e, setDepartment);
+                                const selectedDepartment = e.target.value;
+                                if (["사업기획팀", "그로스팀", "CX팀"].includes(selectedDepartment)) {
+                                    setGroup("1"); // Set group to "그룹 1"
+                                } else {
+                                    setGroup("default"); // Reset group to default for other departments
+                                }
+                            }}
+                            className="text-sm-200"
                         >
                             <option value="default">소속을 선택해주세요</option>
                             <option value="음성 1센터">음성 1센터</option>
@@ -162,20 +172,27 @@ function InsertMember() {
                             <option value="CX팀">CX팀</option>
                         </DetailSelect>
                     </DetailContent>
+
                     <DetailContent>
                         <DetailLeft>
-                            <MypageIcon src={GroupImg} /><IconDescription className='text-md-200'>직무그룹</IconDescription>
+                            <MypageIcon src={GroupImg} />
+                            <IconDescription className="text-md-200">직무그룹</IconDescription>
                         </DetailLeft>
                         <DetailSelect
                             value={group}
                             onChange={(e) => handleSelectChange(e, setGroup)}
-                            className='text-sm-200'
+                            className="text-sm-200"
+                            disabled={
+                                department === "default" || // Disable if no department is selected
+                                ["사업기획팀", "그로스팀", "CX팀"].includes(department) // Disable for specific departments
+                            }
                         >
                             <option value="default">직무그룹을 선택해주세요</option>
                             <option value="1">그룹 1</option>
                             <option value="2">그룹 2</option>
                         </DetailSelect>
                     </DetailContent>
+
                     <DetailContent>
                         <DetailLeft>
                             <MypageIcon src={LevelImg} /><IconDescription className='text-md-200'>레벨</IconDescription>
@@ -198,6 +215,18 @@ function InsertMember() {
                             <option value="F4-II">F4-II</option>
                             <option value="F4-III">F4-III</option>
                             <option value="F5">F5</option>
+                            <option value="B1">B1</option>
+                            <option value="B2">B2</option>
+                            <option value="B3">B3</option>
+                            <option value="B4">B4</option>
+                            <option value="B5">B5</option>
+                            <option value="B6">B6</option>
+                            <option value="G1">G1</option>
+                            <option value="G2">G2</option>
+                            <option value="G3">G3</option>
+                            <option value="G4">G4</option>
+                            <option value="G5">G5</option>
+                            <option value="G6">G6</option>
                         </DetailSelect>
                     </DetailContent>
                     <DetailContent>
@@ -263,13 +292,13 @@ display: flex;
 flex-direction: column;
 
 padding: 20px;
-gap: 130px;
+gap: 290px;
 `;
 
 const ProfileDetailContainer = styled.div`
 
 border-radius: 15px;
-background: var(--sub-20);
+background: var(--black-50);
 `;
 
 const DetailLeft = styled.div`
@@ -285,7 +314,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-background: var(--sub-20);
+background: var(--black-50);
 border: none;
 
 color: var(--gray-60);
@@ -305,7 +334,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-background: var(--sub-20);
+background: var(--black-50);
 border: none;
 
 color: var(--gray-60);
@@ -322,6 +351,10 @@ padding: 11px 20px;
 `;
 
 const MypageIcon = styled.img`
+display: flex;
+justify-content: center;
+align-items: center;
+
 width: 14px;
 height: 14px;
 `;
@@ -331,7 +364,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-color: var(--primary-80);
+color: var(--orange-90);
 `;
 
 const DatePickerWrapper = styled.div`
@@ -343,7 +376,7 @@ const DatePickerWrapper = styled.div`
 }
 
 input {
-    background-color: var(--sub-20); /* 인풋 배경색 */
+    background-color: var(--black-50); /* 인풋 배경색 */
     color: var(--gray-60); /* 텍스트 색상 */
     border: none;
 

@@ -1,13 +1,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
 import QuestCard from '../components/button/QuestCardBtn.tsx'
 
 import { fetchQuestProgress, JobQuest, LeaderQuest } from '../api/user/QuestApi.ts';
+
+// Define the fadeIn keyframes
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const Center = {
     text: "퀘스트",
@@ -41,8 +51,8 @@ function QuestPage() {
 
     const handleQuestClick = (quest: JobQuest | LeaderQuest) => {
         const type = 'questName' in quest ? 'leader' : 'job';
-        console.log("type & id : ", type, quest.id );
-        console.log("Debug: ", quest );
+        console.log("type & id : ", type, quest.id);
+        console.log("Debug: ", quest);
         navigate(`/quest/${quest.id}`, { state: { ...quest, type } });
     };
 
@@ -120,4 +130,6 @@ flex-direction: column;
 
 padding: 20px;
 gap: 20px;
+
+animation: ${fadeIn} 0.3s ease-out;
 `;

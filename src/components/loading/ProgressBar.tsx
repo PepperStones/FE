@@ -43,7 +43,7 @@ export default ProgressBar;
 
 const ProgressContainer = styled.div`
   border-radius: 15px;
-  background: var(--sub-20);
+  background: var(--black-50);
 
   padding: 1px 5px;
 
@@ -64,7 +64,7 @@ const BarContainer = styled.div`
 const BarFill = styled.div<{ progress: number }>`
   width: ${(props) => props.progress}%;
   height: 9px;
-  background: var(--primary-70);
+  background: var(--orange-70);
   border-radius: 13px; /* 모서리 둥글게 */
 
   transition: width 0.3s ease; /* 애니메이션 효과 */
@@ -79,7 +79,7 @@ const Circle = styled.div<{ position: number }>`
 
   width: 13px;
   height: 13px;
-  background-color: var(--primary-70);
+  background-color: var(--orange-70);
   border: none;
   border-radius: 50%; /* 원형 */
 `;
@@ -103,5 +103,5 @@ const CurrentProgress = styled.div`
   display: flex;
   align-items: right;
 
-  color: var(--primary-70);
+  color: var(--orange-70);
 `;

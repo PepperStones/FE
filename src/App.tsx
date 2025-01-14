@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { createGlobalStyle } from 'styled-components';
 
+import Splash from "./pages/Splash.tsx";
+
 import Login from "./pages/Login.tsx";
 
 import NotificationList from "./pages/NotificationList.tsx";
@@ -43,7 +45,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-       background-color: var(--bg-10); 
+       background-color: var(--black-20); 
         font-family: Pretendard;
         height: 100%;
     }
@@ -56,7 +58,9 @@ const App = () => {
       <BrowserRouter>
 
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Splash />} />
+
+          <Route path="/login" element={<Login />} />
 
           <Route path="/home" element={<Home />} />
           <Route path="/notification_list" element={<NotificationList />} />

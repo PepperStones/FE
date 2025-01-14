@@ -3,16 +3,16 @@ import { useLocation, Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Home from "../../assets/images/gray_star.png";
-import ActHome from "../../assets/images/yellow_star.png";
+import ActHome from "../../assets/images/orange_star.png";
 import Quest from "../../assets/images/gray_task_add.png";
-import ActQuest from "../../assets/images/yellow_task_add.png";
+import ActQuest from "../../assets/images/orange_task_add.png";
 import Board from "../../assets/images/gray_pin_paper.png";
-import ActBoard from "../../assets/images/yellow_pin_paper.png";
+import ActBoard from "../../assets/images/orange_pin_paper.png";
 import Mypage from "../../assets/images/gray_person_circle.png";
-import ActMypage from "../../assets/images/yellow_person_circle.png";
+import ActMypage from "../../assets/images/orange_person_circle.png";
 
 import Synchronize from "../../assets/images/admin/gray_arrow_cycle.png"
-import ActSynchronize from "../../assets/images/admin/yellow_arrow_cycle.png"
+import ActSynchronize from "../../assets/images/admin/orange_arrow_cycle.png"
 
 /* lefter, center, righter 모두 인터페이스 동일
 interface FooterNavProps {
@@ -24,7 +24,7 @@ const BottomNav = ({ isAdmin = false }) => {
   const location = useLocation(); // 현재 경로를 가져옴
 
   return (
-    <Nav>
+    <Nav className="caption-md-200">
       {isAdmin ?
         <>
           <NavItem className={location.pathname.startsWith("/member") ? "active" : ""}>
@@ -96,21 +96,21 @@ const BottomNav = ({ isAdmin = false }) => {
 export default BottomNav;
 
 const Nav = styled.nav`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
 
   height: 100px;
-
-  background-color: var(--sub-20);
-  border: 1px solid var(--sub-40);
-
+  background: var(--gray-0);
+  border: none;
+  border-top: 1px solid #666;
   box-shadow: 0px 0px 9px 6px rgba(0, 0, 0, 0.03);
   border-radius: 20px 20px 0px 0px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+
   z-index: 1000;
 `;
 
@@ -119,18 +119,15 @@ const NavItem = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--grey-grey-5, #9e9e9e);
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  border-radius: 10px;
+
   width: 80%;
   height: 100%;
-  user-select: none;
+
+  color: var(--gray-20);
+  text-align: center;
 
   &.active {
-    color: var(--primary-70); /* 활성화된 텍스트 색상 */
+    color: var(--orange-70); /* 활성화된 텍스트 색상 */
   }
 
   user-select: none; /* 텍스트 선택 방지 */

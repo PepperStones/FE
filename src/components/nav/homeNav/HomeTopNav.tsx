@@ -1,9 +1,9 @@
-// HomeTopNav.tsx
+// Home.tsx
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { formatNumberWithCommas } from "../../../utils/NumberWithComma.ts";
 import SpeechBubble from "../../info/InfoBubble.tsx";
 
 import FirstIconImg from "../../../assets/images/solar_star-ring-linear.png";
@@ -55,7 +55,6 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       : { page0: true, page1: true, page2: true };
   });
 
-  const [progressState, setProgressState] = useState(0); // ProgressBar 상태
   const MAX_PERCENT = 100;
   const leftIconSrc =
     isPageOption === 0
@@ -78,6 +77,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
       [`page${isPageOption}`]: false,
     }));
   };
+  
   // F 데이터를 저장할 배열
   const savedData: Array<{ level: string; total_experience: number }> = [];
 
@@ -203,30 +203,41 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
         </Title>
         <PopupWrapper>
           <PopUp isPopupOpen={isPopupOpen}>
-            <MyInfo>
+            <MyInfo onClick={() => navigate("/experience-point?tab=current")}>
               <MyLevel>
                 <Lavel className="caption-sm-300">나의 레벨</Lavel>
                 <Text className="text-lg-300">{userData.level}</Text>
               </MyLevel>
               <Divider></Divider>
-              <MyLevel>
-                {" "}
-                <Lavel className="caption-sm-300">최근 획득 경험치</Lavel>
-                <Text className="text-lg-300">
-                  + {userData.recentExperience} do
-                </Text>
-              </MyLevel>
-              <Icon
-                src={RightArrow}
-                onClick={() => navigate("/experience-point")}
-              ></Icon>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "224px",
+                }}
+              >
+                <ReventExpLavel className="caption-sm-300">
+                  최근 획득 경험치
+                </ReventExpLavel>
+
+                <MyLevel>
+                  <Text className="text-lg-300">
+                    + {formatNumberWithCommas(userData.recentExperience)} do
+                  </Text>
+
+                  <Icon src={RightArrow}></Icon>
+                </MyLevel>
+              </div>
             </MyInfo>
 
             <MyExp>
               <ExpHead>
                 <TotalExp className="text-lg-300">
-                  {userData.totalExperienceThisYear}
-                  <MaxExp className="caption-md-300">/ 9,000</MaxExp>
+                  {formatNumberWithCommas(userData.totalExperienceThisYear)}
+                  <MaxExp className="caption-md-300"> / 9,000</MaxExp>
                 </TotalExp>
                 <Percent className="text-lg-300">{experiencePercent}%</Percent>
               </ExpHead>
@@ -237,12 +248,12 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
               </BarContainer>
               <ExpText className="caption-sm-200"> 올 해 획득한 경험치</ExpText>
               <ExpDivider />
-              <ExpDetail className="caption-sm-200">
+              <ExpDetail
+                className="caption-sm-200"
+                onClick={() => navigate("/experience-point?tab=receipt")}
+              >
                 자세히 보기
-                <DtailIcon
-                  src={RightArrow}
-                  onClick={() => navigate("/experience-point")}
-                ></DtailIcon>
+                <DtailIcon src={RightArrow}></DtailIcon>
               </ExpDetail>
             </MyExp>
           </PopUp>
@@ -265,7 +276,9 @@ export default HomeTopNav;
 const NavContainer = styled.nav`
   display: flex;
   flex-direction: column;
-  background: var(--sub-10);
+
+  border-radius: 0px 0px 25px 25px;
+  background: var(--gray-0);
 
   user-select: none; /* 텍스트 선택 방지 */
   -webkit-user-select: none; /* Safari에서 드래그 방지 */
@@ -368,31 +381,47 @@ const MyInfo = styled.div`
   flex-direction: row;
   border-radius: 15px;
   width: 100%;
-  border-top: 1px solid #404a75;
+
   border-bottom: none;
   flex-shrink: 0;
-  background: var(--sub-20, #262d46);
-
+  background: var(--black-20);
   align-items: center;
   padding: 12px 15px;
 
   gap: 15px;
 `;
-const Lavel = styled.div`
-  color: var(--accent-10);
+
+const ReventExpLavel = styled.div`
+  color: var(--gray-100);
   text-align: center;
 
   border-radius: 15px;
-  border: 1px solid var(--accent-40);
-  background: var(--accent-80);
+  width: 86px;
+  background: var(--gray-0);
 
   padding: 3px 10px;
   align-items: center;
   flex-shrink: 0;
 `;
+
+const Lavel = styled.div`
+  flex: 1;
+  color: var(--gray-100);
+  text-align: center;
+
+  border-radius: 15px;
+  background: var(--gray-0);
+
+  padding: 3px 10px;
+  align-items: center;
+  flex-shrink: 0;
+`;
+
 const MyLevel = styled.div`
   display: flex;
   flex-direction: row;
+  align-contents: space-between;
+
   gap: 10px;
   align-items: center;
   white-space: nowrap;
@@ -407,15 +436,16 @@ const Divider = styled.div`
   width: 1px;
   height: 20px;
 
-  background: #404a75;
+  background: var(--black-70);
 `;
+
 const MyExp = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 15px;
   border: 1px solid var(--, #404a75);
 
-  background: #262d46;
+  background: var(--black-20);
   margin-top: 15px;
 
   padding-top: 14px;
@@ -437,10 +467,11 @@ const MaxExp = styled.span`
   color: var(--gray-40);
 `;
 const TotalExp = styled.span`
-  color: var(--primary-70);
+  color: var(--orange-70);
 `;
+
 const Percent = styled.span`
-  color: var(--primary-70);
+  color: var(--orange-70);
 `;
 const BarContainer = styled.div`
   position: relative;
@@ -448,14 +479,15 @@ const BarContainer = styled.div`
   width: 100%;
   height: 9px; /* 게이지 바 높이 */
   border-radius: 13px; /* 게이지 바 radius */
-  background: var(--gray-20);
+
   margin-bottom: 11px;
 `;
 
 const BarFill = styled.div<{ progress: number }>`
   width: ${(props) => props.progress}%;
   height: 9px;
-  background: var(--primary-70);
+
+  background: linear-gradient(90deg, #151515 0%, #ff5c35 100%);
   border-radius: 13px; /* 모서리 둥글게 */
 
   transition: width 0.3s ease; /* 애니메이션 효과 */
@@ -470,7 +502,7 @@ const Circle = styled.div<{ position: number }>`
 
   width: 13px;
   height: 13px;
-  background-color: var(--primary-70);
+  background-color: var(--orange-70);
   border: none;
   border-radius: 50%; /* 원형 */
 `;

@@ -118,7 +118,7 @@ const AdminBoardList: React.FC = () => {
 
   return (
     <div>
-      <TopNav lefter={null} center={Top} righter={Top} isAdmin={true}/>
+      <TopNav lefter={null} center={Top} righter={Top} isAdmin={true} />
       <SearchFilter
         search={search}
         setSearch={setSearch}
@@ -196,7 +196,7 @@ const BoardContents = styled.div`
 `;
 
 const BoardTitle = styled.div`
-  color: var(--primary-80);
+  color: var(--orange-90);
 
   display: -webkit-box;
   -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
@@ -230,20 +230,19 @@ const BoardVisibility = styled.div<{ centerGroup: string }>`
   border-radius: 15px;
   padding: 3px 10px;
 
-  background: var(--sub-80);
+  background: var(--orange-60);
 
-  color: color: var(--sub-20);
+  color: var(--orange-90);
 `;
 
 const BoardGroup = styled.div`
-  color: var(--primary-20);
+  color: var(--orange-20);
   border-radius: 15px;
   align-items: center;
 
   padding: 3px 10px;
 
-  border: 1px solid var(--primary-30);
-  background: var(--primary-90);
+  background: var(--orange-80);
 `;
 
 const NoResults = styled.div`

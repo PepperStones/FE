@@ -1,16 +1,50 @@
 import React from "react";
 import styled from "styled-components";
-import levels from "../../assets/images/data/levels.json"; // JSON 데이터 가져오기
+import levels from "../../constants/levels.json"; // JSON 데이터 가져오기
+import { formatNumberWithCommas } from "../../utils/NumberWithComma.ts";
 
 import grayStarIcon from "../../assets/images/gray-star-line-duotone.png";
 import grayLevelIcon from "../../assets/images/icon-park-outline_level.png";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user: User;
 }
 
-const ExpModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+interface User {
+  companyNum: number;
+  centerName: string;
+  jobName: string;
+  name: string;
+  level: string;
+}
+
+const ExpModal: React.FC<ModalProps> = ({ isOpen, onClose, user }) => {
   if (!isOpen) return null; // 모달이 열리지 않았을 때 아무것도 렌더링하지 않음
+
+  // F 데이터를 저장할 배열
+  const savedData: Array<{ level: string; total_experience: number }> = [];
+
+  // F 데이터를 저장 및 반환하는 함수
+  const saveData = (
+    levelString: string
+  ): Array<{ level: string; total_experience: number }> => {
+    const groupKey = levelString[0]; // "F1-I" → "F"
+
+    // 그룹 데이터 가져오기
+    const groupData = levels[groupKey];
+
+    if (!groupData) {
+      throw new Error(`No data found for group ${groupKey}`);
+    }
+
+    groupData.forEach((data) => {
+      savedData.push(data);
+    });
+
+    // 반환
+    return savedData;
+  };
 
   return (
     <ModalOverlay onClick={onClose}>
@@ -32,10 +66,10 @@ const ExpModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </span>
           </TableHeader>
           <TableBody>
-            {levels.map((level) => (
+            {saveData(user.level).map((level) => (
               <Row className="caption-sm-200 " key={level.level}>
                 <span>{level.level}</span>
-                <span>{level.required_experience.toLocaleString()}</span>
+                <span>{formatNumberWithCommas(level.total_experience)}</span>
               </Row>
             ))}
           </TableBody>
@@ -68,7 +102,7 @@ const ModalOverlay = styled.div`
 const ModalContent = styled.div`
   width: 85%;
   max-width: 400px;
-  background: var(--sub-20);
+  background: var(--gray-0);
   border-radius: 15px;
   padding: 25px 28px 20px;
   display: flex;
@@ -97,12 +131,12 @@ const TableHeader = styled.div`
   color: var(--Sub-sub-80, #cacfe0);
 
   border-radius: 15px;
-  background: var(--Sub-sub-30, #333b5e);
+  background: var(--gray-10);
 
   > div {
     width: 1px;
     height: 14px;
-    background: var(--sub-40);
+    background: var(--gray-20);
   }
 
   > span {
@@ -128,7 +162,7 @@ const TableBody = styled.div`
 
   margin-top: 10px;
   border-radius: 15px;
-  background: var(--Sub-sub-30, #333b5e);
+  background: var(--gray-10);
 
   padding: 7px 12px;
 
@@ -144,7 +178,7 @@ const Row = styled.div`
   color: var(--gray-80);
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--sub-40);
+    border-bottom: 1px solid var(--gray-20);
   }
 
   > span {
@@ -160,7 +194,7 @@ const Row = styled.div`
     transform: translateY(-50%);
     width: 1px;
     height: 14px;
-    background: var(--sub-40); /* 세로줄 색상 */
+    background: var(--gray-20); /* 세로줄 색상 */
   }
 `;
 
@@ -171,8 +205,8 @@ const ModalFooter = styled.div`
 `;
 
 const CloseButton = styled.button`
-  background: var(--primary-70);
-  color: var(--Grayscale-gray-0, #313131);
+  background: var(--orange-70);
+  color: var(--gray-100);
   width: 100%;
   height: 50px;
 

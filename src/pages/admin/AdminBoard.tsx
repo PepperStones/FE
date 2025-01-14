@@ -26,12 +26,12 @@ const AdminBoard: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [editVisibility, setEditVisibility] = useState(""); // 센터 수정 상태
-  const [editGroup, setEditGroup] = useState(""); // 그룹 수정 상태
+  const [editGroup, setEditGroup] = useState("1"); // 그룹 수정 상태
   const [editTitle, setEditTitle] = useState(""); // 제목 수정 상태
   const [editContents, setEditContents] = useState(""); // 내용 수정 상태
 
   const [textareaHeight, setTextareaHeight] = useState("auto"); // textarea 높이 상태
-
+  const [isActiveSelect, setIsActiveSelect] = useState(true);
   const navigate = useNavigate();
 
   // API 호출하여 게시글 데이터 가져오기
@@ -86,13 +86,15 @@ const AdminBoard: React.FC = () => {
   // centerGroup 변경 시 그룹 값을 "그룹 없음"으로 설정
   const handleVisibilityChange = (value: string) => {
     setEditVisibility(value === "" ? "전체" : value); // "전체"를 ""로 변환
+    setIsActiveSelect(true);
     if (value === "" || value === "전체") {
       setEditGroup("전체"); // centerGroup이 없으면 group도 초기화
       setEditVisibility("전체");
+      setIsActiveSelect(true);
     }
 
     if (value === "사업기획팀" || value === "그로스팀" || value === "CX팀") {
-      setEditGroup("1");
+      setIsActiveSelect(false);
     }
   };
 
@@ -166,18 +168,13 @@ const AdminBoard: React.FC = () => {
     } else return false;
   };
 
-  const isActiveSelect = () => {
-    if (
-      editVisibility === "사회기획팀" ||
-      editVisibility === "그로스팀" ||
-      editVisibility === "CX팀"
-    ) {
-      return false;
-    }
+  const handleIsActiveSelect = (value) => {
+    setEditGroup(value);
   };
+
   return (
     <div>
-      <TopNav lefter={Center} center={Center} righter={null} isAdmin={true}/>
+      <TopNav lefter={Center} center={Center} righter={null} isAdmin={true} />
       <BoardContainer key={boardData.id}>
         <Head>
           <Category>
@@ -192,7 +189,7 @@ const AdminBoard: React.FC = () => {
                 <option value="용인백암센터">용인백암센터</option>
                 <option value="남양주센터">남양주센터</option>
                 <option value="파주센터">파주센터</option>
-                <option value="사회기획팀">사회기획팀</option>
+                <option value="사업기획팀">사업기획팀</option>
                 <option value="그로스팀">그로스팀</option>
                 <option value="CX팀">CX팀</option>
               </EditSelect>
@@ -208,13 +205,13 @@ const AdminBoard: React.FC = () => {
               ? editVisibility !== null && (
                   <EditSelect
                     value={editGroup}
-                    onChange={(e) => setEditGroup(e.target.value)}
+                    onChange={(e) => handleIsActiveSelect(e.target.value)}
                     disabled={nullTitle()}
                     style={{ background: "var(--primary-90)" }} // 객체 형태로 스타일 지정
                   >
                     <option value="전체">그룹 없음</option>
                     <option value="1">1그룹</option>
-                    {!isActiveSelect && <option value="2">2그룹</option>}
+                    {isActiveSelect && <option value="2">2그룹</option>}
                   </EditSelect>
                 )
               : boardData.jobGroup && (
@@ -296,7 +293,7 @@ const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  background: var(--sub-10);
+  background: var(--black-50);
   margin: 20px;
   margin-bottom: 20px;
 `;
@@ -317,7 +314,7 @@ const Category = styled.div`
 `;
 
 const BoardTitle = styled.div`
-  color: var(--primary-80);
+  color: var(--orange-90);
 
   display: -webkit-box;
   -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
@@ -337,19 +334,18 @@ const BoardVisibility = styled.div<{ visibility: string }>`
   border-radius: 15px;
   padding: 3px 10px;
 
-  background: var(--sub-80);
-  color: var(--sub-20);
+  background: var(--orange-60);
+  color: var(--orange-90);
 `;
 
 const BoardGroup = styled.div`
-  color: var(--primary-20);
+  color: var(--orange-20);
   border-radius: 15px;
   align-items: center;
 
   padding: 3px 10px;
 
-  border: 1px solid var(--primary-30);
-  background: var(--primary-90);
+  background: var(--orange-80);
 `;
 
 const DivLine = styled.div`
@@ -376,10 +372,10 @@ const EditInput = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  border: 1px solid var(--sub-10);
+  border: none;
   border-radius: 5px;
 
-  background: var(--sub-10); /* 배경 색상 */
+  background: var(--black-50); /* 배경 색상 */
   color: var(--primary-80); /* 텍스트 색상 */
 
   &:focus {
@@ -392,11 +388,12 @@ const EditTextarea = styled.textarea`
   width: 100%;
   height: 100%;
   padding: 14px;
+  margin-bottom: 10px;
   font-size: 16px;
-  border: 1px solid var(--sub-10);
+  border: none;
   border-radius: 5px;
 
-  background: var(--sub-10); /* 배경 색상 */
+  background: var(--black-50); /* 배경 색상 */
   color: var(--primary-80); /* 텍스트 색상 */
 
   &:focus {
@@ -407,16 +404,14 @@ const EditTextarea = styled.textarea`
 
 // 스타일 추가
 const EditSelect = styled.select`
-  padding: 5px 10px;
   font-size: 16px;
-  border: 1px solid var(--sub-40);
 
   border-radius: 15px;
-  background: var(--sub-80);
-  color: var(--sub-20);
+  background: var(--orange-60);
+  color: var(--orange-90);
 
   &:focus {
     outline: none;
-    border-color: var(--primary-60);
+    border-color: none;
   }
 `;

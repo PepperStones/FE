@@ -29,16 +29,12 @@ const NotificationList: React.FC = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   const getIconByTitle = (title: string, open: boolean): string => {
-    if (open) return grayStarIcon; // 읽은 알림은 기본적으로 회색 아이콘
-
     if (title.startsWith("신규 경험치")) {
       return starIcon;
     } else if (title.startsWith("신규 게시글")) {
       return pinIcon;
     } else if (title.startsWith("상반기 인사평가")) {
       return chartIcon;
-    } else {
-      return starIcon; // 기본 아이콘
     }
   };
 
@@ -173,11 +169,12 @@ const NoticeContent = styled.div`
   gap: 9px;
 `;
 
-const NoticeIcon = styled.img<{ src: string }>`
+const NoticeIcon = styled.img<{ src: string; isRead: boolean }>`
   width: 14px;
   height: 14px;
   padding-top: 2px;
   padding-left: 2px;
+  opacity: ${({ isRead }) => (isRead ? "0.5" : "1")};
 `;
 
 const NoticeHead = styled.div`
@@ -193,7 +190,7 @@ const Notice = styled.div`
   gap: 11px;
 `;
 const NotificationTitle = styled.div<{ isRead: boolean }>`
-  color: ${({ isRead }) => (isRead ? "var(--gray-20)" : "var(--primary-80)")};
+  color: var(--orange-100);
   text-align: left;
   max-width: 220px;
 
@@ -209,7 +206,7 @@ const NotificationMessage = styled.div<{ isRead: boolean }>`
   width: 303px;
   height: 32px;
 
-  color: ${({ isRead }) => (isRead ? "var(--gray-20)" : "var(--gray-40)")};
+  color: var(--gray-40);
   text-align: left;
 
   overflow: hidden;

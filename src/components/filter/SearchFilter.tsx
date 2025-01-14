@@ -32,14 +32,12 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
 
   const handleDepartmentChange = (event) => {
     setDepartment(event.target.value);
-    setGroup("default"); // 소속 변경 시 그룹 초기화
-    console.log(`department selected: ${event.target.value}`);
+    setGroup("default");   
   };
 
-  const handleGroupChange = (event) => {
-    setGroup(event.target.value);
-    console.log(`Group selected: ${event.target.value}`);
-  };
+  const handleGroupChange = (event) => setGroup(event.target.value);
+
+  const isGroupDisabled = department === "사업기획팀" || department === "그로스팀" || department === "CX팀";
 
   return (
     <SearchFilterContainer>
@@ -81,9 +79,10 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         {department === "default" ? undefined : (
           <FilterSelector>
             <FilterSelect
-              value={group}
+              value={isGroupDisabled ? "1" : group}
               onChange={handleGroupChange}
               className={group !== "default" ? "active" : ""}
+              disabled={isGroupDisabled}
             >
               <option value="default">그룹</option>
               <option value="1">그룹 1</option>
@@ -181,6 +180,11 @@ const FilterSelect = styled.select`
     background-color: var(--gray-70);
     color: var(--sub-20);
   }
+
+  &:disabled {
+    color: var(--sub-20);
+    background-color: var(--gray-70);
+}
 `;
 
 const FilterFilterIcon1 = styled.img`

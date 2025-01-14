@@ -107,6 +107,7 @@ function Mypage() {
     const handleLogOut = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userRole');
 
         navigate('/login');
     };

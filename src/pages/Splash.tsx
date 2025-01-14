@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
@@ -22,7 +22,7 @@ const sparkle = keyframes`
     filter: brightness(1) drop-shadow(0px 0px 0px rgba(255,255,255,0));
   }
   50% {
-    filter: brightness(2) drop-shadow(0px 0px 20px rgba(255,255,255,1));
+    filter: brightness(1.25) drop-shadow(0px 0px 20px rgba(255,255,255,1));
   }
   100% {
     filter: brightness(1) drop-shadow(0px 0px 0px rgba(255,255,255,0));
@@ -33,11 +33,21 @@ function Splash() {
     const navigate = useNavigate();
 
     useEffect(() => {
+      const accessToken = localStorage.getItem('accessToken'); // Check for accessToken
+      const userRole = localStorage.getItem('userRole'); // Check for userRole
+  
+      if (accessToken) {
+        if (userRole === 'USER') {
+          navigate('/home');
+        } else if (userRole === 'ADMIN') {
+          navigate('/member');
+        }
+      } else {
         const timer = setTimeout(() => {
-            navigate("/login"); 
-        }, 4500); 
-
+          navigate('/login');
+        }, 4500);
         return () => clearTimeout(timer);
+      }
     }, [navigate]);
 
     return (

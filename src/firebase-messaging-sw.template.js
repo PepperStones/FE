@@ -19,11 +19,19 @@ importScripts(
   const messaging = firebase.messaging();
   
   messaging.onBackgroundMessage((payload) => {
-    if (!document.hidden) return;
 
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
 
     const timestamp = payload.data?.timestamp || Date.now().toString();
+
+    // 마지막 알림 시간 체크 로직 추가
+    const lastNotificationTime = self.localStorage?.getItem('lastNotificationTime');
+    if (lastNotificationTime && (parseInt(timestamp) - parseInt(lastNotificationTime) < 1000)) {
+        console.log('중복 알림 감지, 무시합니다.');
+        return;
+    }
+    self.localStorage?.setItem('lastNotificationTime', timestamp);
+
     const notificationTitle = payload.notification?.title || 'Default Title';
     const notificationOptions = {
       body: payload.notification?.body || 'Default Body',

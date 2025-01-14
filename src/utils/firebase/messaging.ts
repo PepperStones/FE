@@ -27,12 +27,19 @@ export const requestPermissionAndGetToken = async () => {
   try {
     const hasPermission = await requestNotificationPermission();
     if (hasPermission) {
+       // 이미 토큰이 있는지 확인
+       const existingToken = localStorage.getItem('fcmToken');
+       if (existingToken) {
+         return existingToken;
+       }
+
       console.log("Notification permission granted.");
       const token = await getToken(messaging, {
         vapidKey,
       });
       if (token) {
         // console.log("FCM Token:", token);
+        localStorage.setItem('fcmToken', token);
         return token;
         // 서버로 토큰 전송 가능
       } else {
@@ -50,6 +57,17 @@ export const onForegroundMessage = (): void => {
   onMessage(messaging, (payload) => {
     console.log("포그라운드 메시지 수신:", payload);
 
+    // PWA 체크
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+    (window.navigator as any).standalone || 
+    document.referrer.includes('android-app://');
+
+    // PWA가 아닌 경우에만 알림 표시
+    if (isPWA) {
+      console.log("PWA 환경에서는 포그라운드 알림을 표시하지 않습니다.");
+      return;
+    }
+    
     if (document.hidden) {
       console.log("백그라운드 상태에서는 알림을 표시하지 않습니다.");
       return;

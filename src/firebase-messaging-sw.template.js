@@ -24,6 +24,12 @@ importScripts(
 
     const timestamp = payload.data?.timestamp || Date.now().toString();
 
+    // PWA에서만 알림 표시
+    if (!self.matchMedia('(display-mode: standalone)').matches) {
+      console.log('브라우저 환경에서는 백그라운드 알림을 표시하지 않습니다.');
+      return;
+    }
+
     // 마지막 알림 시간 체크 로직 추가
     const lastNotificationTime = self.localStorage?.getItem('lastNotificationTime');
     if (lastNotificationTime && (parseInt(timestamp) - parseInt(lastNotificationTime) < 1000)) {

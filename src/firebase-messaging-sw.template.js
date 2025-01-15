@@ -20,12 +20,12 @@ importScripts(
   
   messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
-
-    const timestamp = payload.notification?.timestamp || Date.now().toString();
-    const notificationTitle = payload.data.title || payload.notification?.title;
+    
+    const timestamp = payload.data?.timestamp || Date.now().toString();
+    const notificationTitle = payload.data?.title || 'Default Title';
     const notificationOptions = {
-      body: payload.data.body || payload.notification?.body,
-      icon: payload.data.icon || payload.notification?.icon || '/default-icon.png',
+      body: payload.data?.body || 'Default Body',
+      icon: payload.data?.icon || '/default-icon.png',
       tag: timestamp,
     };
   

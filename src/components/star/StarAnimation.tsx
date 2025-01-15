@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import StarImage from "../../assets/images/star/real_star.png";
 import tagImage from "../../assets/images/union.png";
 import spaceMan from "../../assets/images/spaceman.png";
-import levelsData from "../../assets/images/data/levels.json";
+import levelsData from "../../constants/levels.json";
 import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
 import allStar from "../../assets/images/star/real_start.png";
 
@@ -140,7 +140,11 @@ const StarAnimation1: React.FC<HomePage> = ({
     x: number;
     y: number;
   } | null>(null); // 말풍선 위치
+
   const [loading, setLoading] = useState(false);
+  const [savedData, setSavedData] = useState<
+    Array<{ level: string; total_experience: number | null }>
+  >([]);
 
   const handleBubbleClick = async (x: number, y: number) => {
     if (!loading) {
@@ -168,24 +172,107 @@ const StarAnimation1: React.FC<HomePage> = ({
   //   };
   // }, []);
 
+  // 데이터를 저장 및 초기화하는 함수
+  const saveData = (levelString: string) => {
+    // 레벨 문자열에서 그룹 키 추출 (F, B, G, T)
+    const groupKey = levelString.charAt(0) as keyof LevelsDataType;
+    const groupData = levelsData[groupKey];
+
+    if (!groupData) {
+      console.error(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
+      return;
+    }
+
+    setSavedData(groupData);
+  };
+
+  const calculateOpacityByLevel = (levelName: string | null): number => {
+    const minOpacity = 0.4;
+    const maxOpacity = 1;
+
+    if (!levelName) return 0;
+
+    // levelsData가 제대로 로드되었는지 확인
+    if (!levelsData) {
+      console.error("levelsData is not loaded");
+      return minOpacity;
+    }
+
+    const groupKey = levelName.charAt(0) as keyof LevelsDataType;
+    console.log("Group Key:", groupKey); // 디버깅을 위한 로그
+    console.log("Level Data for group:", levelsData[groupKey]); // 해당 그룹의 데이터 확인
+
+    const groupData = levelsData[groupKey];
+    if (!groupData) {
+      console.error(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
+      return minOpacity;
+    }
+
+    // 현재 레벨의 경험치 찾기
+    const currentLevelData = groupData.find(
+      (level) => level.level === levelName
+    );
+    console.log("Current Level Data:", currentLevelData); // 현재 레벨 데이터 확인
+
+    if (!currentLevelData) {
+      console.error(`레벨 ${levelName}에 대한 데이터를 찾을 수 없습니다`);
+      return minOpacity;
+    }
+
+    // 현재 레벨의 total_experience가 null이면 최소 광량 반환
+    if (currentLevelData.total_experience === null) {
+      return minOpacity;
+    }
+
+    // 최대 경험치 값 찾기 전에 배열 확인
+    const validExperiences = groupData
+      .map((level) => level.total_experience)
+      .filter((exp): exp is number => exp !== null);
+    console.log("Valid Experiences:", validExperiences); // 유효한 경험치 값들 확인
+
+    if (validExperiences.length === 0) {
+      console.error("유효한 경험치 값이 없습니다");
+      return minOpacity;
+    }
+
+    const maxExperience = Math.max(...validExperiences);
+    const experienceRatio = currentLevelData.total_experience / maxExperience;
+    console.log("Experience Ratio:", experienceRatio); // 경험치 비율 확인
+
+    const opacity = minOpacity + (maxOpacity - minOpacity) * experienceRatio;
+    console.log("Final Opacity:", opacity); // 최종 광량 값 확인
+
+    return Math.min(Math.max(opacity, minOpacity), maxOpacity);
+  };
+
+  useEffect(() => {
+    // 사용자 레벨 데이터를 저장
+    if (home && home.data && home.data.user.level) {
+      saveData(home.data.user.level);
+    }
+    console.log("levelsData:", levelsData);
+  }, [home]);
+
   // 사용자와 팀원의 레벨 정보를 별에 배치
   const enhancedStarData = starData.map((star, index) => {
     if (index === 0) {
-      // 1번 별은 항상 사용자
+      const opacity = calculateOpacityByLevel(home.data.user.level);
+      console.log("User Star Opacity:", opacity); // 사용자 별의 광량 확인
       return {
         ...star,
         level: home.data.user.level,
-        isActive: true, // 활성화 상태
-        opacity: calculateOpacityByLevel(home.data.user.level),
+        isActive: true,
+        opacity,
       };
     } else {
-      // 나머지 별에 팀원 정보 배치
-      const teamLevel = home.data.team.levels[index] || null; // 팀원 레벨 또는 null
+      const teamLevel = home.data.team.levels[index] || null;
+      const opacity = calculateOpacityByLevel(teamLevel);
+      console.log(`Team Star ${index} Opacity:`, opacity); // 팀원 별의 광량 확인
       return {
         ...star,
         level: teamLevel,
-        isActive: !!teamLevel, // 팀원이 있으면 활성화
-        opacity: calculateOpacityByLevel(teamLevel),
+        isActive: !!teamLevel,
+        opacity,
       };
     }
   });

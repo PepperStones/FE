@@ -105,7 +105,7 @@ export const onForegroundMessage = (): void => {
     const timestamp = payload.data?.timestamp || Date.now().toString();
 
     // 브라우저 알림 표시
-    if (true) {
+    if (Notification.permission === "granted") {
       try {
         console.log("알림 권한이 허용되었습니다.");
         new Notification(title || "Default Title", {
@@ -118,6 +118,9 @@ export const onForegroundMessage = (): void => {
         console.log("푸시 알림 표시 실패");
       }
     } else {
+      console.error(
+        "알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요."
+      );
     }
   });
 };

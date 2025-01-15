@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { createGlobalStyle } from 'styled-components';
@@ -53,6 +53,33 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const App = () => {
+
+
+  if (window.matchMedia("(display-mode: standalone)").matches) {
+    console.log("PWA 환경에서 실행 중입니다.");
+  }
+
+  useEffect(() => {
+    // 슬라이드 제스처 방지 (iOS)
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches[0].pageX < 20 || e.touches[0].pageX > window.innerWidth - 20) e.preventDefault(); // 기본 동작 방지
+    };
+    document.addEventListener("touchstart", handleTouchStart);
+
+
+    // 안드로이드 하드웨어 뒤로가기 버튼 비활성화
+    const handleBackButton = (event) => {
+      event.preventDefault(); // 기본 동작 방지
+      alert("뒤로가기가 비활성화되었습니다.");
+    };
+    document.addEventListener("backbutton", handleBackButton);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("backbutton", handleBackButton);
+    };
+  }, []);
+
   return (
     <>
       <GlobalStyle />

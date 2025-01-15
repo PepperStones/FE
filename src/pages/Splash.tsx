@@ -22,7 +22,7 @@ const sparkle = keyframes`
     filter: brightness(1) drop-shadow(0px 0px 0px rgba(255,255,255,0));
   }
   50% {
-    filter: brightness(1.25) drop-shadow(0px 0px 20px rgba(255,255,255,1));
+    filter: brightness(1.5) drop-shadow(0px 0px 20px rgba(200,200,200,1));
   }
   100% {
     filter: brightness(1) drop-shadow(0px 0px 0px rgba(255,255,255,0));

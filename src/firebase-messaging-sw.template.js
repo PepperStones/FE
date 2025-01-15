@@ -31,6 +31,14 @@ importScripts(
       icon: payload.data?.icon || '/default-icon.png',
       tag: timestamp,
     };
+
+    // 포그라운드에 메시지 전달
+    self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage(payload);
+      });
+    });
+
   
     self.registration.showNotification(notificationTitle, notificationOptions);
   });

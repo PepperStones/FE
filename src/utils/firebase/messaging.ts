@@ -57,26 +57,8 @@ export const onForegroundMessage = (): void => {
   onMessage(messaging, (payload) => {
     console.log("포그라운드 메시지 수신:", payload);
 
-    // PWA 체크
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
-    (window.navigator as any).standalone || 
-    document.referrer.includes('android-app://');
-
-    // PWA가 아닌 경우에만 알림 표시
-    if (isPWA) {
-      console.log("PWA 환경에서는 포그라운드 알림을 표시하지 않습니다.");
-      return;
-    }
-    
-    if (document.hidden) {
-      console.log("백그라운드 상태에서는 알림을 표시하지 않습니다.");
-      return;
-    }
-
-    console.log("포그라운드 알림 표시", payload);
-
     // 알림 데이터
-    const { title, body, icon } = payload.notification || {};
+    const { title, body, icon } = payload.data || {};
     const timestamp = payload.data?.timestamp || Date.now().toString();
 
     // 브라우저 알림 표시

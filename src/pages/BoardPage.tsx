@@ -7,7 +7,6 @@ import BottomNav from "../components/nav/FooterNav.tsx";
 
 import LoadingModal from "../components/loading/Loading.tsx";
 
-
 import RightIcon from "../assets/images/right_arrow.png";
 import BubbleGray from "../assets/images/gray_bubble_left.png";
 

@@ -34,6 +34,11 @@ const AdminBoard: React.FC = () => {
   const [isActiveSelect, setIsActiveSelect] = useState(true);
   const navigate = useNavigate();
 
+  // 완료 버튼 활성화 조건
+  const isAvailable =
+    editTitle.trim().length > 0 && // 제목 최소 1자 확인
+    editContents.trim().length > 0; // 내용 최소 1자 확인
+
   // API 호출하여 게시글 데이터 가져오기
   useEffect(() => {
     const fetchBoardData = async () => {
@@ -209,7 +214,7 @@ const AdminBoard: React.FC = () => {
                     onChange={(e) => handleIsActiveSelect(e.target.value)}
                     disabled={nullTitle()}
                     style={{
-                      background: "var(--primary-90)",
+                      background: "var(--orange-80)",
                       color: "var(--orange-20)",
                     }} // 객체 형태로 스타일 지정
                   >
@@ -260,7 +265,7 @@ const AdminBoard: React.FC = () => {
           <LargeBtn
             content="완료"
             onClick={handleModifyClick}
-            isAvailable={isEditable}
+            isAvailable={isAvailable}
           />
         ) : (
           <>

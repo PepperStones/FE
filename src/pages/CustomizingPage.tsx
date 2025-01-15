@@ -262,46 +262,68 @@ function CustomizingPage() {
             let updatedEffect = selectedEffect;
 
             if (activeTab === '별 스킨') {
-                updatedSkin = `S${id}`;
-                setSelectedSkin(updatedSkin);
+                const selectedSkinItem = `S${id}`;
 
-                // Update profile image for skin
-                const newProfileImg = starSkinMap[updatedSkin];
-                if (newProfileImg) {
-                    setProfileImg(newProfileImg);
+                // 이미 착용 중인 아이템인지 확인
+                if (selectedSkinItem === selectedSkin) {
+                    console.log(`선택된 장식 ${selectedSkinItem}은 이미 착용 중입니다.`);
+
                 }
-            }if (activeTab === '별 장식') {
+                else {
+                    updatedSkin = selectedSkinItem;
+                    setSelectedSkin(updatedSkin);
+                    setSelectedDeco(selectedDeco);
+                    setSelectedEffect(selectedEffect);
+
+                    // 프로필 이미지 업데이트
+                    const newProfileImg = starSkinMap[updatedSkin];
+                    if (newProfileImg) {
+                        setIsD0(profileImg?.includes('D0'));
+                        setProfileImg(newProfileImg);
+                    }
+                }
+            } if (activeTab === '별 장식') {
                 const selectedDecoration = `D${id}`;
-                
+
                 // 이미 착용 중인 아이템인지 확인
                 if (selectedDecoration === selectedDeco) {
                     console.log(`선택된 장식 ${selectedDecoration}은 이미 착용 중입니다.`);
                     updatedDeco = 'Dx'; // Dx로 설정
+                    setSelectedDeco(updatedDeco);
                 } else {
                     updatedDeco = selectedDecoration;
+
+                    setSelectedSkin(selectedSkin);
                     setSelectedDeco(updatedDeco);
+                    setSelectedEffect(selectedEffect);
                 }
-    
+
                 // 프로필 이미지 업데이트
                 const newProfileImg = starDecoMap[updatedDeco];
                 if (newProfileImg) {
+                    setIsD0(profileImg?.includes('D0'));
                     setProfileImg(newProfileImg);
                 }
             } else if (activeTab === '별 효과') {
                 const selectedEffectItem = `E${id}`;
-                
+
                 // 이미 착용 중인 아이템인지 확인
                 if (selectedEffectItem === selectedEffect) {
                     console.log(`선택된 효과 ${selectedEffectItem}은 이미 착용 중입니다.`);
                     updatedEffect = 'Ex'; // Ex로 설정
+                    setSelectedEffect(updatedEffect);
                 } else {
                     updatedEffect = selectedEffectItem;
+
+                    setSelectedEffect(selectedSkin);
+                    setSelectedSkin(selectedSkin);
                     setSelectedEffect(updatedEffect);
                 }
-    
+
                 // 프로필 이미지 업데이트
                 const newProfileImg = starEffectMap[updatedEffect];
                 if (newProfileImg) {
+                    setIsD0(profileImg?.includes('D0'));
                     setProfileImg(newProfileImg);
                 }
             }
@@ -344,9 +366,9 @@ function CustomizingPage() {
             <TopNav lefter={NavItem} center={NavItem} righter={null} />
 
             <StarCustomizingContainer>
-                <MainStar isD0={isD0} key={profileImg} src={profileImg} alt="메인 별 스킨" />
+                <MainStar isD0={profileImg?.includes('Dx')} key={profileImg} src={profileImg} alt="메인 별 스킨" />
 
-                <TabMenu activeIndex={activeTabIndex}>
+                <TabMenu activeIndex={activeTabIndex} isD0={profileImg?.includes('Dx')}>
                     <TabItem active={activeTab === '별 스킨'} onClick={() => handleTabClick('별 스킨', 0)}>
                         별 스킨
                     </TabItem>
@@ -398,17 +420,17 @@ const StarCustomizingContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 52px;
+    margin-top: 30px;
 `;
 
-const MainStar = styled.img <{isD0:boolean}>`
+const MainStar = styled.img <{ isD0: boolean }>`
     width: 212px;
-    height: ${({ active }) => (active ? 212 : 263)}px;
+    height: ${({ isD0 }) => (isD0 ? 212 : 263)}px;
 
     animation: ${slideFwdBottom} 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 `;
 
-const TabMenu = styled.div<{ activeIndex: number }>`
+const TabMenu = styled.div<{ activeIndex: number, isD0: boolean }>`
     display: flex;
     justify-content: center;
     position: relative;
@@ -417,7 +439,7 @@ const TabMenu = styled.div<{ activeIndex: number }>`
     border-bottom: 1px solid var(--gray-40);
 
     gap: 35px;
-    margin-top: 53px;
+    margin-top: ${({ isD0 }) => (!isD0 ? 20 : 71)}px;
 
     &::after {
         content: '';
@@ -443,7 +465,7 @@ const StarSkinsContainer = styled.div<{ animate: boolean }>`
     grid-template-columns: repeat(3, 1fr); /* 3개씩 한 행에 배치 */
 
     gap: 12px;
-    margin-top: 20px;
+    margin-top: 10px;
 
     animation: ${({ animate }) => (animate ? fadeIn : 'none')} 0.5s ease-in-out;
 `;

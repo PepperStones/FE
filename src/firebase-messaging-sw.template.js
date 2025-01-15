@@ -20,10 +20,10 @@ importScripts(
   
   messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
-    const notificationTitle = payload.notification?.title || 'Default Title';
+    const notificationTitle = payload.data?.title || 'Default Title';
     const notificationOptions = {
-      body: payload.notification?.body || 'Default Body',
-      icon: payload.notification?.icon || '/default-icon.png',
+      body: payload.data?.body || 'Default Body',
+      icon: payload.data?.icon || '/default-icon.png',
     };
   
     self.registration.showNotification(notificationTitle, notificationOptions);

@@ -58,7 +58,7 @@ export const onForegroundMessage = (): void => {
     console.log("포그라운드 메시지 수신:", payload);
 
     // 알림 데이터
-    const { title, body, icon } = payload.notification || {};
+    const { title, body, icon } = payload.data || {};
     const timestamp = payload.data?.timestamp || Date.now().toString();
 
     // 브라우저 알림 표시

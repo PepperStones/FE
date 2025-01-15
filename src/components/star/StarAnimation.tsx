@@ -2,11 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-import StarImage from "../../assets/images/my_star.png";
+import StarImage from "../../assets/images/star/real_star.png";
 import tagImage from "../../assets/images/union.png";
 import spaceMan from "../../assets/images/spaceman.png";
 import levelsData from "../../constants/levels.json";
 import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
+import allStar from "../../assets/images/star/real_start.png";
+
+import { HomeResponse } from "../api/user/HomeApi.ts";
 
 const starData = [
   { id: 1, x: 120, y: 600, size: 30 },
@@ -86,20 +89,14 @@ export interface Team {
 }
 
 interface HomePage {
-  handleIconPage: () => void;
-  handlePrevPage: () => void;
-  handleNextPage: () => void;
   isPopupOpen: boolean;
   isPageOption: number;
   setIsPageOption: (value: number) => void;
   home: Home;
 }
 
-const StarAnimation: React.FC<HomePage> = ({
+const StarAnimation1: React.FC<HomePage> = ({
   isPageOption,
-  handleIconPage,
-  handlePrevPage,
-  handleNextPage,
   isPopupOpen,
   setIsPageOption,
   home,
@@ -123,7 +120,11 @@ const StarAnimation: React.FC<HomePage> = ({
     x: number;
     y: number;
   } | null>(null); // 말풍선 위치
+
   const [loading, setLoading] = useState(false);
+  const [savedData, setSavedData] = useState<
+    Array<{ level: string; total_experience: number | null }>
+  >([]);
 
   const handleBubbleClick = async (x: number, y: number) => {
     if (!loading) {
@@ -142,9 +143,14 @@ const StarAnimation: React.FC<HomePage> = ({
     }
   };
 
-  const [savedData, setSavedData] = useState<
-    Array<{ level: string; total_experience: number | null }>
-  >([]);
+  // useEffect(() => {
+  //   return () => {
+  //     // 컴포넌트가 언마운트될 때 타이머 초기화
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current);
+  //     }
+  //   };
+  // }, []);
 
   // 데이터를 저장 및 초기화하는 함수
   const saveData = (levelString: string) => {
@@ -218,7 +224,7 @@ const StarAnimation: React.FC<HomePage> = ({
 
     return Math.min(Math.max(opacity, minOpacity), maxOpacity);
   };
-  
+
   useEffect(() => {
     // 사용자 레벨 데이터를 저장
     if (home && home.data && home.data.user.level) {
@@ -226,15 +232,6 @@ const StarAnimation: React.FC<HomePage> = ({
     }
     console.log("levelsData:", levelsData);
   }, [home]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     // 컴포넌트가 언마운트될 때 타이머 초기화
-  //     if (timerRef.current) {
-  //       clearTimeout(timerRef.current);
-  //     }
-  //   };
-  // }, []);
 
   // 사용자와 팀원의 레벨 정보를 별에 배치
   const enhancedStarData = starData.map((star, index) => {
@@ -317,6 +314,7 @@ const StarAnimation: React.FC<HomePage> = ({
       };
     })
     .filter((line) => line.isActive); // 활성화된 선만 포함
+
   const myStar = adjustedStarData.find((star) => star.id === myStarId);
 
   const handleStarClick = (id: number) => {
@@ -345,14 +343,14 @@ const StarAnimation: React.FC<HomePage> = ({
     if (isPageOption === 0) {
       translateX = containerSize.width / 2 - myStar.x;
       translateY =
-        containerSize.height / 2 - myStar.y + (isPopupOpen ? 300 : 40);
+        containerSize.height / 2 - myStar.y + (isPopupOpen ? 350 : 20);
       scale = isPopupOpen ? 20 : 12;
     }
     if (isPageOption === 1) {
       if (isPopupOpen) {
         translateX = containerSize.width / 2 - myStar.x;
-        translateY = containerSize.height / 2 - myStar.y + 130;
-        scale = 3; // 팝업 열렸을 때의 확대 비율
+        translateY = containerSize.height / 2 - myStar.y + 150;
+        scale = 1.5; // 팝업 열렸을 때의 확대 비율
       }
     }
 
@@ -371,139 +369,147 @@ const StarAnimation: React.FC<HomePage> = ({
   };
 
   return (
-    <Container ref={containerRef}>
-      <StarContainer
-        as={motion.div}
-        style={{
-          position: "absolute",
-          transformOrigin: `${myStar?.x}px ${myStar?.y}px`, // 줌 기준 설정
-        }}
-        animate={getAnimationValues(containerSize)}
-        transition={{
-          duration: 1, // 애니메이션 지속 시간
-          ease: "easeInOut", // 자연스러운 이징 효과
-        }}
-      >
-        <SVG>
-          {adjustedLineData.map((line, index) => (
-            <motion.line
-              key={index}
-              x1={line.x1}
-              y1={line.y1}
-              x2={line.x2}
-              y2={line.y2}
-              initial={{ opacity: 1 }}
-              animate={{ opacity: isPageOption === 0 ? 0 : 1 }}
-              transition={{
-                duration: 0.8, // 애니메이션 지속 시간
-                ease: "easeInOut", // 자연스러운 이징 효과
-              }}
-              style={{
-                stroke: "rgba(255, 255, 255, 0.7)",
-                strokeWidth: 2,
-              }}
-            />
-          ))}
-        </SVG>
-        {adjustedStarData.map((star) => (
-          <React.Fragment key={star.id}>
-            {isActiveSpaceMan && star.id === myStarId && (
-              <SpaceManContiner
-                style={{
-                  position: "absolute",
-                  width: "20px", // 별 크기보다 약간 크게
-                  height: `10px`,
-                  left: `${star.x}px`,
-                  top: `${star.y - 10}px`, // 별 위쪽에 위치
-                  transform: "translate(-50%, -50%)",
-                }}
-                onClick={handleBubbleClick}
-              >
-                {isActiveBubble && (
-                  <SpaceManBubble style={{}}>
-                    <img src={Bubble_Icon} alt="" />
-                    <div>
-                      <p>힘드시죠? </p>
-                      <p>항상 고생해주셔서 감사합니다!</p>
-                    </div>
-                  </SpaceManBubble>
-                )}
-
-                <SpaceMan
-                  src={spaceMan}
-                  alt="Space Man"
+    <div>
+      {isPageOption !== 2 && (
+        <Container ref={containerRef}>
+          <StarContainer
+            as={motion.div}
+            style={{
+              position: "absolute",
+              transformOrigin: `${myStar?.x}px ${myStar?.y}px`, // 줌 기준 설정
+            }}
+            animate={getAnimationValues(containerSize)}
+            transition={{
+              duration: 1, // 애니메이션 지속 시간
+              ease: "easeInOut", // 자연스러운 이징 효과
+            }}
+          >
+            <SVG>
+              {adjustedLineData.map((line, index) => (
+                <motion.line
+                  key={index}
+                  x1={line.x1}
+                  y1={line.y1}
+                  x2={line.x2}
+                  y2={line.y2}
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: isPageOption === 0 ? 0 : 1 }}
+                  transition={{
+                    duration: 0.8, // 애니메이션 지속 시간
+                    ease: "easeInOut", // 자연스러운 이징 효과
+                  }}
                   style={{
-                    width: `${star.size - 28}px`, // 별 크기보다 약간 크게
-                    height: `${star.size - 26}px`,
+                    stroke: "rgba(255, 255, 255, 0.7)",
+                    strokeWidth: 2,
+                    strokeDasharray: "4 2", // 점선 스타일 추가
                   }}
                 />
-              </SpaceManContiner>
-            )}
-            <Star
-              src={StarImage}
-              alt={`Star ${star.id}`}
+              ))}
+            </SVG>
+            {adjustedStarData.map((star) => (
+              <React.Fragment key={star.id}>
+                {isActiveSpaceMan && star.id === myStarId && (
+                  <SpaceManContiner
+                    style={{
+                      position: "absolute",
+                      width: "20px", // 별 크기보다 약간 크게
+                      height: `10px`,
+                      left: `${star.x}px`,
+                      top: `${star.y - 10}px`, // 별 위쪽에 위치
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    onClick={handleBubbleClick}
+                  >
+                    {isActiveBubble && (
+                      <SpaceManBubble style={{}}>
+                        <img src={Bubble_Icon} alt="" />
+                        <div>
+                          <p>힘드시죠? </p>
+                          <p>항상 고생해주셔서 감사합니다!</p>
+                        </div>
+                      </SpaceManBubble>
+                    )}
+
+                    <SpaceMan
+                      src={spaceMan}
+                      alt="Space Man"
+                      style={{
+                        width: `${star.size - 28}px`, // 별 크기보다 약간 크게
+                        height: `${star.size - 26}px`,
+                      }}
+                    />
+                  </SpaceManContiner>
+                )}
+                <Star
+                  src={StarImage}
+                  alt={`Star ${star.id}`}
+                  animate={{
+                    scale: star.id === myStarId ? 3 : 1,
+                    opacity: star.id === myStarId ? 1 : 0.8,
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                  }}
+                  size={star.size}
+                  style={{
+                    left: `${star.x}px`,
+                    top: `${star.y}px`,
+                    opacity: star.opacity, // 활성화 여부에 따른 광량 적용
+                    filter: star.isActive ? "none" : "grayscale(100%)", // 비활성화된 별은 흑백 처리
+                  }}
+                  onClick={() => handleStarClick(star.id)}
+                />
+                {star.id === myStarId && (
+                  <TagContainer
+                    as={motion.div}
+                    style={{
+                      left: `${star.x - 23}px`,
+                      top: `${star.y + 20}px`,
+                    }}
+                    animate={{
+                      opacity: isPageOption === 1 ? 1 : 0,
+                      scale: isPageOption === 1 ? 1 : 0.8,
+                    }}
+                    transition={{
+                      duration: 0.8, // 애니메이션 지속 시간
+                      ease: "easeInOut", // 자연스러운 이징 효과
+                    }}
+                  >
+                    <TagImage src={tagImage} alt="Tag" />
+                    <TagText className="caption-sm-300">나의 별</TagText>
+                  </TagContainer>
+                )}
+              </React.Fragment>
+            ))}
+          </StarContainer>
+
+          {isPageOption === 2 && (
+            <TagContainer
+              as={motion.div}
               animate={{
-                scale: star.id === myStarId ? 3 : 1,
-                opacity: star.id === myStarId ? 1 : 0.8,
+                opacity: isPageOption === 2 ? 1 : 0, // 팝업 열림 여부에 따라 투명도 조절
+                left: isPopupOpen ? "40%" : "35%", // StarContainer의 중앙
+                top: isPopupOpen ? "81%" : "66%", // 중앙 아래에 위치
+                scale: isPopupOpen ? 1.5 : 1, // 크기 변화
               }}
               transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "loop",
+                duration: 1, // 애니메이션 지속 시간
+                ease: "easeInOut", // 자연스러운 이징 효과
               }}
-              size={star.size}
-              style={{
-                left: `${star.x}px`,
-                top: `${star.y}px`,
-                opacity: star.opacity, // 활성화 여부에 따른 광량 적용
-                filter: star.isActive ? "none" : "grayscale(100%)", // 비활성화된 별은 흑백 처리
-              }}
-              onClick={() => handleStarClick(star.id)}
-            />
-            {star.id === myStarId && (
-              <TagContainer
-                as={motion.div}
-                style={{ left: `${star.x - 23}px`, top: `${star.y + 14}px` }}
-                animate={{
-                  opacity: isPageOption === 1 ? 1 : 0,
-                  scale: isPageOption === 1 ? 1 : 0.8,
-                }}
-                transition={{
-                  duration: 0.8, // 애니메이션 지속 시간
-                  ease: "easeInOut", // 자연스러운 이징 효과
-                }}
-              >
-                <TagImage src={tagImage} alt="Tag" />
-                <TagText className="caption-sm-300">나의 별</TagText>
-              </TagContainer>
-            )}
-          </React.Fragment>
-        ))}
-      </StarContainer>
-
-      {isPageOption === 2 && (
-        <TagContainer
-          as={motion.div}
-          animate={{
-            opacity: isPageOption === 2 ? 1 : 0, // 팝업 열림 여부에 따라 투명도 조절
-            left: isPopupOpen ? "40%" : "35%", // StarContainer의 중앙
-            top: isPopupOpen ? "81%" : "66%", // 중앙 아래에 위치
-            scale: isPopupOpen ? 1.5 : 1, // 크기 변화
-          }}
-          transition={{
-            duration: 1, // 애니메이션 지속 시간
-            ease: "easeInOut", // 자연스러운 이징 효과
-          }}
-        >
-          <OurStarTagImage src={tagImage} alt="Tag" />
-          <TagText className="caption-sm-300">우리 별자리</TagText>
-        </TagContainer>
+            >
+              <OurStarTagImage src={tagImage} alt="Tag" />
+              <TagText className="caption-sm-300">우리 별자리</TagText>
+            </TagContainer>
+          )}
+        </Container>
       )}
-    </Container>
+    </div>
   );
 };
 
-export default StarAnimation;
+export default StarAnimation1;
 
 // Styled Components
 const Container = styled.div`
@@ -559,8 +565,8 @@ const OurStarTagImage = styled.img`
 
 const TagText = styled.span`
   position: absolute;
-  top: 35%;
-  color: var(--primary-10);
+  top: 30%;
+  color: var(--gray-100);
   pointer-events: none;
 `;
 
@@ -576,7 +582,10 @@ const SpaceManContiner = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const SpaceMan = styled.img``;
+const SpaceMan = styled.img`
+  position: absolute;
+  top: 35%;
+`;
 
 const SpaceManBubble = styled.div`
   position: relative;

@@ -204,10 +204,14 @@ const AdminBoard: React.FC = () => {
             {isEditable
               ? editVisibility !== null && (
                   <EditSelect
+                    className="caption-sm-300"
                     value={editGroup}
                     onChange={(e) => handleIsActiveSelect(e.target.value)}
                     disabled={nullTitle()}
-                    style={{ background: "var(--primary-90)" }} // 객체 형태로 스타일 지정
+                    style={{
+                      background: "var(--primary-90)",
+                      color: "var(--orange-20)",
+                    }} // 객체 형태로 스타일 지정
                   >
                     <option value="전체">그룹 없음</option>
                     <option value="1">1그룹</option>

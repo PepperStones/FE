@@ -147,7 +147,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
   );
 
   return (
-    <NavContainer>
+    <NavContainer isPageOption={isPageOption}>
       <TopNav>
         <Left>
           <NavIcon
@@ -276,7 +276,7 @@ export default HomeTopNav;
 
 // 스타일 컴포넌트
 
-const NavContainer = styled.nav`
+const NavContainer = styled.nav<{ isPageOption: number }>`
   display: flex;
   flex-direction: column;
 
@@ -289,11 +289,14 @@ const NavContainer = styled.nav`
   -ms-user-select: none;
 
   border-radius: 0px 0px 25px 25px;
-  position: fixed;
+
+  position: ${(props) => (props.isPageOption === 2 ? "static" : "fixed")};
+
   top: 0; /* 화면 상단에 고정 */
   left: 0;
   right: 0;
-  z-index: 1000; /* 다른 요소 위에 표시 */
+
+  z-index: 1000;
 `;
 
 const TopNav = styled.nav`

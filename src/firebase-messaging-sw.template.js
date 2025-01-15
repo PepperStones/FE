@@ -22,10 +22,10 @@ importScripts(
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
 
     const timestamp = payload.notification?.timestamp || Date.now().toString();
-    const notificationTitle = payload.notification?.title || 'Default Title';
+    const notificationTitle = payload.data.title || payload.notification?.title;
     const notificationOptions = {
-      body: payload.notification?.body || 'Default Body',
-      icon: payload.notification?.icon || '/default-icon.png',
+      body: payload.data.body || payload.notification?.body,
+      icon: payload.data.icon || payload.notification?.icon || '/default-icon.png',
       tag: timestamp,
     };
   

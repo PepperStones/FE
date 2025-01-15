@@ -72,7 +72,7 @@ import levelData from "../constants/levels.json";
 // }
 
 const renderCategory = (categoryName: string, items: RecentExperience[]) => (
-  <div>
+<div>
     {items.map((item, index) => {
       const displayName = item.projectName || item.questName || "_"; // 조건에 따라 값 결정
       let title = "";
@@ -164,11 +164,11 @@ const ExperiencePoint: React.FC = () => {
   const navigate = useNavigate();
 
   if (!currentExperience) {
-    return <div>No data available</div>;
+    return navigate('/login');
   }
 
   if (!recentExperience) {
-    return <div>No data available</div>;
+    return navigate('/login');
   }
 
   const totalAccumulatedExperience =

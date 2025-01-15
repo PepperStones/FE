@@ -210,10 +210,10 @@ function Mypage() {
 
                 <Evaluation isFromCustomize={isFromCustomize}>
                     <DetailLeft>
-                        <EvaluationTime className='caption-sm-300'>24년 상반기 인사평가</EvaluationTime>
+                        <EvaluationTime className='caption-sm-300'>인사평가 결과</EvaluationTime>
                         <EvaluationDescription className='text-md-200'>{myInfo?.grade}등급</EvaluationDescription>
                     </DetailLeft>
-                    <DetailRight className='text-sm-200'>+ 3500 do</DetailRight>
+                    <DetailRight className='text-sm-200'>+ {myInfo?.experience} do</DetailRight>
                 </Evaluation>
 
                 <LogOutContainer>

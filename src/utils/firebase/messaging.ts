@@ -118,19 +118,28 @@ export const onForegroundMessage = (): void => {
 
     // 브라우저 알림 표시
     if (Notification.permission === "granted") {
-      try {
-        console.log("알림 권한이 허용되었습니다.");
-        alert("알림 권한이 허용되었습니다.");
-        new Notification(title || "Default Title", {
-          body: body || "Default Body",
-          icon: icon || "/favicon.ico",
-          tag: timestamp,
-        });
-        console.log("푸시 알림 표시 성공");
-        alert("푸시 알림 표시 성공");
-      } catch (error) {
-        console.log("푸시 알림 표시 실패");
-        alert("푸시 알림 표시 실패");
+      // try {
+      //   console.log("알림 권한이 허용되었습니다.");
+      //   alert("알림 권한이 허용되었습니다.");
+      //   new Notification(title || "Default Title", {
+      //     body: body || "Default Body",
+      //     icon: icon || "/favicon.ico",
+      //     tag: timestamp,
+      //   });
+
+      //   console.log("푸시 알림 표시 성공");
+      //   alert("푸시 알림 표시 성공");
+      // } catch (error) {
+      //   console.log("푸시 알림 표시 실패");
+      //   alert("푸시 알림 표시 실패");
+      // } 
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage(payload);
+        console.log("Service Worker로 메시지 전달");
+        alert("Service Worker로 메시지 전달");
+      } else {
+        console.error("Service Worker가 등록되어 있지 않습니다.");
+        alert("Service Worker가 등록되어 있지 않습니다.");
       }
     } else {
       console.error(

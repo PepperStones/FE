@@ -54,6 +54,12 @@ jobs:
          ls -la build/service-worker.js || echo "service-worker.js not found"
          ls -la build/service-worker.js.map || echo "service-worker.js.map not found"
          ls -la build/firebase-messaging-sw.js || echo "firebase-messaging-sw.js not found"
+
+      - name: Copy firebase-messaging-sw.js to build folder
+        run: |
+          cp public/firebase-messaging-sw.js build/
+          echo "firebase-messaging-sw.js copied to build folder."
+          ls -la build/
         
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

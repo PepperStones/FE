@@ -53,6 +53,7 @@ jobs:
          ls -la build/asset-manifest.json || echo "asset-manifest.json not found"
          ls -la build/service-worker.js || echo "service-worker.js not found"
          ls -la build/service-worker.js.map || echo "service-worker.js.map not found"
+         ls -la build/firebase-messaging-sw.js || echo "firebase-messaging-sw.js not found"
         
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

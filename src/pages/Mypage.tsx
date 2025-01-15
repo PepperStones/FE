@@ -244,7 +244,7 @@ function Mypage() {
 
             <LoadingModal isOpen={isLoading} />
 
-            <FooterNav />
+            <FooterNav/>
         </MypageContainer>
 
     );
@@ -256,6 +256,7 @@ const MypageContainer = styled.div`
 display: flex;
 flex-direction: column;
 
+overflow-y: scroll;
 `;
 
 const ProfileInfoContainer = styled.div`
@@ -321,6 +322,7 @@ ${({ isFromCustomize }) => isFromCustomize && css`animation: ${fadeIn} 0.5s ease
 const DetailLeft = styled.div`
 display: flex;
 flex-direction: row;
+align-items: center;
 flex: 1;
 
 gap: 8px;
@@ -342,6 +344,8 @@ color: var(--gray-100);
 
 const DetailContent = styled.div`
 display: flex;
+justify-content: center;
+align-items: center;
 flex-direction: row;
 
 padding: 11px 20px;

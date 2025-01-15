@@ -19,18 +19,18 @@ import StarSkin4 from '../assets/images/reward/star_skin_5.png'
 import StarSkin5 from '../assets/images/reward/star_skin_6.png'
 
 import StarDeco0 from '../assets/images/reward/star_deco_1.png'
-import StarDeco1 from '../assets/images/reward/star_deco_1.png'
-import StarDeco2 from '../assets/images/reward/star_deco_1.png'
-import StarDeco3 from '../assets/images/reward/star_deco_1.png'
-import StarDeco4 from '../assets/images/reward/star_deco_1.png'
-import StarDeco5 from '../assets/images/reward/star_deco_1.png'
+import StarDeco1 from '../assets/images/reward/star_deco_2.png'
+import StarDeco2 from '../assets/images/reward/star_deco_3.png'
+import StarDeco3 from '../assets/images/reward/star_deco_4.png'
+import StarDeco4 from '../assets/images/reward/star_deco_5.png'
+import StarDeco5 from '../assets/images/reward/star_deco_6.png'
 
 import StarEffect0 from '../assets/images/reward/star_effect_1.png'
-import StarEffect1 from '../assets/images/reward/star_effect_1.png'
-import StarEffect2 from '../assets/images/reward/star_effect_1.png'
-import StarEffect3 from '../assets/images/reward/star_effect_1.png'
-import StarEffect4 from '../assets/images/reward/star_effect_1.png'
-import StarEffect5 from '../assets/images/reward/star_effect_1.png'
+import StarEffect1 from '../assets/images/reward/star_effect_2.png'
+import StarEffect2 from '../assets/images/reward/star_effect_3.png'
+import StarEffect3 from '../assets/images/reward/star_effect_4.png'
+import StarEffect4 from '../assets/images/reward/star_effect_5.png'
+import StarEffect5 from '../assets/images/reward/star_effect_6.png'
 
 import { fetchStarCustomization, StarCustomizationResponse, updateStarCustomization } from "../api/user/MypageApi.ts";
 
@@ -329,7 +329,7 @@ const TabMenu = styled.div<{ activeIndex: number }>`
         left: 20px;
         height: 2px;
         width: 110px; /* 각 탭의 너비 */
-        background-color: var(--primary-70);
+        background-color: var(--orange-80);
         transform: translateX(${({ activeIndex }) => `${tabOffsets[activeIndex]}px`});
         transition: transform 0.1s ease-in-out;
     }
@@ -338,7 +338,7 @@ const TabMenu = styled.div<{ activeIndex: number }>`
 const TabItem = styled.div<{ active?: boolean }>`
     padding: 10px 20px;
     font-size: 1rem;
-    color: ${({ active }) => (active ? 'var(--primary-70)' : 'var(--gray-40)')};
+    color: ${({ active }) => (active ? 'var(--orange-80)' : 'var(--gray-40)')};
 `;
 
 const StarSkinsContainer = styled.div<{ animate: boolean }>`

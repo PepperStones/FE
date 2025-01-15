@@ -10,27 +10,27 @@ interface SmallBtnProps {
 }
 */
 
-const SmallBtn = ({ content, onClick, isAvailable, isDarkblue }) => {
+const ModalSmallBtn = ({ content, onClick, isAvailable, isDarkblue }) => {
     return (
-        <SmallBtnContainer
+        <ModalSmallBtnContainer
             className='text-lg-300'
             onClick={onClick}
             disabled={!isAvailable}
             isAvailable={isAvailable}
             isDarkblue={isDarkblue}
-        >{content}</SmallBtnContainer>
+        >{content}</ModalSmallBtnContainer>
     )
 }
 
-export default SmallBtn
+export default ModalSmallBtn
 
-const SmallBtnContainer = styled.button<{ isAvailable: boolean, isDarkblue: boolean }>`
+const ModalSmallBtnContainer = styled.button<{ isAvailable: boolean, isDarkblue: boolean }>`
 display: flex;
 justify-content: center;
 align-items: center;
 
-width: 10.5rem; 
-height: 3.375rem;
+width: 8.4375rem;
+height: 3.125rem;
 
 padding: 11px 48px;
 border-radius: 15px;

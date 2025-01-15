@@ -97,5 +97,7 @@ const SplashContent = styled.img`
 width: 209px;
 height: 31px;
 
+margin-bottom: 30px;
+
 animation: ${fadeIn} 2s ease-in-out, ${sparkle} 4s ease-in-out infinite alternate;
 `;

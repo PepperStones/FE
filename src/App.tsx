@@ -62,21 +62,12 @@ const App = () => {
   useEffect(() => {
     // 슬라이드 제스처 방지 (iOS)
     const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches[0].pageX < 20 || e.touches[0].pageX > window.innerWidth - 20) e.preventDefault(); // 기본 동작 방지
+      if (e.touches[0].pageX < 30 || e.touches[0].pageX > window.innerWidth - 30) e.preventDefault(); // 기본 동작 방지
     };
     document.addEventListener("touchstart", handleTouchStart);
 
-
-    // 안드로이드 하드웨어 뒤로가기 버튼 비활성화
-    const handleBackButton = (event) => {
-      event.preventDefault(); // 기본 동작 방지
-      alert("뒤로가기가 비활성화되었습니다.");
-    };
-    document.addEventListener("backbutton", handleBackButton);
-
     return () => {
       document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("backbutton", handleBackButton);
     };
   }, []);
 

@@ -102,23 +102,22 @@ export const onForegroundMessage = (): void => {
 
     // 알림 데이터
     const { title, body, icon } = payload.data || {};
+    const timestamp = payload.data?.timestamp || Date.now().toString();
 
     // 브라우저 알림 표시
-    if (Notification.permission === "granted") {
+    if (true) {
       try {
         console.log("알림 권한이 허용되었습니다.");
         new Notification(title || "Default Title", {
           body: body || "Default Body",
           icon: icon || "/favicon.ico",
+          tag: timestamp,
         });
         console.log("푸시 알림 표시 성공");
       } catch (error) {
         console.log("푸시 알림 표시 실패");
       }
     } else {
-      console.error(
-        "알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요."
-      );
     }
   });
 };

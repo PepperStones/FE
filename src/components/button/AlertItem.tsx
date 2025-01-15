@@ -32,7 +32,6 @@ const Alert = styled.div<{ isRead: boolean }>`
   }
 
   &:hover {
-    background: ${({ isRead }) => (isRead ? "var(--sub-30)" : "var(--sub-30)")};
     cursor: pointer;
   }
 

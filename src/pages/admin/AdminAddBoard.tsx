@@ -173,7 +173,7 @@ const AdminAddBoard: React.FC = () => {
         />
       </ButtonContainer>
 
-      <LoadingModal isOpen={loading}/>
+      <LoadingModal isOpen={loading} />
     </div>
   );
 };

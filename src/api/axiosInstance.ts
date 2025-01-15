@@ -12,14 +12,11 @@ const axiosInstance = axios.create({
 // 요청 인터셉터 (요청 전 데이터를 가공하거나 헤더 추가, 인증 등을 처리.)
 axiosInstance.interceptors.request.use(
   (config) => {
-    // 특정 API 경로에만 Authorization 헤더 추가
-    // const token =
-    //   "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaXNzIjoiYWRtaW5Ac3ByaW5nLnNlY3VyaXR5LmNvbSIsImlhdCI6MTczNjY4MDcwNCwiZXhwIjoxNzM2NzY3MTA0LCJpZCI6Mn0.fnJqT5uCI5sf6g0j-cga3xR8xovR465fqvVsUnRSgen2v6Q4NmUfe2w1-cTqn27zGw-SvKlfCt59F86B0XQ7eg";
+   
     const token = localStorage.getItem("accessToken"); // 로컬스토리지에서 토큰 가져오기
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // Authorization 헤더 추가
     }
-    // config.headers.Authorization = `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaXNzIjoiYWRtaW5Ac3ByaW5nLnNlY3VyaXR5LmNvbSIsImlhdCI6MTczNjY4MDU2NSwiZXhwIjoxNzM2NzY2OTY1LCJpZCI6MX0.26jSFDCtHPJdNHUq9cBISYMjYlyLILhjIG2THy_jLscAyit4iShjKPPXpRiKd7xYgDQpbIn0TtNRCuVUAXr9vw`;
     return config;
   },
   (error) => {

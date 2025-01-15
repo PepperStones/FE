@@ -31,15 +31,25 @@ importScripts(
       icon: payload.data?.icon || '/default-icon.png',
       tag: timestamp,
     };
-
-    // 포그라운드에 메시지 전달
-    self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage(payload);
-      });
-    });
-
   
     self.registration.showNotification(notificationTitle, notificationOptions);
   });
   
+  // 포그라운드 메시지 수신 및 알림 표시
+self.addEventListener("message", (event) => {
+  console.log("Service Worker로 포그라운드 메시지 수신:", event.data);
+  alert(event.data);
+
+  const { title, body, icon } = event.data.notification || {};
+  alert(title);
+  alert(body);
+
+  const notificationTitle = title || "Default Title";
+  const notificationOptions = {
+    body: body || "Default Body",
+    icon: icon || "/favicon.ico",
+  };
+  alert("성공!");
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});

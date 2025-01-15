@@ -221,6 +221,7 @@ export const onForegroundMessage = () => {
 
     if (!navigator.serviceWorker?.controller) {
       console.error("Service Worker가 활성화되지 않았습니다.");
+      alert("푸시 알림 표시 실패");
       return;
     }
 
@@ -229,5 +230,6 @@ export const onForegroundMessage = () => {
       type: 'SHOW_NOTIFICATION',
       payload: payload.data || payload.notification
     });
+    alert("푸시 알림 표시 성공");
   });
 };

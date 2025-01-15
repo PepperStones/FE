@@ -60,7 +60,7 @@ self.addEventListener("message", (event) => {
   
   if (event.data.type === 'SHOW_NOTIFICATION') {
     const { title, body, icon } = event.data.payload;
-    
+    alert("푸시 알림 표시 성공직전");
     return self.registration.showNotification(title || "Default Title", {
       body: body || "Default Body",
       icon: icon || "/favicon.ico",

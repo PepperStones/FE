@@ -20,6 +20,9 @@ importScripts(
   
   messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
+
+    console.log('페이로드 notification:', payload.notification); 
+    console.log('페이로드 data:', payload.data);
     
     const timestamp = payload.notification?.timestamp || Date.now().toString();
     const notificationTitle = payload.notification?.title || 'Default Title';

@@ -59,8 +59,6 @@ const NoticeModal: React.FC<NoticeModalProps> = ({ showNoticeModal, title, descr
 
 export default NoticeModal;
 
-// Styled Components
-
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -76,7 +74,7 @@ const Overlay = styled.div`
 
 const Content = styled.div <{ isClosing: boolean }>`
   width: 20.1875rem;
-  background-color: var(--sub-20);
+  background-color: var(--gray-0);
   border-radius: 10px;
 
   padding: 25px;
@@ -86,7 +84,7 @@ const Content = styled.div <{ isClosing: boolean }>`
   animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.2s ease-in-out;
 `;
 
-const Title = styled.h2`
+const Title = styled.div`
   margin-bottom: 10px;
 
   color: var(--gray-80);

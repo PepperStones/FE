@@ -116,6 +116,7 @@ function ChallengeQuest() {
         onAcceptFunc={closeSuccessModal}
         isSuccess={true}
         isOverlayBlack={true}
+        aboveButton={false}
       />
 
     </ChallengeQuestContainer>

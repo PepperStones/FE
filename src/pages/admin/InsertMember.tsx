@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
@@ -18,11 +18,13 @@ import GroupImg from '../../assets/images/admin/orange_group.png'
 import LevelImg from '../../assets/images/admin/orange_diamond_star.png'
 import IdImg from '../../assets/images/admin/orange_id.png'
 import PwdImg from '../../assets/images/admin/orange_lock.png'
+import SelectImg from '../../assets/images/admin/gray_down_arrow.png'
 
 import { addMember, AddMemberRequest } from '../../api/admin/MemberApi.ts';
 
 function InsertMember() {
     const navigate = useNavigate();
+
     const [ein, setEin] = useState('');
     const [name, setName] = useState('');
     const [joinDate, setJoinDate] = useState<Date | null>(null);;
@@ -98,7 +100,7 @@ function InsertMember() {
 
     return (
         <MypageContainer>
-            <TopNav lefter={Center} center={Center} righter={null} isAdmin={true} />
+            <TopNav lefter={Center} center={Center} righter={null} />
 
             <ProfileInfoContainer>
 
@@ -171,6 +173,7 @@ function InsertMember() {
                             <option value="그로스팀">그로스팀</option>
                             <option value="CX팀">CX팀</option>
                         </DetailSelect>
+                        <SelectIcon src={SelectImg} />
                     </DetailContent>
 
                     <DetailContent>
@@ -191,6 +194,7 @@ function InsertMember() {
                             <option value="1">그룹 1</option>
                             <option value="2">그룹 2</option>
                         </DetailSelect>
+                        <SelectIcon src={SelectImg} />
                     </DetailContent>
 
                     <DetailContent>
@@ -228,6 +232,7 @@ function InsertMember() {
                             <option value="G5">G5</option>
                             <option value="G6">G6</option>
                         </DetailSelect>
+                        <SelectIcon src={SelectImg} />
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
@@ -266,12 +271,14 @@ function InsertMember() {
                 showDefaultErrorModal={isWrongEinErrorModalOpen}
                 errorMessage='사번을 잘못 입력하셨습니다.'
                 onAcceptFunc={closeWrongEinErrorModal}
+                aboveButton={true}
             />
 
             <DefaultErrorModal
                 showDefaultErrorModal={isDuplicateUserIdErrorModalOpen}
                 errorMessage='이미 사용 중인 아이디입니다.'
                 onAcceptFunc={closeDuplicateUserIdErrorModal}
+                aboveButton={true}
             />
 
         </MypageContainer>
@@ -303,6 +310,7 @@ background: var(--black-50);
 
 const DetailLeft = styled.div`
 display: flex;
+align-items: center;
 flex-direction: row;
 flex: 1;
 
@@ -319,7 +327,6 @@ border: none;
 
 color: var(--gray-60);
 text-align: right;
-direction: rtl;
 
 &::placeholder {
     color: var(--gray-20);
@@ -339,9 +346,14 @@ border: none;
 
 color: var(--gray-60);
 text-align: right;
-direction: rtl;
 `;
 
+const SelectIcon = styled.img`
+width: 20px;
+height: 20px;
+
+margin-left: 10px;
+`;
 
 const DetailContent = styled.div`
 display: flex;

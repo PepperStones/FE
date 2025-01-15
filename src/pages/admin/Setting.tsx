@@ -8,16 +8,18 @@ import FooterNav from '../../components/nav/FooterNav.tsx'
 import DefaultModal from '../../components/modal/DefaultModal.tsx';
 import LoadingModal from '../../components/loading/Loading.tsx'
 import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
+import PWAInstallModal from '../../components/modal/PWAInstallModal.tsx';
 
 import SynchronizeIcon from '../../assets/images/admin/gray_arrow_cycle.png'
 import LogOutIcon from '../../assets/images/admin/gray_logout.png'
+import GoIcon from '../../assets/images/admin/lightgray_arrow_right.png'
 
 import { syncData, SyncType } from '../../api/admin/SynchronizationApi.ts';
 
 function Setting() {
     const navigate = useNavigate();
     const Center = {
-        text: "동기화",
+        text: "설정",
     };
 
     const description = "동기화를 진행하면 최신 데이터로 업데이트됩니다.";
@@ -27,6 +29,7 @@ function Setting() {
     const [isLeaderSynchroModalOpen, setIsLeaderSynchroModalOpen] = useState(false);
     const [isProjectSynchroModalOpen, setIsProjectSynchroModalOpen] = useState(false);
     const [isEvaluationSynchroModalOpen, setIsEvaluationSynchroModalOpen] = useState(false);
+    const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -56,6 +59,9 @@ function Setting() {
 
     const openLogOutModal = () => setIsLogOutModalOpen(true);
     const closeLogOutModal = () => setIsLogOutModalOpen(false);
+
+    const openInstallModalModal = () => setIsInstallModalOpen(true);
+    const closeInstallModalModal = () => setIsInstallModalOpen(false);
 
     const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
     const handleLogOut = () => {
@@ -88,40 +94,44 @@ function Setting() {
 
     return (
         <MypageContainer>
-            <TopNav lefter={null} center={Center} righter={null} isAdmin={true} />
+            <TopNav lefter={null} center={Center} righter={null} />
 
 
             <ButtonConatainer className='text-lg-300'>
                 <SettingTitle><SettingTitleIcon className='text-lg-300' src={SynchronizeIcon} />동기화</SettingTitle>
                 <SynchroButton onClick={openAllSynchroModal}>
-                    <SynchroText>전체 동기화</SynchroText>
-                    <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
+                    <SynchroText className='text-md-300'>전체 동기화</SynchroText>
+                    <SynchroIcon className='caption-sm-200'>시작하기 <GoArrowIcon src={GoIcon}/></SynchroIcon>
                 </SynchroButton>
                 <SynchroButton onClick={openJobGroupSynchroModal}>
-                    <SynchroText>직무별 퀘스트 동기화</SynchroText>
-                    <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
+                    <SynchroText className='text-md-300'>직무별 퀘스트 동기화</SynchroText>
+                    <SynchroIcon className='caption-sm-200'>시작하기<GoArrowIcon src={GoIcon}/></SynchroIcon>
                 </SynchroButton>
                 <SynchroButton onClick={openLeaderSynchroModal}>
-                    <SynchroText>리더부여 퀘스트 동기화</SynchroText>
-                    <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
+                    <SynchroText className='text-md-300'>리더부여 퀘스트 동기화</SynchroText>
+                    <SynchroIcon className='caption-sm-200'>시작하기 <GoArrowIcon src={GoIcon}/></SynchroIcon>
                 </SynchroButton>
                 <SynchroButton onClick={openProjectSynchroModal}>
-                    <SynchroText>전사 프로젝트 동기화</SynchroText>
-                    <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
+                    <SynchroText className='text-md-300'>전사 프로젝트 동기화</SynchroText>
+                    <SynchroIcon className='caption-sm-200'>시작하기 <GoArrowIcon src={GoIcon}/></SynchroIcon>
                 </SynchroButton>
                 <SynchroButton onClick={openEvaluationSynchroModal}>
-                    <SynchroText>인사평가 동기화</SynchroText>
-                    <SynchroIcon className='caption-sm-200'>시작하기 &gt;</SynchroIcon>
+                    <SynchroText className='text-md-300'>인사평가 동기화</SynchroText>
+                    <SynchroIcon className='caption-sm-200'>시작하기 <GoArrowIcon src={GoIcon}/></SynchroIcon>
                 </SynchroButton>
             </ButtonConatainer>
 
             <SettingDivider />
 
             <ButtonConatainer className='text-lg-300'>
-                <SettingTitle><SettingTitleIcon className='text-lg-300' src={LogOutIcon} />로그아웃</SettingTitle>
+                <SettingTitle><SettingTitleIcon className='text-lg-300' src={LogOutIcon} />일반</SettingTitle>
+                <SynchroButton onClick={openInstallModalModal}>
+                    <SynchroText className='text-md-300'>인앱 설치</SynchroText>
+                    <SynchroIcon className='caption-sm-200' style={{color: 'var(--black-50)'}}>-<GoArrowIcon src={GoIcon}/></SynchroIcon>
+                </SynchroButton>
                 <SynchroButton onClick={openLogOutModal}>
-                    <SynchroText>로그아웃</SynchroText>
-                    <SynchroIcon className='caption-sm-200'>&gt;</SynchroIcon>
+                    <SynchroText className='text-md-300'>로그아웃</SynchroText>
+                    <SynchroIcon className='caption-sm-200' style={{color: 'var(--black-50)'}}>-<GoArrowIcon src={GoIcon}/></SynchroIcon>
                 </SynchroButton>
             </ButtonConatainer>
 
@@ -172,13 +182,17 @@ function Setting() {
                 errorMessage='동기화가 성공적으로 완료되었습니다!'
                 onAcceptFunc={closeSuccessModal}
                 isSuccess={true}
+                aboveButton={false}
             />
 
             <DefaultErrorModal
                 showDefaultErrorModal={isFailModalOpen}
                 errorMessage={errorMessage}
                 onAcceptFunc={closeFailModal}
+                aboveButton={false}
             />
+
+            <PWAInstallModal showModal={isInstallModalOpen} onClose={closeInstallModalModal} />
 
             <DefaultModal
                 showDefaultModal={isLogOutModalOpen}
@@ -240,7 +254,7 @@ const SynchroText = styled.span`
 display: flex;
 flex: 1;
 
-color: var(--orange-80);
+color: var(--gray-100);
 `;
 
 const SynchroIcon = styled.div`
@@ -258,17 +272,9 @@ height: 10px;
 background: var(--black-30);
 `;
 
+const GoArrowIcon = styled.img`
+width: 5px;
+height: 8px;
 
-const LogOutContainer = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-
-margin-top: 200px;
-`;
-
-const LogOut = styled.button`
-border: none;
-background: var(--black-20);
-color: var(--gray-50);
+margin-left: 7px;
 `;

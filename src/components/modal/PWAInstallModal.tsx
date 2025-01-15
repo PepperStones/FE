@@ -51,7 +51,7 @@ const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ showModal, onClose })
     <DefaultModal
       showDefaultModal={showModal}
       title="앱 설치"
-      description="이 앱을 설치하시겠습니까?"
+      description="* iOS는 추후 업데이트 예정입니다 *"
       onAcceptFunc={handleAcceptFunc}
       onUnacceptFunc={handleUnacceptFunc}
     />

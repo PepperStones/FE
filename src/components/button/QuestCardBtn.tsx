@@ -7,6 +7,7 @@ import UnitIcon from '../../assets/images/clock_cycle.png'
 import PaperIcon from '../../assets/images/orange_paper.png'
 import PersonPrizeIcon from '../../assets/images/orange_person_prize.png'
 import RateIcon from '../../assets/images/percentage-circle.png'
+import GoIconImg from '../../assets/images/lightgray_arrow_right.png'
 
 /* Props 정보
 interface QuestCardBtnProps {
@@ -37,7 +38,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                         <QuestTitle className='text-sm-200'>{title} 퀘스트</QuestTitle>
                         <QuestSubtitle className='text-lg-300'>{subtitle}</QuestSubtitle>
                     </QuestLeftContent>
-                    {isMoreDetail ? <QuestRightContent className='caption-sm-200' onClick={onClick}>상세보기 &gt;</QuestRightContent> : undefined}
+                    {isMoreDetail ? <QuestRightContent className='caption-sm-200' onClick={onClick}>상세보기 <GoIcon src={GoIconImg}/></QuestRightContent> : undefined}
                 </QuestTitleWrapper>
             </QuestHeader>
 
@@ -47,7 +48,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                         <ConditionTitle className='caption-sm-300'>누적 획득 경험치<DownwardTriangle /></ConditionTitle>
                         <ProgressCircle
                             currentProgress={progress.currentProgress}
-                            maxProgress={progress.maxProgress}
+                            maxProgress={rate !== null ? progress.maxProgress * rate / 100 : progress.maxProgress}
                             Variation={progress.Variable}
                             circleRadius={progress.circleRadius}
                             isQuestDetail={false}
@@ -115,11 +116,19 @@ gap: 7px;
 
 const QuestRightContent = styled.div`
 display: flex;
+align-items: center;
 justify-content: flex-end;
 
 margin-right: 10px;
 
 color: var(--gray-70);
+`;
+
+const GoIcon = styled.img`
+width: 5px;
+height: 8px;
+
+margin-left: 7px;
 `;
 
 const QuestIcon = styled.img`
@@ -209,7 +218,7 @@ align-items: center;
 color: var(--gray-80);
 `;
 
-const GetPurpose = styled.button`
+const GetPurpose = styled.div`
 display: flex;
 justify-content: left;
 align-items: center;

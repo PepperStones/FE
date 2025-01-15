@@ -1,6 +1,5 @@
 import axios from "../axiosInstance.ts";
 
-const BASE_URL = "{PORT}/exp"; // {PORT}를 실제 서버 포트로 대체하세요.
 
 // 사용자 정보 인터페이스
 interface User {

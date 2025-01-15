@@ -23,9 +23,9 @@ import companyNumIcon from "../assets/images/hugeicons_id.png";
 import jobNameIcon from "../assets/images/grommet-icons_group.png";
 import centerNameIcon from "../assets/images/lucide_house.png";
 import SpeechBubbleImage from "../assets/images/bubble_gray.png";
-import taskIcon from "../assets/images/task_exp.png";
-import leaderIcon from "../assets/images/leader_exp.png";
-import performanceIcon from "../assets/images/hugeicons_chart-evaluation.png";
+import taskIcon from "../assets/images/QuestList/task.png";
+import leaderIcon from "../assets/images/QuestList/leader.png";
+import performanceIcon from "../assets/images/QuestList/evaluation.png";
 import informationIcon from "../assets/images/information_line.png";
 import LevelBubble from "../assets/images/bubble_gray_2.png";
 import levelData from "../constants/levels.json";
@@ -71,29 +71,42 @@ import levelData from "../constants/levels.json";
 //   };
 // }
 
-const renderCategory = (categoryName: string, items: RecentExperience[]) => (
-<div>
+const renderCategory = (
+  categoryName: string,
+  items: RecentExperience[]
+): JSX.Element => (
+  <div>
     {items.map((item, index) => {
       const displayName = item.projectName || item.questName || "\u00A0"; // 조건에 따라 값 결정
       let title = "";
       let icon = "";
+      let width = "0px";
+      let height = "0px";
 
       switch (categoryName) {
         case "Job": // projectName이 존재하는 경우
           title = "직무별 퀘스트";
           icon = taskIcon;
+          width = "14px";
+          height = "16px";
           break;
         case "Leader": // projectName이 존재하는 경우
           title = "리더부여 퀘스트";
           icon = leaderIcon;
+          width = "15px";
+          height = "16px";
           break;
         case "Project": // projectName이 존재하는 경우
-          title = "전사 프로젝트 참여"!;
+          title = "전사 프로젝트 참여";
           icon = performanceIcon;
+          width = "15px";
+          height = "16px";
           break;
         case "Evaluation": // projectName이 존재하는 경우
           title = "상반기 인사평가";
           icon = leaderIcon;
+          width = "14px";
+          height = "14px";
           break;
       }
 
@@ -104,7 +117,11 @@ const renderCategory = (categoryName: string, items: RecentExperience[]) => (
               <div>
                 <div>
                   {" "}
-                  <img src={icon} alt="" />
+                  <img
+                    src={icon}
+                    alt=""
+                    style={{ width: width, height: height }}
+                  />
                   <h1 className="text-md-200">{title}</h1>
                 </div>
                 <p className="caption-md-100 ">
@@ -126,7 +143,7 @@ const renderCategory = (categoryName: string, items: RecentExperience[]) => (
   </div>
 );
 
-const ExperiencePoint: React.FC = () => {
+const ExperiencePoint: React.FC<{}> = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialTab = queryParams.get("tab") === "receipt" ? 1 : 0;
@@ -140,7 +157,7 @@ const ExperiencePoint: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [currentExperience, setCurrentExperience] =
     useState<CurrentExperienceResponse | null>(null); // API 데이터 상태
-  const [recentExperience, serRecentExperience] =
+  const [recentExperience, setRecentExperience] =
     useState<RecentExperienceResponse | null>(null); // API 데이터 상태
 
   useEffect(() => {
@@ -150,7 +167,7 @@ const ExperiencePoint: React.FC = () => {
         const responseCurrent = await getCurrentExperience();
         const responseResent = await getRecentExperience();
         setCurrentExperience(responseCurrent);
-        serRecentExperience(responseResent);
+        setRecentExperience(responseResent);
       } catch (error) {
         console.error("Error fetching current experience:", error);
       } finally {
@@ -163,12 +180,8 @@ const ExperiencePoint: React.FC = () => {
 
   const navigate = useNavigate();
 
-  if (!currentExperience) {
-    return navigate('/login');
-  }
-
-  if (!recentExperience) {
-    return navigate('/login');
+  if (!currentExperience || !recentExperience) {
+    return <div>데이터를 가져오지 못했습니다. 다시 시도해주세요.</div>;
   }
 
   const totalAccumulatedExperience =
@@ -215,6 +228,9 @@ const ExperiencePoint: React.FC = () => {
   const saveData = (
     levelString: string
   ): Array<{ level: string; total_experience: number }> => {
+    if (!levelString || levelString.length === 0) {
+      throw new Error("Invalid level string provided");
+    }
     const groupKey = levelString[0]; // "F1-I" → "F"
 
     // 그룹 데이터 가져오기

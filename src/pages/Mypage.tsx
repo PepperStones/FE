@@ -7,13 +7,14 @@ import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
 import LoadingModal from '../components/loading/Loading.tsx';
 import DefaultModal from '../components/modal/DefaultModal.tsx';
+import PWAInstallModal from '../components/modal/PWAInstallModal.tsx';
 
-import ProfileImg from '../assets/images/reward/star_skin_1.png'
 import EditIconImg from '../assets/images/orange_circle_pencil.png'
 import DepartmentImg from '../assets/images/yellow_house.png'
 import JoinDateImg from '../assets/images/yellow_calendar.png'
 import LevelImg from '../assets/images/yellow_diamod_star.png'
 import PasswordImg from '../assets/images/yellow_lock.png'
+import SettingImg from "../assets/images/admin/orange_group.png"
 
 import StarSkin0 from '../assets/images/reward/star_skin_1.png'
 import StarSkin1 from '../assets/images/reward/star_skin_2.png'
@@ -103,6 +104,7 @@ function Mypage() {
     const [selectedEffect, setSelectedEffect] = useState<string | null>(null); // 선택된 효과 
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
     const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
     const handleLogOut = () => {
         localStorage.removeItem('accessToken');
@@ -114,6 +116,8 @@ function Mypage() {
 
     const handleUpdatePwdClick = () => navigate('/mypage-pwd');
     const handleCustomizingClick = () => navigate('/mypage-customize');
+    const openInstallModal = () => setIsInstallModalOpen(true);
+    const closeInstallModal = () => setIsInstallModalOpen(false);
     const openLogOutModal = () => setIsLogOutModalOpen(true);
     const closeLogOutModal = () => setIsLogOutModalOpen(false);
 
@@ -174,7 +178,7 @@ function Mypage() {
             <ProfileInfoContainer>
                 <ProfileContainer>
                     <ProfileImageContainer isFromCustomize={isFromCustomize}>
-                        <ProfileImage key={profileImg} src={profileImg} alt="프로필 이미지" />
+                        <ProfileImage src={profileImg} alt="프로필 이미지" />
                         <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
                     </ProfileImageContainer>
                     <ProfileName className='title-md-300'>{myInfo?.name}</ProfileName>
@@ -206,6 +210,12 @@ function Mypage() {
                         </DetailLeft>
                         <FixButton className='caption-sm-200' onClick={handleUpdatePwdClick}>변경하기 &gt;</FixButton>
                     </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={SettingImg} /><IconDescription className='text-md-200'>인앱 설치</IconDescription>
+                        </DetailLeft>
+                        <FixButton className='caption-sm-200' onClick={openInstallModal}>설처하기 &gt;</FixButton>
+                    </DetailContent>
                 </ProfileDetailContainer>
 
                 <Evaluation isFromCustomize={isFromCustomize}>
@@ -222,6 +232,8 @@ function Mypage() {
 
             </ProfileInfoContainer>
 
+            <PWAInstallModal showModal={isInstallModalOpen} onClose={closeInstallModal}/>
+
             <DefaultModal
                 showDefaultModal={isLogOutModalOpen}
                 title="로그아웃 하시겠습니까?"
@@ -229,6 +241,7 @@ function Mypage() {
                 onAcceptFunc={handleLogOut}
                 onUnacceptFunc={closeLogOutModal}
             />
+
             <LoadingModal isOpen={isLoading} />
 
             <FooterNav />
@@ -384,7 +397,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-margin-top: 100px;
+margin-top: 70px;
 `;
 
 const LogOut = styled.button`

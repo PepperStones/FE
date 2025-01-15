@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import TopNav from "../components/nav/TopNav.tsx";
 import BottomNav from "../components/nav/FooterNav.tsx";
+
 import LoadingModal from "../components/loading/Loading.tsx";
 
+
 import RightIcon from "../assets/images/right_arrow.png";
+import BubbleGray from "../assets/images/gray_bubble_left.png";
 
 import { getBoardList, Board } from "../api/user/boardApi.ts";
 import { DateUtil } from "../utils/DateUtil.ts";
@@ -22,6 +25,7 @@ const fadeIn = keyframes`
 
 const BoardPage: React.FC = () => {
   const [boards, setBoards] = useState<Board[]>([]);
+
   const [page, setPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -32,6 +36,14 @@ const BoardPage: React.FC = () => {
 
   const handleClick = (id: number) => {
     navigate(`/board/${id}`); // 동적으로 URL 이동
+  };
+
+  const isToday = (date: string): boolean => {
+    const today = new Date();
+    const formattedToday = `${today.getFullYear()}.${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}.${today.getDate().toString().padStart(2, "0")}`;
+    return date === formattedToday;
   };
 
   // 새로운 데이터를 불러오는 함수
@@ -124,6 +136,12 @@ const BoardPage: React.FC = () => {
                       {board.jobGroup}그룹
                     </BoardGroup>
                   )}
+                  {isToday(DateUtil.formatDate(board.createdAt)) && (
+                    <Bubble>
+                      <BubbleIcon src={BubbleGray} alt="오늘 등록됨" />
+                      <NewContent className="caption-sm-300">NEW</NewContent>
+                    </Bubble>
+                  )}
                 </ContentsHead>
                 <BoardTitle className="text-sm-200">{board.title}</BoardTitle>
                 <BoardDate className="caption-sm-100">
@@ -131,6 +149,7 @@ const BoardPage: React.FC = () => {
                   {DateUtil.formatDate(board.updatedAt)}
                 </BoardDate>
               </BoardContents>
+
               <BoardIcon src={RightIcon}></BoardIcon>
             </BoardItem>
           ))
@@ -206,6 +225,7 @@ const ContentsHead = styled.div`
   gap: 5px;
 
   align-items: center;
+  align-content: ceter;
 `;
 
 const BoardVisibility = styled.div<{ visibility: string }>`
@@ -228,4 +248,22 @@ const BoardGroup = styled.div`
 
   border: 1px solid var(--primary-30);
   background: var(--primary-90);
+`;
+
+const Bubble = styled.div`
+  position: relative;
+  display: inline-block; /* 이미지 크기에 맞게 컨테이너 크기 조정 */
+`;
+
+const BubbleIcon = styled.img`
+  width: 48px; // 원하는 크기
+  height: 20px; // 원하는 크기
+`;
+
+const NewContent = styled.p`
+  color: var(--black-70);
+
+  position: absolute;
+  top: 10%; /* 중앙 정렬 */
+  left: 30%; /* 중앙 정렬 */
 `;

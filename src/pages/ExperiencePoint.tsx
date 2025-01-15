@@ -74,7 +74,7 @@ import levelData from "../constants/levels.json";
 const renderCategory = (categoryName: string, items: RecentExperience[]) => (
 <div>
     {items.map((item, index) => {
-      const displayName = item.projectName || item.questName || "_"; // 조건에 따라 값 결정
+      const displayName = item.projectName || item.questName || "\u00A0"; // 조건에 따라 값 결정
       let title = "";
       let icon = "";
 

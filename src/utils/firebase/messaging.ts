@@ -5,6 +5,25 @@ const messaging = getMessaging(firebaseApp);
 
 const vapidKey = process.env.REACT_APP_FIREBASE_VAPID_KEY;
 
+// Service Worker 등록 함수
+const registerServiceWorker = async () => {
+  if ("serviceWorker" in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+        scope: "/",
+      });
+      console.log("Service Worker 등록 성공:", registration);
+      return registration;
+    } catch (error) {
+      console.error("Service Worker 등록 실패:", error);
+      throw new Error("Service Worker 등록 실패");
+    }
+  } else {
+    console.error("Service Worker가 지원되지 않는 브라우저입니다.");
+    throw new Error("Service Worker가 지원되지 않는 브라우저입니다.");
+  }
+};
+
 const requestNotificationPermission = async (): Promise<boolean> => {
   try {
     const permission = await Notification.requestPermission();
@@ -29,6 +48,9 @@ const requestNotificationPermission = async (): Promise<boolean> => {
 
 export const requestPermissionAndGetToken = async () => {
   try {
+    // Service Worker 등록
+    const registration = await registerServiceWorker();
+
     const hasPermission = await requestNotificationPermission();
     if (hasPermission) {
        // 이미 토큰이 있는지 확인
@@ -41,6 +63,7 @@ export const requestPermissionAndGetToken = async () => {
       alert("Notification permission granted.");
       const token = await getToken(messaging, {
         vapidKey,
+        serviceWorkerRegistration: registration, // Service Worker 등록 전달
       });
       if (token) {
         // console.log("FCM Token:", token);

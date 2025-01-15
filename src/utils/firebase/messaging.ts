@@ -7,14 +7,18 @@ const vapidKey = process.env.REACT_APP_FIREBASE_VAPID_KEY;
 
 const requestNotificationPermission = async (): Promise<boolean> => {
   try {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
+    if (Notification.permission === "granted") {
+      const permission = await Notification.requestPermission();
       console.log("알림 권한이 허용되었습니다.");
-      return true;
-    } else if (permission === "denied") {
-      console.warn("알림 권한이 거부되었습니다.");
-    } else {
-      console.info("사용자가 알림 권한을 결정하지 않았습니다.");
+      if (permission !== "granted") {
+        console.log("알림 권한이 거부되었습니다");
+        return true;
+      }
+    // } else if (permission === "denied") {
+    //   console.warn("알림 권한이 거부되었습니다.");
+    // } else {
+    //   console.info("사용자가 알림 권한을 결정하지 않았습니다.");
+    // }
     }
     return false;
   } catch (error) {

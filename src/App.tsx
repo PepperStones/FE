@@ -37,6 +37,7 @@ import AdminBoardList from "./pages/admin/AdminBoardList.tsx";
 import AdminAddBoard from "./pages/admin/AdminAddBoard.tsx";
 
 import Setting from "./pages/admin/Setting.tsx";
+import { initializeFirebaseMessaging, onForegroundMessage } from "./utils/firebase/messaging.ts";
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -60,6 +61,19 @@ const App = () => {
   }
 
   useEffect(() => {
+    ////////////////////////// 푸시 테스트용용
+    const initMessaging = async () => {
+      try {
+        await initializeFirebaseMessaging();
+        onForegroundMessage();
+      } catch (error) {
+        console.error('Firebase 메시징 초기화 실패:', error);
+      }
+    };
+
+    initMessaging();
+    ////////////////////////// 푸시 테스트용용
+
     // 슬라이드 제스처 방지 (iOS)
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches[0].pageX < 30 || e.touches[0].pageX > window.innerWidth - 30) e.preventDefault(); // 기본 동작 방지

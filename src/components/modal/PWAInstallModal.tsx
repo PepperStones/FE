@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DefaultModal from './DefaultModal.tsx'; // DefaultModal 컴포넌트 import
+import DefaultModal from './DefaultModal.tsx';
 
 // beforeinstallprompt 이벤트 타입 정의
 export interface BeforeInstallPromptEvent extends Event {
@@ -9,7 +9,7 @@ export interface BeforeInstallPromptEvent extends Event {
 }
 
 interface PWAInstallModalProps {
-  showModal: boolean; // 외부에서 모달 표시 여부를 제어
+  showModal: boolean; // 모달 표시 여부를 제어
   onClose: () => void; // 모달 닫기 콜백 함수
 }
 
@@ -45,10 +45,7 @@ const PWAInstallModal: React.FC<PWAInstallModalProps> = ({ showModal, onClose })
     onClose(); // 모달 닫기
   };
 
-  const handleUnacceptFunc = () => {
-    console.log('사용자가 설치를 취소했습니다.');
-    onClose(); // 모달 닫기
-  };
+  const handleUnacceptFunc = () => onClose();
 
   return (
     <DefaultModal

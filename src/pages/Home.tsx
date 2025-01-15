@@ -10,8 +10,10 @@ import spaceMan from "../assets/images/spaceMan.png";
 
 import BottomNav from "../components/nav/FooterNav.tsx";
 import HomeTopNav from "../components/nav/homeNav/HomeTopNav.tsx";
+import allStar from "../assets/images/star/all_star.png";
 
 import { fetchHome, HomeResponse } from "../api/user/HomeApi.ts";
+import StarAnimation2 from "../components/star/StarAnimation2.tsx";
 
 const Home: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -89,14 +91,20 @@ const Home: React.FC = () => {
       />
       {/* <Star isPopupOpen={isPopupOpen} src={StarImg} alt="Star Img"></Star> */}
       <StarAnimation
-        handleIconPage={handleIconPage}
-        handleNextPage={handleNextPage}
-        handlePrevPage={handlePrevPage}
         isPageOption={isPageOption}
         isPopupOpen={isPopupOpen}
         setIsPageOption={setIsPageOption}
         home={homeData}
       ></StarAnimation>
+      {isPageOption === 2 && (
+        <StarAnimation2
+          isPageOption={isPageOption}
+          isPopupOpen={isPopupOpen}
+          setIsPageOption={setIsPageOption}
+          home={homeData}
+        ></StarAnimation2>
+      )}
+
       <BottomNav />
     </HomeContainer>
   );
@@ -109,12 +117,14 @@ const HomeContainer = styled.div`
   background-size: cover;
   background-attachment: fixed; /* 배경 이미지 고정 */
   height: 100vh; /* 전체 화면 높이 */
-  overflow: hidden; /* 자식 요소의 크기 변화가 부모에 영향을 미치지 않도록 설정 */
 
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* 상단과 하단에 간격 배치 */
+
   z-index: -1; /* 다른 요소 아래로 배치 */
+
+  overflow: scroll; /* 스크롤 가능하게 설정 */
 `;
 
 const Star = styled.img<{ isPopupOpen: boolean }>`

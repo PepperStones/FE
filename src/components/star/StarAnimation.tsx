@@ -2,11 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-import StarImage from "../../assets/images/my_star.png";
+import StarImage from "../../assets/images/star/real_star.png";
 import tagImage from "../../assets/images/union.png";
 import spaceMan from "../../assets/images/spaceman.png";
-import levelsData from "../../constants/levels.json";
+import levelsData from "../../assets/images/data/levels.json";
 import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
+import allStar from "../../assets/images/star/real_start.png";
+
+import { HomeResponse } from "../api/user/HomeApi.ts";
 
 const starData = [
   { id: 1, x: 120, y: 600, size: 30 },
@@ -86,20 +89,34 @@ export interface Team {
 }
 
 interface HomePage {
-  handleIconPage: () => void;
-  handlePrevPage: () => void;
-  handleNextPage: () => void;
   isPopupOpen: boolean;
   isPageOption: number;
   setIsPageOption: (value: number) => void;
   home: Home;
 }
 
-const StarAnimation: React.FC<HomePage> = ({
+// 광량 계산 함수
+const calculateOpacityByLevel = (levelName: string | null): number => {
+  const minOpacity = 0.4; // 최소 광량
+  const maxOpacity = 1; // 최대 광량
+
+  // 레벨이 null인 경우(비활성화 상태)
+  if (!levelName) return 0; // 완전히 투명하게 설정
+
+  // 레벨 이름을 기준으로 인덱스 찾기
+  const levelIndex = levelsData.findIndex((level) => level.level === levelName);
+
+  if (levelIndex === -1) return minOpacity; // 레벨을 찾을 수 없을 경우 기본값
+
+  // 레벨 인덱스를 기반으로 Opacity 계산
+  const levelRatio = levelIndex / (levelsData.length - 1); // 0 ~ 1 사이 값
+  const opacity = minOpacity + (maxOpacity - minOpacity) * levelRatio;
+
+  return Math.min(Math.max(opacity, minOpacity), maxOpacity); // 0.4 ~ 1 사이로 제한
+};
+
+const StarAnimation1: React.FC<HomePage> = ({
   isPageOption,
-  handleIconPage,
-  handlePrevPage,
-  handleNextPage,
   isPopupOpen,
   setIsPageOption,
   home,
@@ -142,91 +159,6 @@ const StarAnimation: React.FC<HomePage> = ({
     }
   };
 
-  const [savedData, setSavedData] = useState<
-    Array<{ level: string; total_experience: number | null }>
-  >([]);
-
-  // 데이터를 저장 및 초기화하는 함수
-  const saveData = (levelString: string) => {
-    // 레벨 문자열에서 그룹 키 추출 (F, B, G, T)
-    const groupKey = levelString.charAt(0) as keyof LevelsDataType;
-    const groupData = levelsData[groupKey];
-
-    if (!groupData) {
-      console.error(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
-      return;
-    }
-
-    setSavedData(groupData);
-  };
-
-  const calculateOpacityByLevel = (levelName: string | null): number => {
-    const minOpacity = 0.4;
-    const maxOpacity = 1;
-
-    if (!levelName) return 0;
-
-    // levelsData가 제대로 로드되었는지 확인
-    if (!levelsData) {
-      console.error("levelsData is not loaded");
-      return minOpacity;
-    }
-
-    const groupKey = levelName.charAt(0) as keyof LevelsDataType;
-    console.log("Group Key:", groupKey); // 디버깅을 위한 로그
-    console.log("Level Data for group:", levelsData[groupKey]); // 해당 그룹의 데이터 확인
-
-    const groupData = levelsData[groupKey];
-    if (!groupData) {
-      console.error(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
-      return minOpacity;
-    }
-
-    // 현재 레벨의 경험치 찾기
-    const currentLevelData = groupData.find(
-      (level) => level.level === levelName
-    );
-    console.log("Current Level Data:", currentLevelData); // 현재 레벨 데이터 확인
-
-    if (!currentLevelData) {
-      console.error(`레벨 ${levelName}에 대한 데이터를 찾을 수 없습니다`);
-      return minOpacity;
-    }
-
-    // 현재 레벨의 total_experience가 null이면 최소 광량 반환
-    if (currentLevelData.total_experience === null) {
-      return minOpacity;
-    }
-
-    // 최대 경험치 값 찾기 전에 배열 확인
-    const validExperiences = groupData
-      .map((level) => level.total_experience)
-      .filter((exp): exp is number => exp !== null);
-    console.log("Valid Experiences:", validExperiences); // 유효한 경험치 값들 확인
-
-    if (validExperiences.length === 0) {
-      console.error("유효한 경험치 값이 없습니다");
-      return minOpacity;
-    }
-
-    const maxExperience = Math.max(...validExperiences);
-    const experienceRatio = currentLevelData.total_experience / maxExperience;
-    console.log("Experience Ratio:", experienceRatio); // 경험치 비율 확인
-
-    const opacity = minOpacity + (maxOpacity - minOpacity) * experienceRatio;
-    console.log("Final Opacity:", opacity); // 최종 광량 값 확인
-
-    return Math.min(Math.max(opacity, minOpacity), maxOpacity);
-  };
-  
-  useEffect(() => {
-    // 사용자 레벨 데이터를 저장
-    if (home && home.data && home.data.user.level) {
-      saveData(home.data.user.level);
-    }
-    console.log("levelsData:", levelsData);
-  }, [home]);
-
   // useEffect(() => {
   //   return () => {
   //     // 컴포넌트가 언마운트될 때 타이머 초기화
@@ -239,23 +171,21 @@ const StarAnimation: React.FC<HomePage> = ({
   // 사용자와 팀원의 레벨 정보를 별에 배치
   const enhancedStarData = starData.map((star, index) => {
     if (index === 0) {
-      const opacity = calculateOpacityByLevel(home.data.user.level);
-      console.log("User Star Opacity:", opacity); // 사용자 별의 광량 확인
+      // 1번 별은 항상 사용자
       return {
         ...star,
         level: home.data.user.level,
-        isActive: true,
-        opacity,
+        isActive: true, // 활성화 상태
+        opacity: calculateOpacityByLevel(home.data.user.level),
       };
     } else {
-      const teamLevel = home.data.team.levels[index] || null;
-      const opacity = calculateOpacityByLevel(teamLevel);
-      console.log(`Team Star ${index} Opacity:`, opacity); // 팀원 별의 광량 확인
+      // 나머지 별에 팀원 정보 배치
+      const teamLevel = home.data.team.levels[index] || null; // 팀원 레벨 또는 null
       return {
         ...star,
         level: teamLevel,
-        isActive: !!teamLevel,
-        opacity,
+        isActive: !!teamLevel, // 팀원이 있으면 활성화
+        opacity: calculateOpacityByLevel(teamLevel),
       };
     }
   });
@@ -345,14 +275,14 @@ const StarAnimation: React.FC<HomePage> = ({
     if (isPageOption === 0) {
       translateX = containerSize.width / 2 - myStar.x;
       translateY =
-        containerSize.height / 2 - myStar.y + (isPopupOpen ? 300 : 40);
+        containerSize.height / 2 - myStar.y + (isPopupOpen ? 350 : 20);
       scale = isPopupOpen ? 20 : 12;
     }
     if (isPageOption === 1) {
       if (isPopupOpen) {
         translateX = containerSize.width / 2 - myStar.x;
-        translateY = containerSize.height / 2 - myStar.y + 130;
-        scale = 3; // 팝업 열렸을 때의 확대 비율
+        translateY = containerSize.height / 2 - myStar.y + 150;
+        scale = 1.5; // 팝업 열렸을 때의 확대 비율
       }
     }
 
@@ -371,139 +301,147 @@ const StarAnimation: React.FC<HomePage> = ({
   };
 
   return (
-    <Container ref={containerRef}>
-      <StarContainer
-        as={motion.div}
-        style={{
-          position: "absolute",
-          transformOrigin: `${myStar?.x}px ${myStar?.y}px`, // 줌 기준 설정
-        }}
-        animate={getAnimationValues(containerSize)}
-        transition={{
-          duration: 1, // 애니메이션 지속 시간
-          ease: "easeInOut", // 자연스러운 이징 효과
-        }}
-      >
-        <SVG>
-          {adjustedLineData.map((line, index) => (
-            <motion.line
-              key={index}
-              x1={line.x1}
-              y1={line.y1}
-              x2={line.x2}
-              y2={line.y2}
-              initial={{ opacity: 1 }}
-              animate={{ opacity: isPageOption === 0 ? 0 : 1 }}
-              transition={{
-                duration: 0.8, // 애니메이션 지속 시간
-                ease: "easeInOut", // 자연스러운 이징 효과
-              }}
-              style={{
-                stroke: "rgba(255, 255, 255, 0.7)",
-                strokeWidth: 2,
-              }}
-            />
-          ))}
-        </SVG>
-        {adjustedStarData.map((star) => (
-          <React.Fragment key={star.id}>
-            {isActiveSpaceMan && star.id === myStarId && (
-              <SpaceManContiner
-                style={{
-                  position: "absolute",
-                  width: "20px", // 별 크기보다 약간 크게
-                  height: `10px`,
-                  left: `${star.x}px`,
-                  top: `${star.y - 10}px`, // 별 위쪽에 위치
-                  transform: "translate(-50%, -50%)",
-                }}
-                onClick={handleBubbleClick}
-              >
-                {isActiveBubble && (
-                  <SpaceManBubble style={{}}>
-                    <img src={Bubble_Icon} alt="" />
-                    <div>
-                      <p>힘드시죠? </p>
-                      <p>항상 고생해주셔서 감사합니다!</p>
-                    </div>
-                  </SpaceManBubble>
-                )}
-
-                <SpaceMan
-                  src={spaceMan}
-                  alt="Space Man"
+    <div>
+      {isPageOption !== 2 && (
+        <Container ref={containerRef}>
+          <StarContainer
+            as={motion.div}
+            style={{
+              position: "absolute",
+              transformOrigin: `${myStar?.x}px ${myStar?.y}px`, // 줌 기준 설정
+            }}
+            animate={getAnimationValues(containerSize)}
+            transition={{
+              duration: 1, // 애니메이션 지속 시간
+              ease: "easeInOut", // 자연스러운 이징 효과
+            }}
+          >
+            <SVG>
+              {adjustedLineData.map((line, index) => (
+                <motion.line
+                  key={index}
+                  x1={line.x1}
+                  y1={line.y1}
+                  x2={line.x2}
+                  y2={line.y2}
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: isPageOption === 0 ? 0 : 1 }}
+                  transition={{
+                    duration: 0.8, // 애니메이션 지속 시간
+                    ease: "easeInOut", // 자연스러운 이징 효과
+                  }}
                   style={{
-                    width: `${star.size - 28}px`, // 별 크기보다 약간 크게
-                    height: `${star.size - 26}px`,
+                    stroke: "rgba(255, 255, 255, 0.7)",
+                    strokeWidth: 2,
+                    strokeDasharray: "4 2", // 점선 스타일 추가
                   }}
                 />
-              </SpaceManContiner>
-            )}
-            <Star
-              src={StarImage}
-              alt={`Star ${star.id}`}
+              ))}
+            </SVG>
+            {adjustedStarData.map((star) => (
+              <React.Fragment key={star.id}>
+                {isActiveSpaceMan && star.id === myStarId && (
+                  <SpaceManContiner
+                    style={{
+                      position: "absolute",
+                      width: "20px", // 별 크기보다 약간 크게
+                      height: `10px`,
+                      left: `${star.x}px`,
+                      top: `${star.y - 10}px`, // 별 위쪽에 위치
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    onClick={handleBubbleClick}
+                  >
+                    {isActiveBubble && (
+                      <SpaceManBubble style={{}}>
+                        <img src={Bubble_Icon} alt="" />
+                        <div>
+                          <p>힘드시죠? </p>
+                          <p>항상 고생해주셔서 감사합니다!</p>
+                        </div>
+                      </SpaceManBubble>
+                    )}
+
+                    <SpaceMan
+                      src={spaceMan}
+                      alt="Space Man"
+                      style={{
+                        width: `${star.size - 28}px`, // 별 크기보다 약간 크게
+                        height: `${star.size - 26}px`,
+                      }}
+                    />
+                  </SpaceManContiner>
+                )}
+                <Star
+                  src={StarImage}
+                  alt={`Star ${star.id}`}
+                  animate={{
+                    scale: star.id === myStarId ? 3 : 1,
+                    opacity: star.id === myStarId ? 1 : 0.8,
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                  }}
+                  size={star.size}
+                  style={{
+                    left: `${star.x}px`,
+                    top: `${star.y}px`,
+                    opacity: star.opacity, // 활성화 여부에 따른 광량 적용
+                    filter: star.isActive ? "none" : "grayscale(100%)", // 비활성화된 별은 흑백 처리
+                  }}
+                  onClick={() => handleStarClick(star.id)}
+                />
+                {star.id === myStarId && (
+                  <TagContainer
+                    as={motion.div}
+                    style={{
+                      left: `${star.x - 23}px`,
+                      top: `${star.y + 14}px`,
+                    }}
+                    animate={{
+                      opacity: isPageOption === 1 ? 1 : 0,
+                      scale: isPageOption === 1 ? 1 : 0.8,
+                    }}
+                    transition={{
+                      duration: 0.8, // 애니메이션 지속 시간
+                      ease: "easeInOut", // 자연스러운 이징 효과
+                    }}
+                  >
+                    <TagImage src={tagImage} alt="Tag" />
+                    <TagText className="caption-sm-300">나의 별</TagText>
+                  </TagContainer>
+                )}
+              </React.Fragment>
+            ))}
+          </StarContainer>
+
+          {isPageOption === 2 && (
+            <TagContainer
+              as={motion.div}
               animate={{
-                scale: star.id === myStarId ? 3 : 1,
-                opacity: star.id === myStarId ? 1 : 0.8,
+                opacity: isPageOption === 2 ? 1 : 0, // 팝업 열림 여부에 따라 투명도 조절
+                left: isPopupOpen ? "40%" : "35%", // StarContainer의 중앙
+                top: isPopupOpen ? "81%" : "66%", // 중앙 아래에 위치
+                scale: isPopupOpen ? 1.5 : 1, // 크기 변화
               }}
               transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "loop",
+                duration: 1, // 애니메이션 지속 시간
+                ease: "easeInOut", // 자연스러운 이징 효과
               }}
-              size={star.size}
-              style={{
-                left: `${star.x}px`,
-                top: `${star.y}px`,
-                opacity: star.opacity, // 활성화 여부에 따른 광량 적용
-                filter: star.isActive ? "none" : "grayscale(100%)", // 비활성화된 별은 흑백 처리
-              }}
-              onClick={() => handleStarClick(star.id)}
-            />
-            {star.id === myStarId && (
-              <TagContainer
-                as={motion.div}
-                style={{ left: `${star.x - 23}px`, top: `${star.y + 14}px` }}
-                animate={{
-                  opacity: isPageOption === 1 ? 1 : 0,
-                  scale: isPageOption === 1 ? 1 : 0.8,
-                }}
-                transition={{
-                  duration: 0.8, // 애니메이션 지속 시간
-                  ease: "easeInOut", // 자연스러운 이징 효과
-                }}
-              >
-                <TagImage src={tagImage} alt="Tag" />
-                <TagText className="caption-sm-300">나의 별</TagText>
-              </TagContainer>
-            )}
-          </React.Fragment>
-        ))}
-      </StarContainer>
-
-      {isPageOption === 2 && (
-        <TagContainer
-          as={motion.div}
-          animate={{
-            opacity: isPageOption === 2 ? 1 : 0, // 팝업 열림 여부에 따라 투명도 조절
-            left: isPopupOpen ? "40%" : "35%", // StarContainer의 중앙
-            top: isPopupOpen ? "81%" : "66%", // 중앙 아래에 위치
-            scale: isPopupOpen ? 1.5 : 1, // 크기 변화
-          }}
-          transition={{
-            duration: 1, // 애니메이션 지속 시간
-            ease: "easeInOut", // 자연스러운 이징 효과
-          }}
-        >
-          <OurStarTagImage src={tagImage} alt="Tag" />
-          <TagText className="caption-sm-300">우리 별자리</TagText>
-        </TagContainer>
+            >
+              <OurStarTagImage src={tagImage} alt="Tag" />
+              <TagText className="caption-sm-300">우리 별자리</TagText>
+            </TagContainer>
+          )}
+        </Container>
       )}
-    </Container>
+    </div>
   );
 };
 
-export default StarAnimation;
+export default StarAnimation1;
 
 // Styled Components
 const Container = styled.div`
@@ -559,7 +497,7 @@ const OurStarTagImage = styled.img`
 
 const TagText = styled.span`
   position: absolute;
-  top: 35%;
+  top: 20%;
   color: var(--primary-10);
   pointer-events: none;
 `;
@@ -576,7 +514,10 @@ const SpaceManContiner = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-const SpaceMan = styled.img``;
+const SpaceMan = styled.img`
+  position: absolute;
+  top: 35%;
+`;
 
 const SpaceManBubble = styled.div`
   position: relative;

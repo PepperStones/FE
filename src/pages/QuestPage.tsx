@@ -9,7 +9,6 @@ import QuestCard from '../components/button/QuestCardBtn.tsx'
 
 import { fetchQuestProgress, JobQuest, LeaderQuest } from '../api/user/QuestApi.ts';
 
-// Define the fadeIn keyframes
 const fadeIn = keyframes`
   from {
     opacity: 0;

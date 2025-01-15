@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 
 import TopNav from "../components/nav/TopNav.tsx";
@@ -11,6 +11,15 @@ import { getBoardDetail, BoardDetail } from "../api/user/boardApi.ts";
 import { DateUtil } from "../utils/DateUtil.ts";
 
 // const formattedDate = DateUtil.formatDate("2025-01-12T04:07:29.928354");
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const BoardPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // URL에서 id 가져오기
@@ -99,6 +108,8 @@ const BoardContainer = styled.div`
   background: var(--black-50);
   margin: 20px;
   margin-bottom: 100px;
+
+  animation: ${fadeIn} 0.3s ease-out;
 `;
 
 const Head = styled.div`
@@ -151,14 +162,14 @@ const BoardGroup = styled.div`
 
   padding: 3px 10px;
 
-  border: 1px solid var(--primary-30);
-  background: var(--primary-90);
+  border: none;
+  background: var(--orange-80);
 `;
 
 const DivLine = styled.div`
   margin: 0 8px;
   height: 0.5px;
-  background: #474747;
+  background: var(--gray-10);
 `;
 
 const MainContents = styled.div`

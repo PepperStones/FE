@@ -32,13 +32,14 @@ const LargeBtnContainer = styled.button<{ isAvailable: boolean }>`
   border-radius: 15px;
   border: 1px solid
     ${({ isAvailable }) =>
-      isAvailable ? "var(--orange-70)" : "var(--orange-90)"};
+    isAvailable ? "var(--orange-70)" : "var(--orange-90)"};
   background: ${({ isAvailable }) =>
     isAvailable ? "var(--orange-70)" : "var(--orange-90)"};
 
   gap: 6px;
 
-  color: var(--gray-0);
+  color: ${({ isAvailable }) =>
+    isAvailable ? "var(--gray-100)" : "var(--gray-40)"};
   text-align: center;
 
   user-select: none; /* 텍스트 선택 방지 */

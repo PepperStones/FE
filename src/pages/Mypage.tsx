@@ -7,13 +7,35 @@ import TopNav from '../components/nav/TopNav.tsx';
 import FooterNav from '../components/nav/FooterNav.tsx'
 import LoadingModal from '../components/loading/Loading.tsx';
 import DefaultModal from '../components/modal/DefaultModal.tsx';
+import PWAInstallModal from '../components/modal/PWAInstallModal.tsx';
 
-import ProfileImg from '../assets/images/reward/star_skin_1.png'
 import EditIconImg from '../assets/images/orange_circle_pencil.png'
 import DepartmentImg from '../assets/images/yellow_house.png'
 import JoinDateImg from '../assets/images/yellow_calendar.png'
 import LevelImg from '../assets/images/yellow_diamod_star.png'
 import PasswordImg from '../assets/images/yellow_lock.png'
+import SettingImg from "../assets/images/admin/orange_group.png"
+
+import StarSkin0 from '../assets/images/reward/star_skin_1.png'
+import StarSkin1 from '../assets/images/reward/star_skin_2.png'
+import StarSkin2 from '../assets/images/reward/star_skin_3.png'
+import StarSkin3 from '../assets/images/reward/star_skin_4.png'
+import StarSkin4 from '../assets/images/reward/star_skin_5.png'
+import StarSkin5 from '../assets/images/reward/star_skin_6.png'
+
+import StarDeco0 from '../assets/images/reward/star_deco_1.png'
+import StarDeco1 from '../assets/images/reward/star_deco_1.png'
+import StarDeco2 from '../assets/images/reward/star_deco_1.png'
+import StarDeco3 from '../assets/images/reward/star_deco_1.png'
+import StarDeco4 from '../assets/images/reward/star_deco_1.png'
+import StarDeco5 from '../assets/images/reward/star_deco_1.png'
+
+import StarEffect0 from '../assets/images/reward/star_effect_1.png'
+import StarEffect1 from '../assets/images/reward/star_effect_1.png'
+import StarEffect2 from '../assets/images/reward/star_effect_1.png'
+import StarEffect3 from '../assets/images/reward/star_effect_1.png'
+import StarEffect4 from '../assets/images/reward/star_effect_1.png'
+import StarEffect5 from '../assets/images/reward/star_effect_1.png'
 
 import { fetchMyInfo, fetchStarCustomization, MypageInfoResponse, StarCustomizationResponse } from "../api/user/MypageApi.ts";
 
@@ -36,6 +58,34 @@ const fadeIn = keyframes`
   }
 `;
 
+const starSkinMap: Record<string, string> = {
+    S0: StarSkin0,
+    S1: StarSkin1,
+    S2: StarSkin2,
+    S3: StarSkin3,
+    S4: StarSkin4,
+    S5: StarSkin5,
+};
+
+const starDecoMap: Record<string, string> = {
+    D0: StarDeco0,
+    D1: StarDeco1,
+    D2: StarDeco2,
+    D3: StarDeco3,
+    D4: StarDeco4,
+    D5: StarDeco5,
+};
+
+const starEffectMap: Record<string, string> = {
+    E0: StarEffect0,
+    E1: StarEffect1,
+    E2: StarEffect2,
+    E3: StarEffect3,
+    E4: StarEffect4,
+    E5: StarEffect5,
+};
+
+
 function Mypage() {
     const Center = {
         text: "나의 정보",
@@ -48,17 +98,26 @@ function Mypage() {
     const [myInfo, setMyInfo] = useState<MypageInfoResponse["data"] | null>(null);
     const [starData, setStarData] = useState<StarCustomizationResponse['data'] | null>(null);
 
+    const [profileImg, setProfileImg] = useState<string | null>(null); // 프로필 이미지
+    const [selectedSkin, setSelectedSkin] = useState<string | null>(null); // 선택된 스킨 
+    const [selectedDeco, setSelectedDeco] = useState<string | null>(null); // 선택된 장식 
+    const [selectedEffect, setSelectedEffect] = useState<string | null>(null); // 선택된 효과 
+
     const [isLoading, setIsLoading] = useState(true);
+    const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
     const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
     const handleLogOut = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userRole');
 
         navigate('/login');
     };
 
     const handleUpdatePwdClick = () => navigate('/mypage-pwd');
     const handleCustomizingClick = () => navigate('/mypage-customize');
+    const openInstallModal = () => setIsInstallModalOpen(true);
+    const closeInstallModal = () => setIsInstallModalOpen(false);
     const openLogOutModal = () => setIsLogOutModalOpen(true);
     const closeLogOutModal = () => setIsLogOutModalOpen(false);
 
@@ -78,6 +137,14 @@ function Mypage() {
                 const response = await fetchStarCustomization();
                 setStarData(response.data); // 스타 데이터 저장
                 console.log("Star Data:", response.data);
+
+                // Map initial profile image
+                if (response.data.nowSkin) {
+                    const initialProfileImg = starSkinMap[response.data.nowSkin];
+                    if (initialProfileImg) {
+                        setProfileImg(initialProfileImg);
+                    }
+                }
             } catch (error) {
                 console.error("Error loading star customization:", error);
             }
@@ -93,6 +160,17 @@ function Mypage() {
         fetchAllData();
     }, []);
 
+    useEffect(() => {
+        // Update profile image when selected skin changes
+        if (selectedSkin) {
+            const newProfileImg = starSkinMap[selectedSkin];
+            if (newProfileImg) {
+                setProfileImg(newProfileImg);
+            } else {
+                console.error(`No image found for skin: ${selectedSkin}`);
+            }
+        }
+    }, [selectedSkin]);
     return (
         <MypageContainer>
             <TopNav lefter={null} center={Center} righter={null} />
@@ -100,7 +178,7 @@ function Mypage() {
             <ProfileInfoContainer>
                 <ProfileContainer>
                     <ProfileImageContainer isFromCustomize={isFromCustomize}>
-                        <ProfileImage src={ProfileImg} alt="프로필 이미지" />
+                        <ProfileImage src={profileImg} alt="프로필 이미지" />
                         <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
                     </ProfileImageContainer>
                     <ProfileName className='title-md-300'>{myInfo?.name}</ProfileName>
@@ -132,14 +210,20 @@ function Mypage() {
                         </DetailLeft>
                         <FixButton className='caption-sm-200' onClick={handleUpdatePwdClick}>변경하기 &gt;</FixButton>
                     </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={SettingImg} /><IconDescription className='text-md-200'>인앱 설치</IconDescription>
+                        </DetailLeft>
+                        <FixButton className='caption-sm-200' onClick={openInstallModal}>설처하기 &gt;</FixButton>
+                    </DetailContent>
                 </ProfileDetailContainer>
 
                 <Evaluation isFromCustomize={isFromCustomize}>
                     <DetailLeft>
-                        <EvaluationTime className='caption-sm-300'>24년 상반기 인사평가</EvaluationTime>
+                        <EvaluationTime className='caption-sm-300'>인사평가 결과</EvaluationTime>
                         <EvaluationDescription className='text-md-200'>{myInfo?.grade}등급</EvaluationDescription>
                     </DetailLeft>
-                    <DetailRight className='text-sm-200'>+ 3500 do</DetailRight>
+                    <DetailRight className='text-sm-200'>+ {myInfo?.experience} do</DetailRight>
                 </Evaluation>
 
                 <LogOutContainer>
@@ -148,6 +232,8 @@ function Mypage() {
 
             </ProfileInfoContainer>
 
+            <PWAInstallModal showModal={isInstallModalOpen} onClose={closeInstallModal}/>
+
             <DefaultModal
                 showDefaultModal={isLogOutModalOpen}
                 title="로그아웃 하시겠습니까?"
@@ -155,9 +241,10 @@ function Mypage() {
                 onAcceptFunc={handleLogOut}
                 onUnacceptFunc={closeLogOutModal}
             />
+
             <LoadingModal isOpen={isLoading} />
 
-            <FooterNav />
+            <FooterNav/>
         </MypageContainer>
 
     );
@@ -169,6 +256,7 @@ const MypageContainer = styled.div`
 display: flex;
 flex-direction: column;
 
+overflow-y: scroll;
 `;
 
 const ProfileInfoContainer = styled.div`
@@ -234,6 +322,7 @@ ${({ isFromCustomize }) => isFromCustomize && css`animation: ${fadeIn} 0.5s ease
 const DetailLeft = styled.div`
 display: flex;
 flex-direction: row;
+align-items: center;
 flex: 1;
 
 gap: 8px;
@@ -255,6 +344,8 @@ color: var(--gray-100);
 
 const DetailContent = styled.div`
 display: flex;
+justify-content: center;
+align-items: center;
 flex-direction: row;
 
 padding: 11px 20px;
@@ -310,7 +401,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-margin-top: 100px;
+margin-top: 70px;
 `;
 
 const LogOut = styled.button`

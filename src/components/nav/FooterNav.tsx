@@ -11,8 +11,8 @@ import ActBoard from "../../assets/images/orange_pin_paper.png";
 import Mypage from "../../assets/images/gray_person_circle.png";
 import ActMypage from "../../assets/images/orange_person_circle.png";
 
-import Synchronize from "../../assets/images/admin/gray_arrow_cycle.png"
-import ActSynchronize from "../../assets/images/admin/orange_arrow_cycle.png"
+import Setting from "../../assets/images/admin/gray_setting.png"
+import ActSetting from "../../assets/images/admin/orange_setting.png"
 
 /* lefter, center, righter 모두 인터페이스 동일
 interface FooterNavProps {
@@ -43,12 +43,12 @@ const BottomNav = ({ isAdmin = false }) => {
               <p>게시글</p>
             </NavLink>
           </NavItem>
-          <NavItem className={location.pathname.startsWith("/synchro") ? "active" : ""}>
-            <NavLink to="/synchro">
+          <NavItem className={location.pathname.startsWith("/setting") ? "active" : ""}>
+            <NavLink to="/setting">
               <IconMypage
-                src={location.pathname.startsWith("/synchro") ? ActSynchronize : Synchronize}
+                src={location.pathname.startsWith("/setting") ? ActSetting : Setting}
               />
-              <p>동기화</p>
+              <p>설정</p>
             </NavLink>
           </NavItem>
         </>

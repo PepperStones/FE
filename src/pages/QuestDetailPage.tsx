@@ -26,7 +26,6 @@ function QuestDetailPage() {
     const navigate = useNavigate();
     const location = useLocation(); // URL에서 전달된 state 데이터 가져오기
     const quest = location.state;
-
     const [questDetails, setQuestDetails] = useState<QuestDetailResponse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -54,11 +53,10 @@ function QuestDetailPage() {
         navigate(`/quest-all/${quest.id}`, { state: { ...quest, type } }); // quest 데이터를 state로 전달
     };
 
-    const buttons = questDetails
-        ? Array.from({ length: questDetails.data.period === "WEEKLY" ? 50 : questDetails.data.period === "MONTHLY" ? 48 : 0 }) : [];
+    const buttons = questDetails ? Array.from({ length: questDetails.data.period === "WEEKLY" ? 50 : questDetails.data.period === "MONTHLY" ? 48 : 0 }) : [];
     const angleIncrement = 360 / buttons.length; // 각 버튼 간의 각도
     const radius = 700;
-
+    const circleRefs = useRef<(HTMLDivElement | null)[]>([]);
     const scrollContainerRef = useRef(null);
     const [dragStart, setDragStart] = useState(null);
     const rotationRef = useRef(0);
@@ -89,20 +87,47 @@ function QuestDetailPage() {
         setDragStart(clientX);
     };
 
-    // 드래그 중
     const handleDrag = (event) => {
         if (dragStart !== null) {
             const clientX = event.type === 'touchmove' ? event.touches[0].clientX : event.clientX;
             const deltaX = clientX - dragStart;
-            rotationRef.current += deltaX * -0.5; // 회전값 업데이트
+            rotationRef.current += deltaX * 0.2; // 회전값 업데이트
             setDragStart(clientX);
 
             if (scrollContainerRef.current) {
                 scrollContainerRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
             }
+
+            // 현재 회전 각도 계산
+            const currentRotation = (rotationRef.current % 360 + 360) % 360;
+
+            // 회전 방향 감지
+            const direction = deltaX > 0 ? 'right' : 'left';
+
+            // 각 버튼의 상대 위치 업데이트
+            buttons.forEach((_, index) => {
+                const buttonAngle = angleIncrement * index; // 각 버튼의 고유 각도
+                const relativeAngle =
+                    direction === 'right'
+                        ? (buttonAngle - currentRotation + 360) % 360 // 반대 방향으로 상대 각도 계산
+                        : (currentRotation - buttonAngle + 360) % 360;
+
+                const isOppositeButton =
+                    relativeAngle >= 180 - angleIncrement / 2 &&
+                    relativeAngle <= 180 + angleIncrement / 2;
+
+                const circle = circleRefs.current[index];
+                if (circle) {
+                    circle.style.width = isOppositeButton ? '60px' : '40px';
+                    circle.style.height = isOppositeButton ? '60px' : '40px';
+                    circle.style.zIndex = isOppositeButton ? '2' : '1';
+                }
+            });
+
             triggerVibration(rotationRef.current);
         }
     };
+
 
     // 드래그 종료
     const handleDragEnd = () => {
@@ -213,31 +238,52 @@ function QuestDetailPage() {
             >
                 <CenterHole />
                 {buttons.map((_, index) => {
-                    const unit = questDetails?.data.period === 'WEEKLY' ? index + 1 : index % 12 + 1;
+                    const reversedIndex = buttons.length - 1 - index;
+                    const unit = questDetails?.data.period === 'WEEKLY' ? (reversedIndex + 1) % 50 + 1 : (reversedIndex + 1) % 12 + 1;
                     const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
 
-                    const currentProgress = (questData?.experience / (quest.maxScore || quest.maxPoints)) * 100;
+                    const currentProgress = questData
+                        ? Math.min(
+                            (questData.experience / (quest.maxScore || quest.maxPoints || 100)) * 100,
+                            quest.maxScore || quest.maxPoints // Cap at 100
+                        )
+                        : 0;
+
+
+                    // 각 버튼의 각도 계산
+                    const buttonAngle = angleIncrement * index; // 버튼의 고유 각도
+                    const currentRotation = (rotationRef.current % 360 + 360) % 360; // 현재 회전 각도 (0~360 범위로 정규화)
+
+                    const relativeAngle = Math.abs((buttonAngle - currentRotation + 360) % 360);
+
+                    // 중앙(위쪽)에 가까운 버튼인지 확인 (0도 또는 360도에 가까운 경우)
+                    const isTopButton = relativeAngle <= angleIncrement / 2 || relativeAngle >= 360 - angleIncrement / 2;
 
                     return (
                         <CircleComponent
-                            key={index}
+                            key={reversedIndex}
                             style={{
                                 // Arrange each button in a circular layout
                                 transform: `
-                    rotate(${angleIncrement * index}deg) 
+                    rotate(${-angleIncrement * index}deg) 
                     translate(0, -${radius}px)
                 `,
+                                width: isTopButton ? '60px' : '40px', // 중앙에 가까운 버튼은 더 크게
+                                height: isTopButton ? '60px' : '40px',
+                                zIndex: isTopButton ? 2 : 1, // 중앙 버튼을 위로 배치
+                                transition: 'all 0.15s ease-in-out', // 부드러운 크기 전환 효과
                             }}
+                            ref={(el) => (circleRefs.current[index] = el)}
                         >
                             <ButtonContainer className="no-drag">
                                 <ShowUnit className="caption-sm-300">
-                                    {questDetails?.data.period === 'WEEKLY' ? `${index + 1}주차` : `${index % 12 + 1}월`}
+                                    {questDetails?.data.period === 'WEEKLY' ? `${(reversedIndex + 1) % 50 + 1}주차` : `${(reversedIndex + 1) % 12 + 1}월`}
                                 </ShowUnit>
                                 <ProgressCircle
                                     currentProgress={currentProgress || null}
                                     maxProgress={quest.maxScore || quest.maxPoints}
-                                    Variation={questData?.experience || null}
-                                    circleRadius={27}
+                                    Variation={isTopButton ? questData?.experience || null : null}
+                                    circleRadius={isTopButton ? 34 : 27}
                                     isQuestDetail={true}
                                 />
                             </ButtonContainer>
@@ -311,12 +357,12 @@ const MaxMinDescription = styled.div`
   width: auto;
 
   padding: 10px;
-
+  padding-top: 15px;
   color: var(--gray-100);
 `;
 
 const MaxPoint = styled.div`
-margin-bottom: 65px;
+margin-bottom: 85px;
 `;
 
 const MinPoint = styled.div`
@@ -336,7 +382,7 @@ const ProfileSkin = styled.img`
 width: 410px;
 height: 410px;
 
-margin-top: 135px;
+margin-top: 150px;
 
 z-index: 20;
 
@@ -349,13 +395,15 @@ const DonutWrapper = styled.div`
   align-items: center;
 
   position: absolute; /* 페이지 내 특정 위치에 고정 */
-top: 40%;
+top: 40.5%;
 left: -140%;
-transform: translate(-50%, -50%);
+
 
   width: 1500px;
   height: 1500px;
   border-radius: 50%;
+
+  padding-top: 15px;
 
   z-index: 10; /* 다른 컴포넌트보다 위에 배치 */
   overflow: hidden; /* 내부 요소가 튀어나오지 않도록 설정 */
@@ -393,7 +441,7 @@ border-radius: 15px;
 background: var(--gray-40);
 
 padding: 3px 5px;
-margin-bottom: 10px;
+margin-bottom: 15px;
 
 color: var(--gray-0);
 `;

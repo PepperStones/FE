@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import SmallBtn from '../button/SmallBtn.tsx';
+import ModalSmallBtn from '../button/ModalSmallBtn.tsx';
 
 interface DefaultModalProps {
   showDefaultModal: boolean;
@@ -52,17 +52,20 @@ const DefaultModal: React.FC<DefaultModalProps> = ({ showDefaultModal, title, de
 
   return (
     <Overlay>
-      <Content isClosing={isClosing}>
+      <Content isClosing={isClosing} isExpand={description === ''}>
         <Title className='title-sm-300'>{title}</Title>
-        <Description className='caption-md-300'>{description}</Description>
+        {description === '' ? undefined :
+          <Description className='caption-md-300'>{description}</Description>
+        }
+
         <ButtonContainer>
-          <SmallBtn
+          <ModalSmallBtn
             content="취소"
             onClick={handleUnacceptClick}
             isAvailable={true}
             isDarkblue={true}
           />
-          <SmallBtn
+          <ModalSmallBtn
             content="확인"
             onClick={onAcceptFunc}
             isAvailable={true}
@@ -89,12 +92,16 @@ const Overlay = styled.div`
   z-index: 10000;
 `;
 
-const Content = styled.div<{ isClosing: boolean }>`
+const Content = styled.div<{ isClosing: boolean, isExpand: boolean }>`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
   width: 20.1875rem;
   background: var(--gray-0);
   border-radius: 10px;
 
-  padding: 15px;
+  padding: ${({ isExpand }) => (isExpand ? 25 : 15)}px;
 
   text-align: center;
 
@@ -112,8 +119,11 @@ const Description = styled.span`
 `;
 
 const ButtonContainer = styled.div`
-  margin-top: 20px;
   display: flex;
+  justify-content: center;
+
+  margin-top: 20px;
+
   
   gap: 8px;
 `;

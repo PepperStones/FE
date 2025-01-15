@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { createGlobalStyle } from 'styled-components';
@@ -36,7 +36,7 @@ import AdminBoard from "./pages/admin/AdminBoard.tsx";
 import AdminBoardList from "./pages/admin/AdminBoardList.tsx";
 import AdminAddBoard from "./pages/admin/AdminAddBoard.tsx";
 
-import Synchronization from "./pages/admin/Synchronization.tsx";
+import Setting from "./pages/admin/Setting.tsx";
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -53,6 +53,24 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const App = () => {
+
+
+  if (window.matchMedia("(display-mode: standalone)").matches) {
+    console.log("PWA 환경에서 실행 중입니다.");
+  }
+
+  useEffect(() => {
+    // 슬라이드 제스처 방지 (iOS)
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches[0].pageX < 30 || e.touches[0].pageX > window.innerWidth - 30) e.preventDefault(); // 기본 동작 방지
+    };
+    document.addEventListener("touchstart", handleTouchStart);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+    };
+  }, []);
+
   return (
     <>
       <GlobalStyle />
@@ -86,7 +104,7 @@ const App = () => {
           <Route path="/admin-board/:id" element={<ProtectedRoute element={<AdminBoard />} />} />
           <Route path="/admin-add-board" element={<ProtectedRoute element={<AdminAddBoard />} />} />
 
-          <Route path="/synchro" element={<ProtectedRoute element={<Synchronization />} />} />
+          <Route path="/setting" element={<ProtectedRoute element={<Setting />} />} />
         </Routes>
 
       </BrowserRouter>

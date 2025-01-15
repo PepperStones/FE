@@ -329,7 +329,10 @@ const Right = styled.div`
   justify-content: right; /* 중앙 정렬 */
 `;
 
-const NavIcon = styled.img``;
+const NavIcon = styled.img`
+  width: 20px;
+  height: 22px;
+`;
 
 const Title = styled.div`
   display: flex;

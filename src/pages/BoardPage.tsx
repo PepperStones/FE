@@ -1,14 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import TopNav from "../components/nav/TopNav.tsx";
 import BottomNav from "../components/nav/FooterNav.tsx";
+
+import LoadingModal from "../components/loading/Loading.tsx";
+
+
 import RightIcon from "../assets/images/right_arrow.png";
 import BubbleGray from "../assets/images/gray_bubble_left.png";
 
 import { getBoardList, Board } from "../api/user/boardApi.ts";
 import { DateUtil } from "../utils/DateUtil.ts";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const BoardPage: React.FC = () => {
   const [boards, setBoards] = useState<Board[]>([]);
@@ -146,6 +159,9 @@ const BoardPage: React.FC = () => {
           </p>
         )}
       </BoardList>
+
+      <LoadingModal isOpen={loading} />
+
       <BottomNav />
     </Container>
   );
@@ -160,6 +176,8 @@ const BoardList = styled.div`
   flex: 1;
   overflow-y: auto;
   margin-bottom: 100px;
+
+  animation: ${fadeIn} 0.3s ease-out;
 `;
 
 const BoardItem = styled.div`

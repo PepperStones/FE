@@ -5,10 +5,12 @@ import errorIcon from '../../assets/images/triangle_caution.png'
 import successIcon from '../../assets/images/admin/success.png'
 
 interface DefaultErrorModalProps {
-    showDefaultErrorModal: boolean;
-    errorMessage: string;
-    onAcceptFunc: () => void;
-    isSuccess?: boolean;
+  showDefaultErrorModal: boolean;
+  errorMessage: string;
+  onAcceptFunc: () => void;
+  isSuccess?: boolean;
+  aboveButton: boolean;
+  isOverlayBlack?: boolean;
 }
 
 const fadeIn = keyframes`
@@ -29,39 +31,41 @@ const fadeOut = keyframes`
   }
 `;
 
-const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorModal, errorMessage, onAcceptFunc, isSuccess = false }) => {
-    const [isClosing, setIsClosing] = useState(false);
+const DefaultErrorModal: React.FC<DefaultErrorModalProps> = ({ showDefaultErrorModal, errorMessage, onAcceptFunc, aboveButton, isSuccess = false, isOverlayBlack = false }) => {
+  const [isClosing, setIsClosing] = useState(false);
 
-    if (!showDefaultErrorModal && !isClosing) return null;
+  if (!showDefaultErrorModal && !isClosing) return null;
 
-    const handleOverlayClick = () => {
-        setIsClosing(true); // 페이드아웃 애니메이션 시작
-        setTimeout(() => {
-            setIsClosing(false); // 상태 초기화
-            onAcceptFunc(); // 애니메이션 종료 후 닫기 함수 호출
-        }, 150); // 애니메이션 시간과 동일하게 설정
-    };
+  const handleOverlayClick = () => {
+    setIsClosing(true); // 페이드아웃 애니메이션 시작
+    setTimeout(() => {
+      setIsClosing(false); // 상태 초기화
+      onAcceptFunc(); // 애니메이션 종료 후 닫기 함수 호출
+    }, 150); // 애니메이션 시간과 동일하게 설정
+  };
 
-    return (
-        <Overlay onClick={handleOverlayClick}>
-            <div style={{ height: '400px' }}></div>
-            <Content isClosing={isClosing} isSuccess={isSuccess}>
-                {isSuccess ? <ContentIcon src={successIcon}/> : <ContentIcon src={errorIcon}/>}
-                <ContentText className='text-sm-300'>{errorMessage}</ContentText>
-            </Content>
-        </Overlay>
-    );
+  return (
+    <Overlay onClick={handleOverlayClick} OverlayBlack={isOverlayBlack}>
+      {isOverlayBlack ? undefined : <div style={{ height: '540px' }}></div>}
+      <Content isClosing={isClosing} isSuccess={isSuccess}>
+        {isSuccess ? <ContentIcon src={successIcon} /> : <ContentIcon src={errorIcon} />}
+        <ContentText className='text-sm-300'>{errorMessage}</ContentText>
+      </Content>
+      {aboveButton ? <div style={{ height: '30px' }}></div> : undefined}
+      {isOverlayBlack ? <div style={{ height: '620px' }}></div> : undefined}
+    </Overlay>
+  );
 };
 
 export default DefaultErrorModal;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ OverlayBlack: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: ${({ OverlayBlack }) => OverlayBlack ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)"};
   display: flex;
   justify-content: center;
   align-items: center;

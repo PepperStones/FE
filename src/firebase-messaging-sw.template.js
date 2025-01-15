@@ -20,11 +20,25 @@ importScripts(
   
   messaging.onBackgroundMessage((payload) => {
     console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신:', payload);
-    const notificationTitle = payload.notification?.title || 'Default Title';
+
+    console.log('페이로드 notification:', payload.notification); 
+    console.log('페이로드 data:', payload.data);
+    
+    const timestamp = payload.data?.timestamp || Date.now().toString();
+    const notificationTitle = payload.data?.title || 'Default Title';
     const notificationOptions = {
-      body: payload.notification?.body || 'Default Body',
-      icon: payload.notification?.icon || '/default-icon.png',
+      body: payload.data?.body || 'Default Body',
+      icon: payload.data?.icon || '/default-icon.png',
+      tag: timestamp,
     };
+
+    // 포그라운드에 메시지 전달
+    self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage(payload);
+      });
+    });
+
   
     self.registration.showNotification(notificationTitle, notificationOptions);
   });

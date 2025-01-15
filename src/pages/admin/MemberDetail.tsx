@@ -22,6 +22,7 @@ import IdImg from '../../assets/images/admin/orange_id.png'
 import DeactIdImg from '../../assets/images/admin/gray_id.png'
 import PwdImg from '../../assets/images/admin/orange_lock.png'
 import DeactPwdImg from '../../assets/images/admin/gray_lock.png'
+import SelectImg from '../../assets/images/admin/gray_down_arrow.png'
 
 import { fetchMemberDetail, updateMemberDetail, deleteMemberDetail, MemberDetailResponse } from '../../api/admin/MemberApi.ts';
 
@@ -84,13 +85,8 @@ function MemberDetail() {
     const handleDeleteClick = async () => {
         try {
             if (!id) throw new Error("유효하지 않은 사용자 ID입니다.");
-
-            const isDeleted = await deleteMemberDetail(Number(id)); // API 호출
-
-            if (isDeleted) {
-                navigate("/member"); // 목록 페이지로 이동
-            }
-
+            const isDeleted = await deleteMemberDetail(Number(id));
+            if (isDeleted) navigate("/member");
         } catch (error: any) {
             console.error("Error deleting member detail:", error);
         }
@@ -153,7 +149,7 @@ function MemberDetail() {
 
     return (
         <MypageContainer>
-            <TopNav lefter={Center} center={Center} righter={null} isAdmin={true} />
+            <TopNav lefter={Center} center={Center} righter={null} />
 
             <ProfileInfoContainer>
 
@@ -230,6 +226,7 @@ function MemberDetail() {
                             <option value="그로스팀">그로스팀</option>
                             <option value="CX팀">CX팀</option>
                         </DetailSelect>
+                        {isEditable ? <SelectIcon src={SelectImg} /> : undefined}
                     </DetailContent>
 
                     <DetailContent>
@@ -250,6 +247,7 @@ function MemberDetail() {
                             <option value="1">그룹 1</option>
                             <option value="2">그룹 2</option>
                         </DetailSelect>
+                        {isEditable ? <SelectIcon src={SelectImg} /> : undefined}
                     </DetailContent>
 
                     <DetailContent>
@@ -288,6 +286,7 @@ function MemberDetail() {
                             <option value="G5">G5</option>
                             <option value="G6">G6</option>
                         </DetailSelect>
+                        {isEditable ? <SelectIcon src={SelectImg} /> : undefined}
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
@@ -384,8 +383,8 @@ function MemberDetail() {
                 showDefaultErrorModal={isWrongEinErrorModalOpen}
                 errorMessage='사번을 잘못 입력하셨습니다.'
                 onAcceptFunc={closeWrongEinErrorModal}
+                aboveButton={true}
             />
-
 
         </MypageContainer>
 
@@ -416,6 +415,7 @@ background: var(--black-50);
 
 const DetailLeft = styled.div`
 display: flex;
+align-items: center;
 flex-direction: row;
 flex: 1;
 
@@ -432,7 +432,6 @@ border: none;
 
 color: var(--gray-60);
 text-align: right;
-direction: rtl;
 
 &::placeholder {
     color: var(--gray-20);
@@ -464,6 +463,13 @@ direction: rtl;
 &:disabled {
     color: var(--gray-60);
 }
+`;
+
+const SelectIcon = styled.img`
+width: 20px;
+height: 20px;
+
+margin-left: 10px;
 `;
 
 const DetailContent = styled.div`

@@ -30,7 +30,7 @@ justify-content: center;
 align-items: center;
 
 width: 10.5rem; 
-height: 2.875rem; 
+height: 3.375rem;
 
 padding: 11px 48px;
 border-radius: 15px;

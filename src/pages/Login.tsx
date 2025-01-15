@@ -38,9 +38,11 @@ function Login() {
       // Save tokens to localStorage
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.refreshToken);
+      localStorage.setItem("userRole", result.data.userRole);
+
       // FCM 토큰 발급
       const fcmToken = await requestPermissionAndGetToken();
-      console.log("FCM Token 이씨:", fcmToken);
+      console.log("FCM Token:", fcmToken);
       if (fcmToken) {
         try {
           // FCM 토큰 등록 요청

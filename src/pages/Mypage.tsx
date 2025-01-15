@@ -16,27 +16,6 @@ import LevelImg from '../assets/images/yellow_diamod_star.png'
 import PasswordImg from '../assets/images/yellow_lock.png'
 import SettingImg from "../assets/images/admin/orange_group.png"
 
-import StarSkin0 from '../assets/images/reward/star_skin_1.png'
-import StarSkin1 from '../assets/images/reward/star_skin_2.png'
-import StarSkin2 from '../assets/images/reward/star_skin_3.png'
-import StarSkin3 from '../assets/images/reward/star_skin_4.png'
-import StarSkin4 from '../assets/images/reward/star_skin_5.png'
-import StarSkin5 from '../assets/images/reward/star_skin_6.png'
-
-import StarDeco0 from '../assets/images/reward/star_deco_1.png'
-import StarDeco1 from '../assets/images/reward/star_deco_1.png'
-import StarDeco2 from '../assets/images/reward/star_deco_1.png'
-import StarDeco3 from '../assets/images/reward/star_deco_1.png'
-import StarDeco4 from '../assets/images/reward/star_deco_1.png'
-import StarDeco5 from '../assets/images/reward/star_deco_1.png'
-
-import StarEffect0 from '../assets/images/reward/star_effect_1.png'
-import StarEffect1 from '../assets/images/reward/star_effect_1.png'
-import StarEffect2 from '../assets/images/reward/star_effect_1.png'
-import StarEffect3 from '../assets/images/reward/star_effect_1.png'
-import StarEffect4 from '../assets/images/reward/star_effect_1.png'
-import StarEffect5 from '../assets/images/reward/star_effect_1.png'
-
 import S0DxEx from '../assets/images/customItem/S0DxEx.png'
 import S0DxE0 from '../assets/images/customItem/S0DxE0.png'
 import S0D0Ex from '../assets/images/customItem/S0D0Ex.png'
@@ -72,7 +51,7 @@ import { fetchMyInfo, fetchStarCustomization, MypageInfoResponse, StarCustomizat
 // Keyframes 정의
 const slideBwdTop = keyframes`
   0% {
-    transform: scale(1.55) translateZ(160px) translateY(39px);
+    transform: scale(2.3) translateZ(160px) translateY(50px);
   }
   100% {
     transform: scale(1) translateZ(0px) translateY(0px);
@@ -118,35 +97,7 @@ const profileImgMap = {
     "S5DxE0": S5DxE0,
     "S5D0Ex": S5D0Ex,
     "S5D0E0": S5D0E0,
-  };
-
-const starSkinMap: Record<string, string> = {
-    S0: StarSkin0,
-    S1: StarSkin1,
-    S2: StarSkin2,
-    S3: StarSkin3,
-    S4: StarSkin4,
-    S5: StarSkin5,
 };
-
-const starDecoMap: Record<string, string> = {
-    D0: StarDeco0,
-    D1: StarDeco1,
-    D2: StarDeco2,
-    D3: StarDeco3,
-    D4: StarDeco4,
-    D5: StarDeco5,
-};
-
-const starEffectMap: Record<string, string> = {
-    E0: StarEffect0,
-    E1: StarEffect1,
-    E2: StarEffect2,
-    E3: StarEffect3,
-    E4: StarEffect4,
-    E5: StarEffect5,
-};
-
 
 function Mypage() {
     const Center = {
@@ -164,6 +115,8 @@ function Mypage() {
     const [selectedSkin, setSelectedSkin] = useState<string | null>(null); // 선택된 스킨 
     const [selectedDeco, setSelectedDeco] = useState<string | null>(null); // 선택된 장식 
     const [selectedEffect, setSelectedEffect] = useState<string | null>(null); // 선택된 효과 
+
+    const [isD0, setIsD0] = useState<boolean | undefined>(false); // 여우
 
     const [isLoading, setIsLoading] = useState(true);
     const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
@@ -217,6 +170,8 @@ function Mypage() {
                         setProfileImg(profileImgMap[initialKey]);
                     }
                 }
+                setIsD0(profileImg?.includes('D0'));
+
             } catch (error) {
                 console.error("Error loading star customization:", error);
             }
@@ -230,6 +185,8 @@ function Mypage() {
         };
 
         fetchAllData();
+
+        setIsD0(profileImg?.includes('D0'));
     }, []);
 
     useEffect(() => {
@@ -242,6 +199,8 @@ function Mypage() {
                 console.error(`No image found for key: ${newKey}`);
             }
         }
+
+        setIsD0(profileImg?.includes('D0'));
     }, [selectedSkin, selectedDeco, selectedEffect]);
 
     return (
@@ -251,7 +210,9 @@ function Mypage() {
             <ProfileInfoContainer>
                 <ProfileContainer>
                     <ProfileImageContainer isFromCustomize={isFromCustomize}>
-                        <ProfileImage src={profileImg} alt="프로필 이미지" />
+
+                        <ProfileImage isD0={profileImg?.includes('D0') ?? false} src={profileImg || undefined} alt="프로필 이미지" />
+
                         <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
                     </ProfileImageContainer>
                     <ProfileName className='title-md-300'>{myInfo?.name}</ProfileName>
@@ -354,12 +315,12 @@ const ProfileImageContainer = styled.div<{ isFromCustomize: boolean }>`
 
     margin-bottom: 20px;
 
-    ${({ isFromCustomize }) => isFromCustomize && css`animation: ${slideBwdTop} 0.75s cubic-bezier(0.25, 0.45, 0.46, 0.94) both;`}
+    ${({ isFromCustomize }) => isFromCustomize && css`animation: ${slideBwdTop} 1s cubic-bezier(0.25, 0.45, 0.46, 0.94) both;`}
 `;
 
-const ProfileImage = styled.img`
+const ProfileImage = styled.img<{ isD0: boolean }>`
 width: 97px;
-height: 97px;
+height: ${({ isD0 }) => (isD0 ? '113' : '97')}px;
 
 margin-bottom: 20px;
 `;

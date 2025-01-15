@@ -1,10 +1,10 @@
-import React from 'react'
-import styled, { keyframes, css } from 'styled-components'
+import React from "react";
+import styled, { keyframes, css } from "styled-components";
 
-import MediumBtn from './MediumBtn.tsx'
-import ProgressBar from '../loading/ProgressBar.tsx'
+import MediumBtn from "./MediumBtn.tsx";
+import ProgressBar from "../loading/ProgressBar.tsx";
 
-import Lock from '../../assets/images/reward/reward_lock.png'
+import Lock from "../../assets/images/reward/reward_lock.png";
 
 /* Props 정보
 interface QuestRewardBtnProps {
@@ -28,81 +28,90 @@ const animationStyles = (isDone: boolean) => css`
   animation: ${isDone ? fadeInOverlay : fadeOutOverlay} 0.3s ease-in-out;
 `;
 
-const QuestRewardBtn = ({ title, content, rewardImg, isAvailable, isDone, progress, onClick }) => {
-    return (
+const QuestRewardBtn = ({
+  title,
+  content,
+  rewardImg,
+  isAvailable,
+  isDone,
+  progress,
+  onClick,
+}) => {
+  return (
+    <QuestRewardBtnContainer
+      className="text-md-300"
+      disabled={!isAvailable}
+      isAvailable={isAvailable}
+      isDone={isDone}
+    >
+      <TopContent>
+        <TopLeftContent>
+          <ProgressTitle className="caption-sm-200">{title}</ProgressTitle>
+          <ProgressContent className="caption-md-200">
+            {content}
+          </ProgressContent>
+        </TopLeftContent>
 
-        <QuestRewardBtnContainer
-            className='text-md-300'
-            disabled={!isAvailable}
+        <TopRightContent>
+          <TopContentIconContainer isAvailable={isAvailable}>
+            <TopContentIcon src={rewardImg} />
+          </TopContentIconContainer>
+        </TopRightContent>
+      </TopContent>
+
+      <ContentDivider />
+
+      <BottomContent>
+        {isDone ? (
+          <MediumBtn
+            content="아이템 받기 완료"
+            onClick={null}
+            isAvailable={false}
+          />
+        ) : isAvailable ? (
+          <MediumBtn
+            content="아이템 받기"
+            onClick={onClick}
             isAvailable={isAvailable}
-            isDone={isDone}
-        >
+          />
+        ) : (
+          <ProgressBar
+            progressContent="도전과제 진행중"
+            currentProgress={progress.currentProgress}
+            maxProgress={progress.maxProgress}
+          />
+        )}
+      </BottomContent>
+    </QuestRewardBtnContainer>
+  );
+};
 
-            <TopContent>
-                <TopLeftContent>
-                    <ProgressTitle className='caption-sm-200'>{title}</ProgressTitle>
-                    <ProgressContent className='caption-md-200'>{content}</ProgressContent>
-                </TopLeftContent>
+export default QuestRewardBtn;
 
-                <TopRightContent>
-                    <TopContentIconContainer isAvailable={isAvailable} >
-                        <TopContentIcon src={rewardImg} />
-                    </TopContentIconContainer>
-                </TopRightContent>
-            </TopContent>
+const QuestRewardBtnContainer = styled.button<{
+  isAvailable: boolean;
+  isDone: boolean;
+}>`
+  width: 22.0625rem;
+  border-radius: 15px;
+  background: var(--black-50);
+  border: none;
 
-            <ContentDivider />
+  padding: 5px;
 
-            <BottomContent>
-                {isDone ? (
-                    <MediumBtn
-                        content="아이템 받기 완료"
-                        onClick={null}
-                        isAvailable={false}
-                    />
-                ) : isAvailable ? (
-                    <MediumBtn
-                        content="아이템 받기"
-                        onClick={onClick}
-                        isAvailable={isAvailable}
-                    />
-                ) : (
-                    <ProgressBar
-                        progressContent="도전과제 진행중"
-                        currentProgress={progress.currentProgress}
-                        maxProgress={progress.maxProgress}
-                    />
-                )}
-            </BottomContent>
+  text-align: center;
 
-        </QuestRewardBtnContainer>
+  user-select: none; /* 텍스트 선택 방지 */
+  -webkit-user-select: none; /* Safari에서 드래그 방지 */
+  -moz-user-select: none; /* Firefox에서 드래그 방지 */
+  -ms-user-select: none;
 
-    )
-}
+  position: relative;
 
-export default QuestRewardBtn
-
-const QuestRewardBtnContainer = styled.button<{ isAvailable: boolean, isDone: boolean }>`
-Width: 22.0625rem;
-border-radius: 15px;
-background: var(--black-50);
-border: none;
-
-padding : 5px;
-
-text-align: center;
-
-user-select: none; /* 텍스트 선택 방지 */
--webkit-user-select: none; /* Safari에서 드래그 방지 */
--moz-user-select: none; /* Firefox에서 드래그 방지 */
--ms-user-select: none;
-
-position: relative;
-
-/* isDone이 true일 때 오버레이 추가 */
-${({ isDone }) =>
-        isDone &&
-        `
+  /* isDone이 true일 때 오버레이 추가 */
+  ${({ isDone }) =>
+    isDone &&
+    `
     &::after {
         content: '';
         position: absolute;
@@ -115,51 +124,60 @@ ${({ isDone }) =>
         opacity: ${({ isDone }) => (isDone ? 1 : 0)};
         pointer-events: none; /* 클릭 이벤트 방지 */
         
-        opacity: ${({ isDone }) => (isDone ? '1' : '0')}; /* 초기 투명도 설정 */
+        opacity: ${({ isDone }) => (isDone ? "1" : "0")}; /* 초기 투명도 설정 */
         ${({ isDone }) => animationStyles(isDone)}; /* 애니메이션 스타일 적용 */
         animation-fill-mode: forwards; /* 애니메이션 종료 후 상태 유지 */
     }
-`}
+`} /* 반응형 디자인 추가 */
+//   @media (max-width: 768px) {
+//     width: 20rem; /* 화면이 작은 경우 버튼 크기 축소 */
+//     padding: 0.7rem;
+//   }
+
+  @media (max-width: 360px) {
+    width: 20rem; /* 더 작은 화면에서 크기 조정 */
+    padding: 0.5rem;
+    font-size: 0.9rem; /* 텍스트 크기 축소 */
+  }
 `;
 
 const TopContent = styled.div`
-display: flex;
-flex-direction: row;
+  display: flex;
+  flex-direction: row;
 `;
 
 const TopLeftContent = styled.div`
-display: flex;
-flex-direction: column;
-flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
-gap: 11px;
-padding: 10px;
-padding-bottom: 14px;
+  gap: 11px;
+  padding: 10px;
+  padding-bottom: 14px;
 `;
 
 const TopRightContent = styled.div`
-
-padding: 10px;
-padding-bottom: 14px;
+  padding: 10px;
+  padding-bottom: 14px;
 `;
 
 const TopContentIconContainer = styled.div<{ isAvailable: boolean }>`
-display: flex;
-justify-content: center;
-align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-width: 55px;
-height: 55px;
-border-radius: 15px;
-background: var(--gray-30);
-border: 1px solid var(--gray-60);
+  width: 55px;
+  height: 55px;
+  border-radius: 15px;
+  background: var(--gray-30);
+  border: 1px solid var(--gray-60);
 
-padding: 8px;
+  padding: 8px;
 
-position: relative;
-${({ isAvailable }) =>
-        !isAvailable &&
-        `
+  position: relative;
+  ${({ isAvailable }) =>
+    !isAvailable &&
+    `
   /* 모자이크 효과 */
   &::after {
     content: '';
@@ -191,34 +209,33 @@ ${({ isAvailable }) =>
     pointer-events: none;
   }
 `}
-
 `;
 
 const TopContentIcon = styled.img`
-width: 40px;
-height: 40px;
+  width: 40px;
+  height: 40px;
 `;
 
 const ContentDivider = styled.div`
-border: 0.5px solid var(--gray-10);
+  border: 0.5px solid var(--gray-10);
 `;
 
 const BottomContent = styled.div`
-padding: 10px 9px;
+  padding: 10px 9px;
 `;
 
 const ProgressTitle = styled.div`
-display: flex;
-justify-content: left;
+  display: flex;
+  justify-content: left;
 
-color: var(--gray-40);
+  color: var(--gray-40);
 `;
 
 const ProgressContent = styled.div`
-display: flex;
+  display: flex;
 
-text-align: left;
-color: var(--gray-80);
+  text-align: left;
+  color: var(--gray-80);
 `;
 
 const fadeInOverlay = keyframes`

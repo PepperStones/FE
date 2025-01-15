@@ -9,7 +9,7 @@ import tagImage from "../../assets/images/union.png";
 import spaceMan from "../../assets/images/spaceman.png";
 import levelsData from "../../constants/levels.json";
 import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
-import allStar from "../../assets/images/star/all_star.png";
+import allStar from "../../assets/images/space.png";
 import { HomeResponse } from "../api/user/HomeApi.ts";
 
 // export interface HomeResponse {
@@ -33,6 +33,18 @@ import { HomeResponse } from "../api/user/HomeApi.ts";
 //   count: number;
 //   levels: string[];
 // }
+
+interface LevelData {
+  level: string;
+  total_experience: number | null;
+}
+
+interface LevelsDataType {
+  F: LevelData[];
+  B: LevelData[];
+  G: LevelData[];
+  T: LevelData[];
+}
 
 interface HomePage {
   isPopupOpen: boolean;

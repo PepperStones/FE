@@ -95,26 +95,6 @@ interface HomePage {
   home: Home;
 }
 
-// 광량 계산 함수
-const calculateOpacityByLevel = (levelName: string | null): number => {
-  const minOpacity = 0.4; // 최소 광량
-  const maxOpacity = 1; // 최대 광량
-
-  // 레벨이 null인 경우(비활성화 상태)
-  if (!levelName) return 0; // 완전히 투명하게 설정
-
-  // 레벨 이름을 기준으로 인덱스 찾기
-  const levelIndex = levelsData.findIndex((level) => level.level === levelName);
-
-  if (levelIndex === -1) return minOpacity; // 레벨을 찾을 수 없을 경우 기본값
-
-  // 레벨 인덱스를 기반으로 Opacity 계산
-  const levelRatio = levelIndex / (levelsData.length - 1); // 0 ~ 1 사이 값
-  const opacity = minOpacity + (maxOpacity - minOpacity) * levelRatio;
-
-  return Math.min(Math.max(opacity, minOpacity), maxOpacity); // 0.4 ~ 1 사이로 제한
-};
-
 const StarAnimation1: React.FC<HomePage> = ({
   isPageOption,
   isPopupOpen,
@@ -334,6 +314,7 @@ const StarAnimation1: React.FC<HomePage> = ({
       };
     })
     .filter((line) => line.isActive); // 활성화된 선만 포함
+
   const myStar = adjustedStarData.find((star) => star.id === myStarId);
 
   const handleStarClick = (id: number) => {
@@ -485,7 +466,7 @@ const StarAnimation1: React.FC<HomePage> = ({
                     as={motion.div}
                     style={{
                       left: `${star.x - 23}px`,
-                      top: `${star.y + 14}px`,
+                      top: `${star.y + 20}px`,
                     }}
                     animate={{
                       opacity: isPageOption === 1 ? 1 : 0,
@@ -584,8 +565,8 @@ const OurStarTagImage = styled.img`
 
 const TagText = styled.span`
   position: absolute;
-  top: 20%;
-  color: var(--primary-10);
+  top: 30%;
+  color: var(--gray-100);
   pointer-events: none;
 `;
 

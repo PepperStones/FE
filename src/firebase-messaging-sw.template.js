@@ -24,11 +24,11 @@ importScripts(
     console.log('페이로드 notification:', payload.notification); 
     console.log('페이로드 data:', payload.data);
     
-    const timestamp = payload.notification?.timestamp || Date.now().toString();
-    const notificationTitle = payload.notification?.title || 'Default Title';
+    const timestamp = payload.data?.timestamp || Date.now().toString();
+    const notificationTitle = payload.data?.title || 'Default Title';
     const notificationOptions = {
-      body: payload.notification?.body || 'Default Body',
-      icon: payload.notification?.icon || '/default-icon.png',
+      body: payload.data?.body || 'Default Body',
+      icon: payload.data?.icon || '/default-icon.png',
       tag: timestamp,
     };
   

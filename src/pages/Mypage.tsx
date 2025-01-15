@@ -37,6 +37,36 @@ import StarEffect3 from '../assets/images/reward/star_effect_1.png'
 import StarEffect4 from '../assets/images/reward/star_effect_1.png'
 import StarEffect5 from '../assets/images/reward/star_effect_1.png'
 
+import S0DxEx from '../assets/images/customItem/S0DxEx.png'
+import S0DxE0 from '../assets/images/customItem/S0DxE0.png'
+import S0D0Ex from '../assets/images/customItem/S0D0Ex.png'
+import S0D0E0 from '../assets/images/customItem/S0D0E0.png'
+
+import S1DxEx from '../assets/images/customItem/S1DxEx.png'
+import S1DxE0 from '../assets/images/customItem/S1DxE0.png'
+import S1D0Ex from '../assets/images/customItem/S1D0Ex.png'
+import S1D0E0 from '../assets/images/customItem/S1D0E0.png'
+
+import S2DxEx from '../assets/images/customItem/S2DxEx.png'
+import S2DxE0 from '../assets/images/customItem/S2DxE0.png'
+import S2D0Ex from '../assets/images/customItem/S2D0Ex.png'
+import S2D0E0 from '../assets/images/customItem/S2D0E0.png'
+
+import S3DxEx from '../assets/images/customItem/S3DxEx.png'
+import S3DxE0 from '../assets/images/customItem/S3DxE0.png'
+import S3D0Ex from '../assets/images/customItem/S3D0Ex.png'
+import S3D0E0 from '../assets/images/customItem/S3D0E0.png'
+
+import S4DxEx from '../assets/images/customItem/S4DxEx.png'
+import S4DxE0 from '../assets/images/customItem/S4DxE0.png'
+import S4D0Ex from '../assets/images/customItem/S4D0Ex.png'
+import S4D0E0 from '../assets/images/customItem/S4D0E0.png'
+
+import S5DxEx from '../assets/images/customItem/S5DxEx.png'
+import S5DxE0 from '../assets/images/customItem/S5DxE0.png'
+import S5D0Ex from '../assets/images/customItem/S5D0Ex.png'
+import S5D0E0 from '../assets/images/customItem/S5D0E0.png'
+
 import { fetchMyInfo, fetchStarCustomization, MypageInfoResponse, StarCustomizationResponse } from "../api/user/MypageApi.ts";
 
 // Keyframes 정의
@@ -57,6 +87,38 @@ const fadeIn = keyframes`
     opacity: 1;
   }
 `;
+
+const profileImgMap = {
+    "S0DxEx": S0DxEx,
+    "S0DxE0": S0DxE0,
+    "S0D0Ex": S0D0Ex,
+    "S0D0E0": S0D0E0,
+
+    "S1DxEx": S1DxEx,
+    "S1DxE0": S1DxE0,
+    "S1D0Ex": S1D0Ex,
+    "S1D0E0": S1D0E0,
+
+    "S2DxEx": S2DxEx,
+    "S2DxE0": S2DxE0,
+    "S2D0Ex": S2D0Ex,
+    "S2D0E0": S2D0E0,
+
+    "S3DxEx": S3DxEx,
+    "S3DxE0": S3DxE0,
+    "S3D0Ex": S3D0Ex,
+    "S3D0E0": S3D0E0,
+
+    "S4DxEx": S4DxEx,
+    "S4DxE0": S4DxE0,
+    "S4D0Ex": S4D0Ex,
+    "S4D0E0": S4D0E0,
+
+    "S5DxEx": S5DxEx,
+    "S5DxE0": S5DxE0,
+    "S5D0Ex": S5D0Ex,
+    "S5D0E0": S5D0E0,
+  };
 
 const starSkinMap: Record<string, string> = {
     S0: StarSkin0,
@@ -121,6 +183,12 @@ function Mypage() {
     const openLogOutModal = () => setIsLogOutModalOpen(true);
     const closeLogOutModal = () => setIsLogOutModalOpen(false);
 
+    // 프로필 이미지 키 생성 함수
+    const generateProfileImgKey = (skin: string | null, deco: string | null, effect: string | null) => {
+        if (!skin || !deco || !effect) return null;
+        return `${skin}${deco}${effect}`; // 예: "S2D3E5"
+    };
+
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -139,10 +207,14 @@ function Mypage() {
                 console.log("Star Data:", response.data);
 
                 // Map initial profile image
-                if (response.data.nowSkin) {
-                    const initialProfileImg = starSkinMap[response.data.nowSkin];
-                    if (initialProfileImg) {
-                        setProfileImg(initialProfileImg);
+                if (response.data.nowSkin && response.data.nowDecoration && response.data.nowEffect) {
+                    const initialKey = generateProfileImgKey(
+                        response.data.nowSkin,
+                        response.data.nowDecoration,
+                        response.data.nowEffect
+                    );
+                    if (initialKey && profileImgMap[initialKey]) {
+                        setProfileImg(profileImgMap[initialKey]);
                     }
                 }
             } catch (error) {
@@ -161,16 +233,17 @@ function Mypage() {
     }, []);
 
     useEffect(() => {
-        // Update profile image when selected skin changes
-        if (selectedSkin) {
-            const newProfileImg = starSkinMap[selectedSkin];
-            if (newProfileImg) {
-                setProfileImg(newProfileImg);
+        // 선택된 스킨/장식/효과가 변경될 때 프로필 이미지 업데이트
+        if (selectedSkin && selectedDeco && selectedEffect) {
+            const newKey = generateProfileImgKey(selectedSkin, selectedDeco, selectedEffect);
+            if (newKey && profileImgMap[newKey]) {
+                setProfileImg(profileImgMap[newKey]);
             } else {
-                console.error(`No image found for skin: ${selectedSkin}`);
+                console.error(`No image found for key: ${newKey}`);
             }
         }
-    }, [selectedSkin]);
+    }, [selectedSkin, selectedDeco, selectedEffect]);
+
     return (
         <MypageContainer>
             <TopNav lefter={null} center={Center} righter={null} />
@@ -232,7 +305,7 @@ function Mypage() {
 
             </ProfileInfoContainer>
 
-            <PWAInstallModal showModal={isInstallModalOpen} onClose={closeInstallModal}/>
+            <PWAInstallModal showModal={isInstallModalOpen} onClose={closeInstallModal} />
 
             <DefaultModal
                 showDefaultModal={isLogOutModalOpen}
@@ -244,7 +317,7 @@ function Mypage() {
 
             <LoadingModal isOpen={isLoading} />
 
-            <FooterNav/>
+            <FooterNav />
         </MypageContainer>
 
     );

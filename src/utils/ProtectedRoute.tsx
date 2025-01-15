@@ -58,11 +58,9 @@ const ProtectedRoute = ({ element }) => {
     const authenticate = async () => {
       const result = await handleAuthentication(navigate);
       setIsAuthenticated(result); // 인증 결과 업데이트
-
       setIsLoading(false); // 로딩 완료
-      if(!isAuthenticated) navigate("/login");
     };
-
+    
     authenticate();
   }, [navigate]);
 

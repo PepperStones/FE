@@ -12,6 +12,7 @@ import FooterNav from "../../components/nav/FooterNav.tsx";
 import RightIcon from "../../assets/images/right_arrow.png";
 import PlusIcon from "../../assets/images/add_icon.png";
 import { DateUtil } from "../../utils/DateUtil.ts";
+import LoadingModal from "../../components/loading/Loading.tsx";
 const AdminBoardList: React.FC = () => {
   const [boards, setBoards] = useState<Board[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -165,6 +166,9 @@ const AdminBoardList: React.FC = () => {
           <NoResults>검색 결과가 없습니다.</NoResults>
         )}
       </BoardList>
+
+      <LoadingModal isOpen={loading} />
+
       <FooterNav isAdmin={true} />
     </div>
   );

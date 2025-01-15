@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import TopNav from "../components/nav/TopNav.tsx";
 import BottomNav from "../components/nav/FooterNav.tsx";
+import LoadingModal from "../components/loading/Loading.tsx";
 
 import RightIcon from "../assets/images/right_arrow.png";
 
@@ -130,6 +131,9 @@ const BoardPage: React.FC = () => {
           </p>
         )}
       </BoardList>
+
+      <LoadingModal isOpen={loading} />
+
       <BottomNav />
     </Container>
   );

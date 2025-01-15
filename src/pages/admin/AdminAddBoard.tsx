@@ -10,6 +10,7 @@ import BackIcon from "../../assets/images/left_arrow.png";
 import { addBoard } from "../../api/admin/adminBoardApi.ts";
 
 import { DateUtil } from "../../utils/DateUtil.ts";
+import LoadingModal from "../../components/loading/Loading.tsx";
 
 const AdminAddBoard: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const AdminAddBoard: React.FC = () => {
   const [title, setTitle] = useState(""); // 제목 수정 상태
   const [contents, setContents] = useState(""); // 내용 수정 상태
   const [textareaHeight, setTextareaHeight] = useState("auto"); // textarea 높이 상태
+
+  const [loading, setLoading] = useState(false);
 
   // 완료 버튼 활성화 조건
   const isAvailable =
@@ -50,6 +53,8 @@ const AdminAddBoard: React.FC = () => {
 
   const handleAddClick = async () => {
     try {
+      setLoading(true);
+
       const requestBody = {
         centerGroup: centerSelect, // 값이 없으면 빈 문자열로 설정
         jobGroup: groupSelect, // 값이 없으면 빈 문자열로 설정
@@ -60,12 +65,12 @@ const AdminAddBoard: React.FC = () => {
       const response = await addBoard(requestBody);
 
       if (response.code === 200) {
-        alert("게시글이 성공적으로 추가되었습니다!");
-        // 폼 초기화
         setCenterSelect("");
         setGroupSelect("");
         setTitle("");
         setContents("");
+
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error adding board:", error);
@@ -167,6 +172,8 @@ const AdminAddBoard: React.FC = () => {
           isAvailable={isAvailable}
         />
       </ButtonContainer>
+
+      <LoadingModal isOpen={loading}/>
     </div>
   );
 };

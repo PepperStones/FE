@@ -14,6 +14,7 @@ import HomeTopNav from "../components/nav/homeNav/HomeTopNav.tsx";
 import { fetchHome, HomeResponse } from "../api/user/HomeApi.ts";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPageOption, setIsPageOption] = useState(0);
   const [homeData, setHomeData] = useState<HomeResponse>();
@@ -39,7 +40,7 @@ const Home: React.FC = () => {
   };
 
   if (!homeData) {
-    return <div>No data available</div>;
+    return navigate('/login');
   }
 
   const hometitle = {

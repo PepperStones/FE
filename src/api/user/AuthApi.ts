@@ -11,7 +11,6 @@ const authApi = axios.create({
   },
 });
 
-// Login Api
 export const login = async (userId: string, password: string) => {
   const response = await authApi.post('/signin', { userId, password });
   return response.data;

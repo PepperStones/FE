@@ -1,82 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import styled, { keyframes, css } from "styled-components";
 
-import TopNav from "../components/nav/TopNav.tsx";
-import FooterNav from "../components/nav/FooterNav.tsx";
-import LoadingModal from "../components/loading/Loading.tsx";
-import DefaultModal from "../components/modal/DefaultModal.tsx";
-import PWAInstallModal from "../components/modal/PWAInstallModal.tsx";
 
-import EditIconImg from "../assets/images/orange_circle_pencil.png";
-import DepartmentImg from "../assets/images/yellow_house.png";
-import JoinDateImg from "../assets/images/yellow_calendar.png";
-import LevelImg from "../assets/images/yellow_diamod_star.png";
-import PasswordImg from "../assets/images/yellow_lock.png";
-import SettingImg from "../assets/images/admin/orange_group.png";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import styled, { keyframes, css } from 'styled-components';
 
-import StarSkin0 from "../assets/images/reward/star_skin_1.png";
-import StarSkin1 from "../assets/images/reward/star_skin_2.png";
-import StarSkin2 from "../assets/images/reward/star_skin_3.png";
-import StarSkin3 from "../assets/images/reward/star_skin_4.png";
-import StarSkin4 from "../assets/images/reward/star_skin_5.png";
-import StarSkin5 from "../assets/images/reward/star_skin_6.png";
+import TopNav from '../components/nav/TopNav.tsx';
+import FooterNav from '../components/nav/FooterNav.tsx'
+import LoadingModal from '../components/loading/Loading.tsx';
+import DefaultModal from '../components/modal/DefaultModal.tsx';
+import PWAInstallModal from '../components/modal/PWAInstallModal.tsx';
 
-import StarDeco0 from "../assets/images/reward/star_deco_1.png";
-import StarDeco1 from "../assets/images/reward/star_deco_1.png";
-import StarDeco2 from "../assets/images/reward/star_deco_1.png";
-import StarDeco3 from "../assets/images/reward/star_deco_1.png";
-import StarDeco4 from "../assets/images/reward/star_deco_1.png";
-import StarDeco5 from "../assets/images/reward/star_deco_1.png";
+import EditIconImg from '../assets/images/orange_circle_pencil.png'
+import DepartmentImg from '../assets/images/yellow_house.png'
+import JoinDateImg from '../assets/images/yellow_calendar.png'
+import LevelImg from '../assets/images/yellow_diamod_star.png'
+import PasswordImg from '../assets/images/yellow_lock.png'
+import SettingImg from "../assets/images/admin/orange_group.png"
 
-import StarEffect0 from "../assets/images/reward/star_effect_1.png";
-import StarEffect1 from "../assets/images/reward/star_effect_1.png";
-import StarEffect2 from "../assets/images/reward/star_effect_1.png";
-import StarEffect3 from "../assets/images/reward/star_effect_1.png";
-import StarEffect4 from "../assets/images/reward/star_effect_1.png";
-import StarEffect5 from "../assets/images/reward/star_effect_1.png";
+import S0DxEx from '../assets/images/customItem/S0DxEx.png'
+import S0DxE0 from '../assets/images/customItem/S0DxE0.png'
+import S0D0Ex from '../assets/images/customItem/S0D0Ex.png'
+import S0D0E0 from '../assets/images/customItem/S0D0E0.png'
 
-import S0DxEx from "../assets/images/customItem/S0DxEx.png";
-import S0DxE0 from "../assets/images/customItem/S0DxE0.png";
-import S0D0Ex from "../assets/images/customItem/S0D0Ex.png";
-import S0D0E0 from "../assets/images/customItem/S0D0E0.png";
+import S1DxEx from '../assets/images/customItem/S1DxEx.png'
+import S1DxE0 from '../assets/images/customItem/S1DxE0.png'
+import S1D0Ex from '../assets/images/customItem/S1D0Ex.png'
+import S1D0E0 from '../assets/images/customItem/S1D0E0.png'
 
-import S1DxEx from "../assets/images/customItem/S1DxEx.png";
-import S1DxE0 from "../assets/images/customItem/S1DxE0.png";
-import S1D0Ex from "../assets/images/customItem/S1D0Ex.png";
-import S1D0E0 from "../assets/images/customItem/S1D0E0.png";
+import S2DxEx from '../assets/images/customItem/S2DxEx.png'
+import S2DxE0 from '../assets/images/customItem/S2DxE0.png'
+import S2D0Ex from '../assets/images/customItem/S2D0Ex.png'
+import S2D0E0 from '../assets/images/customItem/S2D0E0.png'
 
-import S2DxEx from "../assets/images/customItem/S2DxEx.png";
-import S2DxE0 from "../assets/images/customItem/S2DxE0.png";
-import S2D0Ex from "../assets/images/customItem/S2D0Ex.png";
-import S2D0E0 from "../assets/images/customItem/S2D0E0.png";
+import S3DxEx from '../assets/images/customItem/S3DxEx.png'
+import S3DxE0 from '../assets/images/customItem/S3DxE0.png'
+import S3D0Ex from '../assets/images/customItem/S3D0Ex.png'
+import S3D0E0 from '../assets/images/customItem/S3D0E0.png'
 
-import S3DxEx from "../assets/images/customItem/S3DxEx.png";
-import S3DxE0 from "../assets/images/customItem/S3DxE0.png";
-import S3D0Ex from "../assets/images/customItem/S3D0Ex.png";
-import S3D0E0 from "../assets/images/customItem/S3D0E0.png";
+import S4DxEx from '../assets/images/customItem/S4DxEx.png'
+import S4DxE0 from '../assets/images/customItem/S4DxE0.png'
+import S4D0Ex from '../assets/images/customItem/S4D0Ex.png'
+import S4D0E0 from '../assets/images/customItem/S4D0E0.png'
 
-import S4DxEx from "../assets/images/customItem/S4DxEx.png";
-import S4DxE0 from "../assets/images/customItem/S4DxE0.png";
-import S4D0Ex from "../assets/images/customItem/S4D0Ex.png";
-import S4D0E0 from "../assets/images/customItem/S4D0E0.png";
+import S5DxEx from '../assets/images/customItem/S5DxEx.png'
+import S5DxE0 from '../assets/images/customItem/S5DxE0.png'
+import S5D0Ex from '../assets/images/customItem/S5D0Ex.png'
+import S5D0E0 from '../assets/images/customItem/S5D0E0.png'
 
-import S5DxEx from "../assets/images/customItem/S5DxEx.png";
-import S5DxE0 from "../assets/images/customItem/S5DxE0.png";
-import S5D0Ex from "../assets/images/customItem/S5D0Ex.png";
-import S5D0E0 from "../assets/images/customItem/S5D0E0.png";
+import { fetchMyInfo, fetchStarCustomization, MypageInfoResponse, StarCustomizationResponse } from "../api/user/MypageApi.ts";
 
-import {
-  fetchMyInfo,
-  fetchStarCustomization,
-  MypageInfoResponse,
-  StarCustomizationResponse,
-} from "../api/user/MypageApi.ts";
 
 // Keyframes 정의
 const slideBwdTop = keyframes`
   0% {
-    transform: scale(1.55) translateZ(160px) translateY(39px);
+    transform: scale(2.3) translateZ(160px) translateY(50px);
   }
   100% {
     transform: scale(1) translateZ(0px) translateY(0px);
@@ -93,62 +70,36 @@ const fadeIn = keyframes`
 `;
 
 const profileImgMap = {
-  S0DxEx: S0DxEx,
-  S0DxE0: S0DxE0,
-  S0D0Ex: S0D0Ex,
-  S0D0E0: S0D0E0,
 
-  S1DxEx: S1DxEx,
-  S1DxE0: S1DxE0,
-  S1D0Ex: S1D0Ex,
-  S1D0E0: S1D0E0,
+    "S0DxEx": S0DxEx,
+    "S0DxE0": S0DxE0,
+    "S0D0Ex": S0D0Ex,
+    "S0D0E0": S0D0E0,
 
-  S2DxEx: S2DxEx,
-  S2DxE0: S2DxE0,
-  S2D0Ex: S2D0Ex,
-  S2D0E0: S2D0E0,
+    "S1DxEx": S1DxEx,
+    "S1DxE0": S1DxE0,
+    "S1D0Ex": S1D0Ex,
+    "S1D0E0": S1D0E0,
 
-  S3DxEx: S3DxEx,
-  S3DxE0: S3DxE0,
-  S3D0Ex: S3D0Ex,
-  S3D0E0: S3D0E0,
+    "S2DxEx": S2DxEx,
+    "S2DxE0": S2DxE0,
+    "S2D0Ex": S2D0Ex,
+    "S2D0E0": S2D0E0,
 
-  S4DxEx: S4DxEx,
-  S4DxE0: S4DxE0,
-  S4D0Ex: S4D0Ex,
-  S4D0E0: S4D0E0,
+    "S3DxEx": S3DxEx,
+    "S3DxE0": S3DxE0,
+    "S3D0Ex": S3D0Ex,
+    "S3D0E0": S3D0E0,
 
-  S5DxEx: S5DxEx,
-  S5DxE0: S5DxE0,
-  S5D0Ex: S5D0Ex,
-  S5D0E0: S5D0E0,
-};
+    "S4DxEx": S4DxEx,
+    "S4DxE0": S4DxE0,
+    "S4D0Ex": S4D0Ex,
+    "S4D0E0": S4D0E0,
 
-const starSkinMap: Record<string, string> = {
-  S0: StarSkin0,
-  S1: StarSkin1,
-  S2: StarSkin2,
-  S3: StarSkin3,
-  S4: StarSkin4,
-  S5: StarSkin5,
-};
-
-const starDecoMap: Record<string, string> = {
-  D0: StarDeco0,
-  D1: StarDeco1,
-  D2: StarDeco2,
-  D3: StarDeco3,
-  D4: StarDeco4,
-  D5: StarDeco5,
-};
-
-const starEffectMap: Record<string, string> = {
-  E0: StarEffect0,
-  E1: StarEffect1,
-  E2: StarEffect2,
-  E3: StarEffect3,
-  E4: StarEffect4,
-  E5: StarEffect5,
+    "S5DxEx": S5DxEx,
+    "S5DxE0": S5DxE0,
+    "S5D0Ex": S5D0Ex,
+    "S5D0E0": S5D0E0,
 };
 
 function Mypage() {
@@ -198,16 +149,17 @@ function Mypage() {
     return `${skin}${deco}${effect}`; // 예: "S2D3E5"
   };
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetchMyInfo();
-        setMyInfo(response.data); // 사용자 정보 저장
-        console.log("My Info:", response.data);
-      } catch (error) {
-        console.error("Failed to load my info:", error);
-      }
-    };
+
+    const [isD0, setIsD0] = useState<boolean | undefined>(false); // 여우
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+    const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
+    const handleLogOut = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userRole');
+
 
     const loadStarData = async () => {
       try {
@@ -242,37 +194,140 @@ function Mypage() {
       setIsLoading(false); // 로딩 종료
     };
 
-    fetchAllData();
-  }, []);
 
-  useEffect(() => {
-    // 선택된 스킨/장식/효과가 변경될 때 프로필 이미지 업데이트
-    if (selectedSkin && selectedDeco && selectedEffect) {
-      const newKey = generateProfileImgKey(
-        selectedSkin,
-        selectedDeco,
-        selectedEffect
-      );
-      if (newKey && profileImgMap[newKey]) {
-        setProfileImg(profileImgMap[newKey]);
-      } else {
-        console.error(`No image found for key: ${newKey}`);
-      }
-    }
-  }, [selectedSkin, selectedDeco, selectedEffect]);
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const response = await fetchMyInfo();
+                setMyInfo(response.data); // 사용자 정보 저장
+                console.log("My Info:", response.data);
+            } catch (error) {
+                console.error("Failed to load my info:", error);
+            }
+        };
 
-  return (
-    <MypageContainer>
-      <TopNav lefter={null} center={Center} righter={null} />
+        const loadStarData = async () => {
+            try {
+                const response = await fetchStarCustomization();
+                setStarData(response.data); // 스타 데이터 저장
+                console.log("Star Data:", response.data);
 
-      <ProfileInfoContainer>
-        <ProfileContainer>
-          <ProfileImageContainer isFromCustomize={isFromCustomize}>
-            <ProfileImage src={profileImg} alt="프로필 이미지" />
-            <EditIcon
-              src={EditIconImg}
-              alt="아이콘"
-              onClick={handleCustomizingClick}
+                // Map initial profile image
+                if (response.data.nowSkin && response.data.nowDecoration && response.data.nowEffect) {
+                    const initialKey = generateProfileImgKey(
+                        response.data.nowSkin,
+                        response.data.nowDecoration,
+                        response.data.nowEffect
+                    );
+                    if (initialKey && profileImgMap[initialKey]) {
+                        setProfileImg(profileImgMap[initialKey]);
+                    }
+                }
+                setIsD0(profileImg?.includes('D0'));
+
+            } catch (error) {
+                console.error("Error loading star customization:", error);
+            }
+        };
+
+        // 두 비동기 작업을 병렬로 처리
+        const fetchAllData = async () => {
+            setIsLoading(true); // 로딩 시작
+            await Promise.all([loadData(), loadStarData()]); // 두 작업 완료 대기
+            setIsLoading(false); // 로딩 종료
+        };
+
+        fetchAllData();
+
+        setIsD0(profileImg?.includes('D0'));
+    }, []);
+
+    useEffect(() => {
+        // 선택된 스킨/장식/효과가 변경될 때 프로필 이미지 업데이트
+        if (selectedSkin && selectedDeco && selectedEffect) {
+            const newKey = generateProfileImgKey(selectedSkin, selectedDeco, selectedEffect);
+            if (newKey && profileImgMap[newKey]) {
+                setProfileImg(profileImgMap[newKey]);
+            } else {
+                console.error(`No image found for key: ${newKey}`);
+            }
+        }
+
+        setIsD0(profileImg?.includes('D0'));
+    }, [selectedSkin, selectedDeco, selectedEffect]);
+
+    return (
+        <MypageContainer>
+            <TopNav lefter={null} center={Center} righter={null} />
+
+            <ProfileInfoContainer>
+                <ProfileContainer>
+                    <ProfileImageContainer isFromCustomize={isFromCustomize}>
+
+                        <ProfileImage isD0={profileImg?.includes('D0') ?? false} src={profileImg || undefined} alt="프로필 이미지" />
+
+                        <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
+                    </ProfileImageContainer>
+                    <ProfileName className='title-md-300'>{myInfo?.name}</ProfileName>
+                    <ProfileEIN className='text-sm-300'>{myInfo?.companyNum}</ProfileEIN>
+                </ProfileContainer>
+
+                <ProfileDetailContainer isFromCustomize={isFromCustomize}>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={DepartmentImg} /><IconDescription className='text-md-200'>소속</IconDescription>
+                        </DetailLeft>
+                        <DetailRight className='text-sm-200'>{myInfo?.centerGroup}</DetailRight>
+                    </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={JoinDateImg} /><IconDescription className='text-md-200'>입사일</IconDescription>
+                        </DetailLeft>
+                        <DetailRight className='text-sm-200'>{myInfo?.joinDate}</DetailRight>
+                    </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={LevelImg} /><IconDescription className='text-md-200'>레벨</IconDescription>
+                        </DetailLeft>
+                        <DetailRight className='text-sm-200'>{myInfo?.level}</DetailRight>
+                    </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={PasswordImg} /><IconDescription className='text-md-200'>비밀번호</IconDescription>
+                        </DetailLeft>
+                        <FixButton className='caption-sm-200' onClick={handleUpdatePwdClick}>변경하기 &gt;</FixButton>
+                    </DetailContent>
+                    <DetailContent>
+                        <DetailLeft>
+                            <MypageIcon src={SettingImg} /><IconDescription className='text-md-200'>인앱 설치</IconDescription>
+                        </DetailLeft>
+                        <FixButton className='caption-sm-200' onClick={openInstallModal}>설처하기 &gt;</FixButton>
+                    </DetailContent>
+                </ProfileDetailContainer>
+
+                <Evaluation isFromCustomize={isFromCustomize}>
+                    <DetailLeft>
+                        <EvaluationTime className='caption-sm-300'>인사평가 결과</EvaluationTime>
+                        <EvaluationDescription className='text-md-200'>{myInfo?.grade}등급</EvaluationDescription>
+                    </DetailLeft>
+                    <DetailRight className='text-sm-200'>+ {myInfo?.experience} do</DetailRight>
+                </Evaluation>
+
+                <LogOutContainer>
+                    <LogOut className='caption-md-300' onClick={openLogOutModal}>로그아웃 &gt;</LogOut>
+                </LogOutContainer>
+
+            </ProfileInfoContainer>
+
+            <PWAInstallModal showModal={isInstallModalOpen} onClose={closeInstallModal} />
+
+            <DefaultModal
+                showDefaultModal={isLogOutModalOpen}
+                title="로그아웃 하시겠습니까?"
+                description=""
+                onAcceptFunc={handleLogOut}
+                onUnacceptFunc={closeLogOutModal}
+
             />
           </ProfileImageContainer>
           <ProfileName className="title-md-300">{myInfo?.name}</ProfileName>
@@ -414,6 +469,7 @@ const ProfileImageContainer = styled.div<{ isFromCustomize: boolean }>`
 const ProfileImage = styled.img`
   width: 97px;
   height: 97px;
+
 
   margin-bottom: 20px;
 `;

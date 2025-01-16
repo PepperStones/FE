@@ -227,7 +227,7 @@ const StarAnimation1: React.FC<HomePage> = ({
 
       default:
         console.log("Unknown skin type");
-        break;
+        return null;
     }
   };
 
@@ -242,7 +242,7 @@ const StarAnimation1: React.FC<HomePage> = ({
 
       default:
         console.log("Unknown skin type");
-        break;
+        return null;
     }
   };
   const calculateOpacityByLevel = (levelName: string | null): number => {
@@ -260,7 +260,7 @@ const StarAnimation1: React.FC<HomePage> = ({
 
     const groupData = levelsData[groupKey];
     if (!groupData) {
-      console.error(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
+      console.log(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
       return minOpacity;
     }
 
@@ -270,7 +270,7 @@ const StarAnimation1: React.FC<HomePage> = ({
     );
 
     if (!currentLevelData) {
-      console.error(`레벨 ${levelName}에 대한 데이터를 찾을 수 없습니다`);
+      console.log(`레벨 ${levelName}에 대한 데이터를 찾을 수 없습니다`);
       return minOpacity;
     }
 
@@ -285,7 +285,7 @@ const StarAnimation1: React.FC<HomePage> = ({
       .filter((exp): exp is number => exp !== null);
 
     if (validExperiences.length === 0) {
-      console.error("유효한 경험치 값이 없습니다");
+      console.log("유효한 경험치 값이 없습니다");
       return minOpacity;
     }
 
@@ -329,16 +329,6 @@ const StarAnimation1: React.FC<HomePage> = ({
       };
     }
   });
-
-  useEffect(() => {
-    console.log("Container Size:", containerSize);
-    if (containerRef.current) {
-      console.log(
-        "Bounding Client Rect:",
-        containerRef.current.getBoundingClientRect()
-      );
-    }
-  }, [containerSize]);
 
   useEffect(() => {
     const resizeHandler = () => {

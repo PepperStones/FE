@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 import TopNav from '../components/nav/TopNav.tsx';
@@ -56,33 +56,41 @@ const fadeIn = keyframes`
 const tabOffsets = [0, 120, 240]; // 슬라이드 양
 
 function CustomizingPage() {
+    const location = useLocation();
+    const isFromCustomize = location.state?.fromCustomize || false;
 
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('별 스킨');
     const [activeTabIndex, setActiveTabIndex] = useState(0);
-    const [starData, setStarData] = useState<StarCustomizationResponse['data'] | null>(null);
 
     const [profileImg, setProfileImg] = useState(ProfileImg); // 프로필 이미지
     const [selectedSkin, setSelectedSkin] = useState<string | null>(null); // 선택된 스킨 
     const [selectedDeco, setSelectedDeco] = useState<string | null>(null); // 선택된 장식 
     const [selectedEffect, setSelectedEffect] = useState<string | null>(null); // 선택된 효과 
     const [tabData, setTabData] = useState({ '별 스킨': [], '별 장식': [], '별 효과': [], });
-
-    const [isD0, setIsD0] = useState<boolean | undefined>(false); // 여우
-
     const [animate, setAnimate] = useState(false);
 
+    const handleBackIconClick = () => navigate('/mypage', { state: { fromCustomize: true } });
+
+    const NavItem = {
+        icon: BackIcon,
+        iconWidth: Number(11),
+        iconHeight: Number(16),
+        text: "나의 별 꾸미기",
+        clickFunc: handleBackIconClick,
+    };
+
+    // 커스터마이징 데이터 로드
     useEffect(() => {
         const loadStarData = async () => {
             try {
                 const response = await fetchStarCustomization();
-                setStarData(response.data);
                 const data = response.data;
 
                 // Set currently equipped items as strings
-                setSelectedSkin(data.nowSkin); // Example: "S0"
-                setSelectedDeco(data.nowDecoration); // Example: "D0"
-                setSelectedEffect(data.nowEffect); // Example: "E0"
+                setSelectedSkin(data.nowSkin);
+                setSelectedDeco(data.nowDecoration);
+                setSelectedEffect(data.nowEffect);
 
                 // Map initial profile image
                 if (response.data.nowSkin && response.data.nowDecoration && response.data.nowEffect) {
@@ -135,21 +143,10 @@ function CustomizingPage() {
                 console.error('Error loading star customization:', error);
             }
         };
-
-        setIsD0(profileImg?.includes('D0'));
         loadStarData();
     }, []);
 
-    const handleBackIconClick = () => navigate('/mypage', { state: { fromCustomize: true } });
-
-    const NavItem = {
-        icon: BackIcon,
-        iconWidth: Number(11),
-        iconHeight: Number(16),
-        text: "나의 별 꾸미기",
-        clickFunc: handleBackIconClick,
-    };
-
+    // Tab Click 이벤트 처리
     const handleTabClick = (tabName: string, index: number) => {
         if (activeTab === tabName) return;
 
@@ -161,6 +158,7 @@ function CustomizingPage() {
         }, 10); // Small delay to ensure state updates
     };
 
+    // Tab Item Click 이벤트 처리
     const handleItemClick = async (id: number) => {
         try {
             let updatedSkin = selectedSkin;
@@ -184,7 +182,6 @@ function CustomizingPage() {
                     // 프로필 이미지 업데이트
                     const newProfileImg = starSkinMap[updatedSkin];
                     if (newProfileImg) {
-                        setIsD0(profileImg?.includes('D0'));
                         setProfileImg(newProfileImg);
                     }
                 }
@@ -207,7 +204,6 @@ function CustomizingPage() {
                 // 프로필 이미지 업데이트
                 const newProfileImg = starDecoMap[updatedDeco];
                 if (newProfileImg) {
-                    setIsD0(profileImg?.includes('D0'));
                     setProfileImg(newProfileImg);
                 }
             } else if (activeTab === '별 효과') {
@@ -229,7 +225,6 @@ function CustomizingPage() {
                 // 프로필 이미지 업데이트
                 const newProfileImg = starEffectMap[updatedEffect];
                 if (newProfileImg) {
-                    setIsD0(profileImg?.includes('D0'));
                     setProfileImg(newProfileImg);
                 }
             }
@@ -251,7 +246,7 @@ function CustomizingPage() {
         }
     };
 
-
+    // 업데이트된 현재 스킨 정보 렌더링
     useEffect(() => {
         // 선택된 스킨/장식/효과가 변경될 때 프로필 이미지 업데이트
         if (selectedSkin && selectedDeco && selectedEffect) {
@@ -262,8 +257,6 @@ function CustomizingPage() {
                 console.error(`No image found for key: ${newKey}`);
             }
         }
-
-        setIsD0(profileImg?.includes('D0'));
     }, [selectedSkin, selectedDeco, selectedEffect]);
 
     return (
@@ -272,7 +265,11 @@ function CustomizingPage() {
             <TopNav lefter={NavItem} center={NavItem} righter={null} />
 
             <StarCustomizingContainer>
-                <MainStar isD0={profileImg?.includes('D0')} isE0={profileImg?.includes('E0')} key={profileImg} src={profileImg} alt="메인 별 스킨" />
+                <MainStar isD0={profileImg?.includes('D0')}
+                    isE0={profileImg?.includes('E0')}
+                    isFromCustomize={isFromCustomize}
+                    key={profileImg}
+                    src={profileImg} alt="메인 별 스킨" />
 
                 <TabMenu activeIndex={activeTabIndex} isD0={profileImg?.includes('Dx')}>
                     <TabItem active={activeTab === '별 스킨'} onClick={() => handleTabClick('별 스킨', 0)}>
@@ -329,7 +326,7 @@ const StarCustomizingContainer = styled.div`
     margin-top: 30px;
 `;
 
-const MainStar = styled.img <{ isD0: boolean, isE0: boolean }>`
+const MainStar = styled.img <{ isD0: boolean, isE0: boolean, isFromCustomize: boolean }>`
     width: ${({ isE0 }) => (isE0 ? 254 : 212)}px;
     height: ${({ isD0 }) => (isD0 ? 263 : 212)}px;
 

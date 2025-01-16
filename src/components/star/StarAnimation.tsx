@@ -227,7 +227,7 @@ const StarAnimation1: React.FC<HomePage> = ({
 
       default:
         console.log("Unknown skin type");
-        return null;
+        return "";
     }
   };
 
@@ -242,7 +242,7 @@ const StarAnimation1: React.FC<HomePage> = ({
 
       default:
         console.log("Unknown skin type");
-        return null;
+        return "";
     }
   };
   const calculateOpacityByLevel = (levelName: string | null): number => {
@@ -730,6 +730,7 @@ const Deco = styled.img`
   object-fit: contain;
   aspect-ratio: 1 / 1;
   transform: rotate(-18deg); /* 10도 회전 */
+
   border: none !important;
   outline: none !important;
   background: transparent !important;
@@ -767,14 +768,14 @@ const EfectContainer = styled.div`
   border: none;
   transform: translate(-50%, -50%);
   z-index: 1000;
+
+  border: none !important;
   outline: none !important;
   background: transparent !important;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  &[src=""],
-  &:not([src]) {
-    visibility: hidden;
+  &:empty {
     display: none;
   }
 `;
@@ -793,7 +794,10 @@ const Effect = styled.img`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  &:empty {
+
+  &[src=""],
+  &:not([src]) {
+    visibility: hidden;
     display: none;
   }
 `;

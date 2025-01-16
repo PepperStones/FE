@@ -27,11 +27,11 @@ export const requestPermissionAndGetToken = async () => {
   try {
     const hasPermission = await requestNotificationPermission();
     if (hasPermission) {
-       // 이미 토큰이 있는지 확인
-       const existingToken = localStorage.getItem('fcmToken');
-       if (existingToken) {
-         return existingToken;
-       }
+      // 이미 토큰이 있는지 확인
+      const existingToken = localStorage.getItem('fcmToken');
+      if (existingToken) {
+        return existingToken;
+      }
 
       console.log("Notification permission granted.");
       const token = await getToken(messaging, {
@@ -54,7 +54,7 @@ export const requestPermissionAndGetToken = async () => {
 };
 
 export const onForegroundMessage = (callback: (payload: any) => void): void => {
-  onMessage(messaging, (payload) => {    
+  onMessage(messaging, (payload) => {
     // 알림 데이터 추출
     const { title, body, icon } = payload.data || {};
     const timestamp = payload.data?.timestamp || Date.now().toString();
@@ -67,6 +67,22 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
         icon: icon || "/favicon.ico",
         timestamp,
       });
+    }
+    else {
+      if (Notification.permission === "granted") {
+        try {
+          new Notification(title || "Default Title", {
+            body: body || "Default Body",
+            icon: icon || "/favicon.ico",
+            tag: timestamp,
+          });
+          console.log("푸시 알림 표시 성공");
+        } catch (error) {
+          console.error("푸시 알림 표시 실패:", error);
+        }
+      } else {
+        console.error("알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요.");
+      }
     }
 
     /*

@@ -64,14 +64,9 @@ const App = () => {
       console.log("Foreground message received:", payload);
 
       alert(`포그라운드 메세지 수신 in app.tsx`);
-      alert(`data?.title: ${payload.data?.title}`);
-      alert(`data?.body: ${payload.data?.body}`);
-      alert(`notification?.title: ${payload.notification?.title}`);
-      alert(`notification?.body: ${payload.notification?.body}`);
-      alert(`생짜 payload: ${payload}`);
 
       // Extract notification data
-      const { title, body, icon } = payload.data || {};
+      const { title, body, icon } = payload || {};
 
       // Update state with notification data
       setPushData({
@@ -92,6 +87,11 @@ const App = () => {
       // No specific cleanup needed as Firebase handles subscriptions internally
     };
   }, []);
+
+  useEffect(() => {
+    console.log("모달 열림 여부:", isPushModalOpen);
+    console.log("푸시 데이터:", pushData);
+  }, [isPushModalOpen, pushData]);
 
   const closePushModal = () => setIsPushModalOpen(false);
 

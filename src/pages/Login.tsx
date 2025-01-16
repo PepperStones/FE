@@ -60,9 +60,6 @@ function Login() {
         console.warn("FCM 토큰을 가져올 수 없습니다.");
       }
 
-      // 포그라운드 메시지 처리
-      onForegroundMessage();
-
       if (result.data.userRole === "USER") {
         navigate("/home");
       } else if (result.data.userRole === "ADMIN") {

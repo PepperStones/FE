@@ -72,8 +72,6 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
 
     // 콜백 함수 호출 및 데이터 전달
     if (callback) {
-      alert("onForegroundMessage 2222");
-      console.log("onForegroundMessage 2222");
       callback({
         title: title || "Default Title",
         body: body || "Default Body",
@@ -82,15 +80,13 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
       });
     }
 
-    alert("onForegroundMessage 3333");
-    console.log("onForegroundMessage 3333");
+    alert("onForegroundMessage End");
+    console.log("onForegroundMessage End");
 
+    /*
     // 브라우저 알림 표시
     if (Notification.permission === "granted") {
       try {
-        console.log("알림 권한이 허용되었습니다.");
-        alert("onForegroundMessage 4444");
-
         new Notification(title || "Default Title", {
           body: body || "Default Body",
           icon: icon || "/favicon.ico",
@@ -106,6 +102,8 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
       console.error("알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요.");
       alert("onForegroundMessage 7777");
     }
+    */
+
   });
 };
 

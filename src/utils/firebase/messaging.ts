@@ -61,42 +61,40 @@ export const requestPermissionAndGetToken = async () => {
   }
 };
 
-export const onForegroundMessage = (): void => {
+export const onForegroundMessage = (callback: (payload: any) => void): void => {
   onMessage(messaging, (payload) => {
     console.log("포그라운드 메시지 수신:", payload);
-    alert("포그라운드 메시지 수신");
 
-    // 알림 데이터
-    alert(payload.data);
+    // 알림 데이터 추출
     const { title, body, icon } = payload.data || {};
     const timestamp = payload.data?.timestamp || Date.now().toString();
-    alert(title);
-    alert(body);
+
+    // 콜백 함수 호출 및 데이터 전달
+    if (callback) {
+      callback({
+        title: title || "Default Title",
+        body: body || "Default Body",
+        icon: icon || "/favicon.ico",
+        timestamp,
+      });
+    }
 
     // 브라우저 알림 표시
     if (Notification.permission === "granted") {
       try {
         console.log("알림 권한이 허용되었습니다.");
-        alert("알림 권한이 허용되었습니다.");
         new Notification(title || "Default Title", {
           body: body || "Default Body",
           icon: icon || "/favicon.ico",
           tag: timestamp,
         });
-
         console.log("푸시 알림 표시 성공");
-        alert("푸시 알림 표시 성공");
       } catch (error) {
-        console.log("푸시 알림 표시 실패");
-        alert("푸시 알림 표시 실패");
-      } 
+        console.error("푸시 알림 표시 실패:", error);
+      }
     } else {
-      console.error(
-        "알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요."
-      );
-      alert(
-        "알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요."
-      );
+      console.error("알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요.");
     }
   });
 };
+

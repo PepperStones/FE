@@ -63,14 +63,17 @@ export const requestPermissionAndGetToken = async () => {
 
 export const onForegroundMessage = (callback: (payload: any) => void): void => {
   onMessage(messaging, (payload) => {
-    console.log("포그라운드 메시지 수신:", payload);
-
+    alert("onForegroundMessage 11111");
+    console.log("onForegroundMessage 11111");
+    
     // 알림 데이터 추출
     const { title, body, icon } = payload.data || {};
     const timestamp = payload.data?.timestamp || Date.now().toString();
 
     // 콜백 함수 호출 및 데이터 전달
     if (callback) {
+      alert("onForegroundMessage 2222");
+      console.log("onForegroundMessage 2222");
       callback({
         title: title || "Default Title",
         body: body || "Default Body",
@@ -79,21 +82,29 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
       });
     }
 
+    alert("onForegroundMessage 3333");
+    console.log("onForegroundMessage 3333");
+
     // 브라우저 알림 표시
     if (Notification.permission === "granted") {
       try {
         console.log("알림 권한이 허용되었습니다.");
+        alert("onForegroundMessage 4444");
+
         new Notification(title || "Default Title", {
           body: body || "Default Body",
           icon: icon || "/favicon.ico",
           tag: timestamp,
         });
         console.log("푸시 알림 표시 성공");
+        alert("onForegroundMessage 5555");
       } catch (error) {
         console.error("푸시 알림 표시 실패:", error);
+        alert("onForegroundMessage 6666");
       }
     } else {
       console.error("알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요.");
+      alert("onForegroundMessage 7777");
     }
   });
 };

@@ -63,6 +63,13 @@ const App = () => {
     const handleForegroundMessage = (payload) => {
       console.log("Foreground message received:", payload);
 
+      alert(`포그라운드 메세지 수신 in app.tsx`);
+      alert(`data?.title: ${payload.data?.title}`);
+      alert(`data?.body: ${payload.data?.body}`);
+      alert(`notification?.title: ${payload.notification?.title}`);
+      alert(`notification?.body: ${payload.notification?.body}`);
+      alert(`생짜 payload: ${payload}`);
+
       // Extract notification data
       const { title, body, icon } = payload.data || {};
 

@@ -77,9 +77,13 @@ const NotificationList: React.FC = () => {
     } else if (title.startsWith("도전과제")) {
       navigate("/challenge");
     } else if (title.startsWith("직무별")) {
-      navigate("/quest");
+      navigate("/experience-point?tab=receip");
     } else if (title.startsWith("리더부여")) {
-      navigate("/quest");
+      navigate("/experience-point?tab=receip");
+    } else if (title.startsWith("전사")) {
+      navigate("/experience-point?tab=receip");
+    } else if (title.startsWith("인사평가")) {
+      navigate("/mypage");
     }
     try {
       // 알림 읽음 상태로 변경

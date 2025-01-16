@@ -736,6 +736,12 @@ const Deco = styled.img`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+
+  &[src=""],
+  &:not([src]) {
+    visibility: hidden;
+    display: none;
+  }
 `;
 
 const DecoContainer = styled.div`
@@ -751,6 +757,9 @@ const DecoContainer = styled.div`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  &:empty {
+    display: none;
+  }
 `;
 
 const EfectContainer = styled.div`
@@ -763,6 +772,11 @@ const EfectContainer = styled.div`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  &[src=""],
+  &:not([src]) {
+    visibility: hidden;
+    display: none;
+  }
 `;
 
 const Effect = styled.img`
@@ -779,4 +793,7 @@ const Effect = styled.img`
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  &:empty {
+    display: none;
+  }
 `;

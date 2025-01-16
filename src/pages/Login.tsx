@@ -18,6 +18,7 @@ import {
   requestPermissionAndGetToken,
   onForegroundMessage,
 } from "../utils/firebase/messaging.ts";
+import LoadingModal from "../components/loading/Loading.tsx";
 
 function Login() {
   const navigate = useNavigate();
@@ -26,12 +27,14 @@ function Login() {
   const [userPWD, setUserPWD] = useState<string>("");
   const [isLoginAvailable, setIsLoginAvailable] = useState<boolean>(false);
   const [isLoginFailModalOpen, setIsLoginFailModalOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Function to handle login
   const handleLogin = async () => {
     if (!isLoginAvailable) return;
 
     try {
+      setIsLoading(true);
       // Call the login API
       const result = await login(userID, userPWD);
 
@@ -50,15 +53,21 @@ function Login() {
 
           if (registerResponse.message) {
             console.log("FCM 토큰 등록 성공:", registerResponse.message);
+            setIsLoading(false);
           } else {
             console.error("FCM 토큰 등록 실패:", registerResponse.message);
+            setIsLoading(false);
           }
         } catch (error) {
           console.error("FCM 토큰 등록 요청 실패:", error.message);
+          setIsLoading(false);
         }
       } else {
         console.warn("FCM 토큰을 가져올 수 없습니다.");
+        setIsLoading(false);
       }
+
+      setIsLoading(false);
 
       if (result.data.userRole === "USER") {
         navigate("/home");
@@ -67,6 +76,7 @@ function Login() {
       }
     } catch (error) {
       console.error("Login failed:", error);
+      setIsLoading(false);
       openLoginFailModal();
     }
   };
@@ -125,6 +135,8 @@ function Login() {
         description="아이디와 비밀번호를 다시 입력해주세요."
         onAcceptFunc={closeLoginFailModal}
       />
+
+      <LoadingModal isOpen={isLoading} />
     </LoginScreenContainer>
   );
 }

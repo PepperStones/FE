@@ -11,15 +11,19 @@ import "./styles/color.css";
 import './styles/font.css';
 import "./styles/utilities.css";
 
-import {
-  requestPermissionAndGetToken,
-  onForegroundMessage,
-} from "./utils/firebase/messaging.ts";
-// FCM 토큰 요청 및 권한 확인
-requestPermissionAndGetToken();
+// import {
+//   requestPermissionAndGetToken,
+//   onForegroundMessage,
+// } from "./utils/firebase/messaging.ts";
+// // FCM 토큰 요청 및 권한 확인
+// requestPermissionAndGetToken();
 
-// 포그라운드 메시지 처리
-onForegroundMessage();
+// // 포그라운드 메시지 처리
+// onForegroundMessage();
+
+import { onMessageListener, requestPermissionAndGetToken } from "./utils/firebase/firebase.js";
+requestPermissionAndGetToken();
+onMessageListener();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -41,6 +45,8 @@ if ("serviceWorker" in navigator) {
       console.error("[Service Worker] 서비스 워커 등록 실패:", error);
     });
 }
+
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA

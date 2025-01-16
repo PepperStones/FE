@@ -15,6 +15,7 @@ import allStar from "../assets/images/star/all_star.png";
 import { fetchHome, HomeResponse } from "../api/user/HomeApi.ts";
 import StarAnimation2 from "../components/star/StarAnimation2.tsx";
 import SpaceImg from "../assets/images/space.png";
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -28,6 +29,7 @@ const Home: React.FC = () => {
     const fetchHomeData = async () => {
       try {
         const response = await fetchHome();
+
         setHomeData(response);
       } catch (error) {
         console.error("Error fetching Home:", error);
@@ -37,13 +39,13 @@ const Home: React.FC = () => {
     fetchHomeData();
   }, []);
 
+  if (!homeData) {
+    return navigate("/login");
+  }
+
   const togglePopup = () => {
     setIsPopupOpen((prev) => !prev);
   };
-
-  if (!homeData) {
-    return navigate('/login');
-  }
 
   const hometitle = {
     first:

@@ -269,8 +269,8 @@ const Container = styled.div`
 
 const StarMapContainer = styled(motion.div)`
   position: relative; /* 자식 요소를 기준으로 배치 */
-  width: 948px;
-  height: 642px;
+  width: 2590px;
+  height: 1750px;
 `;
 
 const ConstellationImage = styled.img`

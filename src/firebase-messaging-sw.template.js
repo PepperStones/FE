@@ -23,7 +23,6 @@ importScripts(
 
     console.log('페이로드 notification:', payload.notification); 
     console.log('페이로드 data:', payload.data);
-    alert("onBackgroundMessage 1111");
 
     const timestamp = payload.data?.timestamp || Date.now().toString();
     const notificationTitle = payload.data?.title || 'Default Title';
@@ -34,4 +33,5 @@ importScripts(
     };
   
     self.registration.showNotification(notificationTitle, notificationOptions);
+    console.log("푸시 알림 표시 성공");
   });

@@ -725,14 +725,17 @@ const SpaceManButton = styled.div`
 const Deco = styled.img`
   width: auto;
   height: auto;
-  max-width: 100%;
+  max-width: 100px;
   max-height: 100%;
   object-fit: contain;
   aspect-ratio: 1 / 1;
   transform: rotate(-18deg); /* 10도 회전 */
-  border: none; /* 명시적으로 추가 */
-  outline: none; /* 기본 아웃라인 제거 */
-  background: transparent; /* 배경색 제거 */
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 `;
 
 const DecoContainer = styled.div`
@@ -742,9 +745,12 @@ const DecoContainer = styled.div`
   transform: translate(-50%, -50%);
   z-index: 500;
 
-  border: none; /* 명시적으로 추가 */
-  outline: none; /* 기본 아웃라인 제거 */
-  background: transparent; /* 배경색 제거 */
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 `;
 
 const EfectContainer = styled.div`
@@ -752,12 +758,11 @@ const EfectContainer = styled.div`
   border: none;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  outline: none; /* 기본 아웃라인 제거 */
-  background: transparent; /* 배경색 제거 */
-
-  border: none; /* 명시적으로 추가 */
-  outline: none; /* 기본 아웃라인 제거 */
-  background: transparent; /* 배경색 제거 */
+  outline: none !important;
+  background: transparent !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 `;
 
 const Effect = styled.img`
@@ -768,7 +773,10 @@ const Effect = styled.img`
   object-fit: contain;
   aspect-ratio: 1 / 1;
 
-  border: none; /* 명시적으로 추가 */
-  outline: none; /* 기본 아웃라인 제거 */
-  background: transparent; /* 배경색 제거 */
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 `;

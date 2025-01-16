@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { createGlobalStyle } from 'styled-components';
 import ProtectedRoute from "./utils/ProtectedRoute.tsx";
+import { onForegroundMessage } from "./utils/firebase/messaging.ts";
+import PushModal from "./components/modal/ForegroundPushModal.tsx";
 
 // ⇩⇩⇩ Init Screen Routes ⇩⇩⇩ //
 import Splash from "./pages/Splash.tsx";
@@ -53,11 +55,38 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const App = () => {
+  const [isPushModalOpen, setIsPushModalOpen] = useState(false);
+  const [pushData, setPushData] = useState({ title: "", body: "", icon: "" });
 
+  useEffect(() => {
+    // Subscribe to foreground messages
+    const handleForegroundMessage = (payload) => {
+      console.log("Foreground message received:", payload);
 
-  if (window.matchMedia("(display-mode: standalone)").matches) {
-    console.log("PWA 환경에서 실행 중입니다.");
-  }
+      // Extract notification data
+      const { title, body, icon } = payload.data || {};
+
+      // Update state with notification data
+      setPushData({
+        title: title || "Default Title",
+        body: body || "Default Body",
+        icon: icon || "/favicon.ico",
+      });
+
+      // Open modal
+      setIsPushModalOpen(true);
+    };
+
+    // Call the onForegroundMessage function and pass the handler
+    onForegroundMessage(handleForegroundMessage);
+
+    // Cleanup function (if necessary)
+    return () => {
+      // No specific cleanup needed as Firebase handles subscriptions internally
+    };
+  }, []);
+
+  const closePushModal = () => setIsPushModalOpen(false);
 
   useEffect(() => {
     // 슬라이드 제스처 방지 (iOS)
@@ -74,6 +103,7 @@ const App = () => {
   return (
     <>
       <GlobalStyle />
+
       <BrowserRouter>
 
         <Routes>
@@ -108,6 +138,12 @@ const App = () => {
         </Routes>
 
       </BrowserRouter>
+
+      <PushModal
+        showPushModal={isPushModalOpen}
+        errorMessage={pushData.body}
+        onAcceptFunc={closePushModal}
+      />
     </>
   );
 };

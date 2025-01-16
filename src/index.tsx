@@ -11,16 +11,6 @@ import "./styles/color.css";
 import './styles/font.css';
 import "./styles/utilities.css";
 
-import {
-  requestPermissionAndGetToken,
-  onForegroundMessage,
-} from "./utils/firebase/messaging.ts";
-// FCM 토큰 요청 및 권한 확인
-requestPermissionAndGetToken();
-
-// 포그라운드 메시지 처리
-onForegroundMessage();
-
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

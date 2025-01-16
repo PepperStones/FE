@@ -730,6 +730,9 @@ const Deco = styled.img`
   object-fit: contain;
   aspect-ratio: 1 / 1;
   transform: rotate(-18deg); /* 10도 회전 */
+  border: none; /* 명시적으로 추가 */
+  outline: none; /* 기본 아웃라인 제거 */
+  background: transparent; /* 배경색 제거 */
 `;
 
 const DecoContainer = styled.div`
@@ -764,4 +767,8 @@ const Effect = styled.img`
   max-height: 100%;
   object-fit: contain;
   aspect-ratio: 1 / 1;
+
+  border: none; /* 명시적으로 추가 */
+  outline: none; /* 기본 아웃라인 제거 */
+  background: transparent; /* 배경색 제거 */
 `;

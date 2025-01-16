@@ -51,7 +51,7 @@ const QuestCardBtn = ({ title, subtitle, maxCondition, mediumCondition, progress
                             maxProgress={rate !== null ? progress.maxProgress * rate / 100 : progress.maxProgress}
                             Variation={progress.Variable}
                             circleRadius={progress.circleRadius}
-                            isQuestDetail={false}
+                            isQuestDetail={true}
                         />
                     </ProgressCircleContainer>
 

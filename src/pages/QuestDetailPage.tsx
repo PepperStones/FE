@@ -254,6 +254,11 @@ function QuestDetailPage() {
                         currentProgress = 10;
                     }
 
+                    const lastValidIndex = questDetails?.data.questList.length - 1; // 마지막 유효한 item의 index
+                    if (index > lastValidIndex) {
+                        currentProgress = 0;
+                    }
+
                     // 각 버튼의 각도 계산
                     const buttonAngle = angleIncrement * index; // 버튼의 고유 각도
                     const currentRotation = (rotationRef.current % 360 + 360) % 360; // 현재 회전 각도 (0~360 범위로 정규화)

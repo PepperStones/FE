@@ -97,10 +97,10 @@ stroke: ${({ progressPercent, isQuestDetail }) =>
             : progressPercent === 100
                 ? "var(--orange-60)"
                 : progressPercent <= 30
-                    ? "#A88077"
+                    ? "#98fb98"
                     : progressPercent <= 50
-                        ? "#FF8365"
-                        : "#4caf50"};
+                        ? "#66cdaa"
+                        : "#006400"};
 stroke-linecap: round; /* Rounded ends for the progress */
 transition: stroke-dashoffset 0.35s ease; /* Smooth animation */
 `;

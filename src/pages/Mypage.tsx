@@ -17,42 +17,13 @@ import PasswordImg from '../assets/images/yellow_lock.png'
 import SettingImg from "../assets/images/admin/orange_group.png"
 import GoIconImg from '../assets/images/lightgray_arrow_right.png'
 
-import S0DxEx from '../assets/images/customItem/S0DxEx.png'
-import S0DxE0 from '../assets/images/customItem/S0DxE0.png'
-import S0D0Ex from '../assets/images/customItem/S0D0Ex.png'
-import S0D0E0 from '../assets/images/customItem/S0D0E0.png'
-
-import S1DxEx from '../assets/images/customItem/S1DxEx.png'
-import S1DxE0 from '../assets/images/customItem/S1DxE0.png'
-import S1D0Ex from '../assets/images/customItem/S1D0Ex.png'
-import S1D0E0 from '../assets/images/customItem/S1D0E0.png'
-
-import S2DxEx from '../assets/images/customItem/S2DxEx.png'
-import S2DxE0 from '../assets/images/customItem/S2DxE0.png'
-import S2D0Ex from '../assets/images/customItem/S2D0Ex.png'
-import S2D0E0 from '../assets/images/customItem/S2D0E0.png'
-
-import S3DxEx from '../assets/images/customItem/S3DxEx.png'
-import S3DxE0 from '../assets/images/customItem/S3DxE0.png'
-import S3D0Ex from '../assets/images/customItem/S3D0Ex.png'
-import S3D0E0 from '../assets/images/customItem/S3D0E0.png'
-
-import S4DxEx from '../assets/images/customItem/S4DxEx.png'
-import S4DxE0 from '../assets/images/customItem/S4DxE0.png'
-import S4D0Ex from '../assets/images/customItem/S4D0Ex.png'
-import S4D0E0 from '../assets/images/customItem/S4D0E0.png'
-
-import S5DxEx from '../assets/images/customItem/S5DxEx.png'
-import S5DxE0 from '../assets/images/customItem/S5DxE0.png'
-import S5D0Ex from '../assets/images/customItem/S5D0Ex.png'
-import S5D0E0 from '../assets/images/customItem/S5D0E0.png'
-
 import { fetchMyInfo, fetchStarCustomization, MypageInfoResponse, StarCustomizationResponse } from "../api/user/MypageApi.ts";
+import { profileImgMap, generateProfileImgKey } from '../utils/ProfileImageUtil.ts';
 
 // Keyframes 정의
 const slideBwdTop = keyframes`
   0% {
-    transform: scale(2.3) translateZ(160px) translateY(50px);
+    transform: scale(2.3) translateZ(160px) translateY(35px);
   }
   100% {
     transform: scale(1) translateZ(0px) translateY(0px);
@@ -67,38 +38,6 @@ const fadeIn = keyframes`
     opacity: 1;
   }
 `;
-
-const profileImgMap = {
-    "S0DxEx": S0DxEx,
-    "S0DxE0": S0DxE0,
-    "S0D0Ex": S0D0Ex,
-    "S0D0E0": S0D0E0,
-
-    "S1DxEx": S1DxEx,
-    "S1DxE0": S1DxE0,
-    "S1D0Ex": S1D0Ex,
-    "S1D0E0": S1D0E0,
-
-    "S2DxEx": S2DxEx,
-    "S2DxE0": S2DxE0,
-    "S2D0Ex": S2D0Ex,
-    "S2D0E0": S2D0E0,
-
-    "S3DxEx": S3DxEx,
-    "S3DxE0": S3DxE0,
-    "S3D0Ex": S3D0Ex,
-    "S3D0E0": S3D0E0,
-
-    "S4DxEx": S4DxEx,
-    "S4DxE0": S4DxE0,
-    "S4D0Ex": S4D0Ex,
-    "S4D0E0": S4D0E0,
-
-    "S5DxEx": S5DxEx,
-    "S5DxE0": S5DxE0,
-    "S5D0Ex": S5D0Ex,
-    "S5D0E0": S5D0E0,
-};
 
 function Mypage() {
     const Center = {
@@ -136,12 +75,6 @@ function Mypage() {
     const closeInstallModal = () => setIsInstallModalOpen(false);
     const openLogOutModal = () => setIsLogOutModalOpen(true);
     const closeLogOutModal = () => setIsLogOutModalOpen(false);
-
-    // 프로필 이미지 키 생성 함수
-    const generateProfileImgKey = (skin: string | null, deco: string | null, effect: string | null) => {
-        if (!skin || !deco || !effect) return null;
-        return `${skin}${deco}${effect}`; // 예: "S2D3E5"
-    };
 
     useEffect(() => {
         const loadData = async () => {
@@ -212,9 +145,9 @@ function Mypage() {
                 <ProfileContainer>
                     <ProfileImageContainer isFromCustomize={isFromCustomize}>
 
-                        <ProfileImage isD0={profileImg?.includes('D0') ?? false} src={profileImg || undefined} alt="프로필 이미지" />
+                        <ProfileImage isD0={profileImg?.includes('D0') ?? false} isE0={profileImg?.includes('E0') ?? false} src={profileImg || undefined} alt="프로필 이미지" />
 
-                        <EditIcon src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
+                        <EditIcon isD0={profileImg?.includes('D0') ?? false} src={EditIconImg} alt="아이콘" onClick={handleCustomizingClick} />
                     </ProfileImageContainer>
                     <ProfileName className='title-md-300'>{myInfo?.name}</ProfileName>
                     <ProfileEIN className='text-sm-300'>{myInfo?.companyNum}</ProfileEIN>
@@ -312,6 +245,10 @@ align-items: center;
 `;
 
 const ProfileImageContainer = styled.div<{ isFromCustomize: boolean }>`
+display: flex;
+flex-direction: column;
+align-items: center;
+
     position: relative;
     width: 100px;
     height: 100px;
@@ -321,16 +258,17 @@ const ProfileImageContainer = styled.div<{ isFromCustomize: boolean }>`
     ${({ isFromCustomize }) => isFromCustomize && css`animation: ${slideBwdTop} 1s cubic-bezier(0.25, 0.45, 0.46, 0.94) both;`}
 `;
 
-const ProfileImage = styled.img<{ isD0: boolean }>`
-width: 97px;
+const ProfileImage = styled.img<{ isD0: boolean, isE0: boolean }>`
+width: ${({ isE0 }) => (isE0 ? '113' : '97')}px;
 height: ${({ isD0 }) => (isD0 ? '113' : '97')}px;
 
+margin-right: ${({ isE0 }) => (isE0 ? '10' : '0')}px;
 margin-bottom: 20px;
 `;
 
-const EditIcon = styled.img`
+const EditIcon = styled.img<{isD0: boolean}>`
     position: absolute;
-    bottom: 5px; /* 오른쪽 하단에 위치 */
+    bottom: ${({ isD0 }) => (isD0 ? '0' : '5')}px; /* 오른쪽 하단에 위치 */
     right: 5px;
     width: 28px; /* 아이콘 크기 */
     height: 28px;

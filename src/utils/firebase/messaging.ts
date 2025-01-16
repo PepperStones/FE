@@ -10,19 +10,15 @@ const requestNotificationPermission = async (): Promise<boolean> => {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
       console.log("알림 권한이 허용되었습니다.");
-      alert("알림 권한이 허용되었습니다.");
       return true;
     } else if (permission === "denied") {
       console.warn("알림 권한이 거부되었습니다.");
-      alert("알림 권한이 거부되었습니다.");
     } else {
       console.info("사용자가 알림 권한을 결정하지 않았습니다.");
-      alert("사용자가 알림 권한을 결정하지 않았습니다.");
     }
     return false;
   } catch (error) {
     console.error("알림 권한 요청 중 오류 발생:", error);
-    alert("알림 권한 요청 중 오류 발생");
     return false;
   }
 };
@@ -38,7 +34,6 @@ export const requestPermissionAndGetToken = async () => {
        }
 
       console.log("Notification permission granted.");
-      alert("Notification permission granted.");
       const token = await getToken(messaging, {
         vapidKey,
       });
@@ -49,15 +44,12 @@ export const requestPermissionAndGetToken = async () => {
         // 서버로 토큰 전송 가능
       } else {
         console.log("No registration token available.");
-        alert("No registration token available.");
       }
     } else {
       console.error("Notification permission denied.");
-      alert("Notification permission denied.");
     }
   } catch (error) {
     console.error("Error getting token:", error);
-    alert("Error getting token");
   }
 };
 

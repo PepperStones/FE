@@ -14,6 +14,7 @@ import StarSkin4 from "../assets/images/reward/star_skin_5.png";
 import StarSkin5 from "../assets/images/reward/star_skin_6.png";
 
 import { fetchChallenges, receiveChallengeReward, Challenge } from "../api/user/ChallengeApi.ts";
+import Realistic from "../components/animation/Realistic.tsx";
 
 const rewardImageMap: Record<string, string> = {
   S1: StarSkin1,
@@ -31,6 +32,15 @@ function ChallengeQuest() {
   const handleBackIconClick = () => navigate("/home");
   const openSuccessModal = () => setIsSuccessModalOpen(true);
   const closeSuccessModal = () => setIsSuccessModalOpen(false);
+
+  const [startReceiveAnimation, setStartReceiveAnimation] = useState(false);
+
+  const triggerAnimation = () => {
+    setStartReceiveAnimation(false); // 먼저 false로 초기화
+    setTimeout(() => {
+      setStartReceiveAnimation(true); // 이후 true로 설정
+    }, 0); // 짧은 지연 시간 추가
+  };
 
   // 도전과제 리스트업 API
   useEffect(() => {
@@ -65,7 +75,7 @@ function ChallengeQuest() {
             : challenge
         )
       );
-
+      triggerAnimation();
       openSuccessModal();
     } catch (error: any) {
       console.error("Error receiving reward:", error);
@@ -83,7 +93,7 @@ function ChallengeQuest() {
 
   return (
     <ChallengeQuestContainer>
-      <TopNav lefter={NavItem} center={NavItem} righter={null} />
+      <TopNav lefter={NavItem} center={NavItem} righter={null}/>
 
       <QuestContainer>
         <QuestTitle className="text-md-200">
@@ -119,6 +129,8 @@ function ChallengeQuest() {
         aboveButton={false}
       />
 
+      <AnimationContainer><Realistic onStart={startReceiveAnimation} /></AnimationContainer>
+
     </ChallengeQuestContainer>
   );
 }
@@ -144,4 +156,13 @@ const QuestTitle = styled.div`
   span {
     color: var(--orange-80);
   }
+`;
+
+const AnimationContainer = styled.div`
+  display: flex;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 `;

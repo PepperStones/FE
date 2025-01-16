@@ -53,19 +53,3 @@ importScripts(
 
 //   self.registration.showNotification(notificationTitle, notificationOptions);
 // });
-
-// 포그라운드 메시지 처리
-self.addEventListener("message", (event) => {
-  console.log("Service Worker에서 메시지 수신:", event.data);
-  
-  if (event.data.type === 'SHOW_NOTIFICATION') {
-    const { title, body, icon } = event.data.payload;
-    alert("푸시 알림 표시 성공직전");
-    return self.registration.showNotification(title || "Default Title", {
-      body: body || "Default Body",
-      icon: icon || "/favicon.ico",
-      tag: Date.now().toString(), // 각 알림을 구분하기 위한 고유 태그
-      data: event.data.payload // 추가 데이터 저장
-    });
-  }
-});

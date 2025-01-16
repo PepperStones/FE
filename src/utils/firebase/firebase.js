@@ -129,39 +129,41 @@ export const onMessageListener = () => {
     console.log('notificationOptions:', notificationOptions.body);
     alert('notificationTitle:', payload.data.title);
     alert('notificationOptions:', notificationOptions.body);
-    new Notification(notificationTitle, notificationOptions);
 
-    // 서비스 워크가 종료되는 문제
-    // try {
-    //       // 서비스 워커가 준비될 때까지 대기
-    //       const registration = await navigator.serviceWorker.ready;
-    //       if (!registration.active) {
-    //         throw new Error('활성화된 서비스 워커가 없습니다.');
-    //       }
-    //       // 웹일 때 
-    //       if (!isMobile) {
-    //         new Notification(
-    //             notificationTitle,
-    //             notificationOptions,
-    //         );
-    //       // 모바일 중에서도 (모바일웹 또는 PWA)일 때    
-    //       } else {
-    //           // 서비스 워커 로직으로 구현
-    //           navigator.serviceWorker.ready.then(function (registration) {
-    //               registration.showNotification(
-    //                   notificationTitle,
-    //                   notificationOptions,
-    //               );
-    //           });
-    //       }
-    //       console.log('알림 표시 완료');
-    //       alert('알림 표시 완료');
-    //   } catch (error ) {
-    //     console.error('알림 표시 중 오류 발생:', error);
-    //     alert('알림 표시 중 오류 발생');
-    //     // 폴백: 기본 Notification API 사용 시도
-    //     new Notification(notificationTitle, notificationOptions);
-    //   }
+    try {
+          // 서비스 워커가 준비될 때까지 대기
+          const registration = await navigator.serviceWorker.ready;
+          if (!registration.active) {
+            throw new Error('활성화된 서비스 워커가 없습니다.');
+          }
+          // 웹일 때 
+          if (!isMobile) {
+            console.log('웹에서 알림 표시');
+            alert('웹에서 알림 표시');
+            new Notification(
+                notificationTitle,
+                notificationOptions,
+            );
+          // 모바일 중에서도 (모바일웹 또는 PWA)일 때    
+          } else {
+              console.log('모바일에서 알림 표시');
+              alert('모바일에서 알림 표시');
+              // 서비스 워커 로직으로 구현
+              navigator.serviceWorker.ready.then(function (registration) {
+                  registration.showNotification(
+                      notificationTitle,
+                      notificationOptions,
+                  );
+              });
+          }
+          console.log('알림 표시 완료');
+          alert('알림 표시 완료');
+      } catch (error ) {
+        console.error('알림 표시 중 오류 발생:', error);
+        alert('알림 표시 중 오류 발생');
+        // 폴백: 기본 Notification API 사용 시도
+        new Notification(notificationTitle, notificationOptions);
+      }
   });
 };
 

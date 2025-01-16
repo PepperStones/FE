@@ -14,10 +14,11 @@ import ActLock from "../assets/images/lightgray_lock.png";
 import { login } from "../api/user/AuthApi.ts";
 import { registerFcmToken } from "../api/user/registerFcmTokenAPI.ts";
 
-import {
-  requestPermissionAndGetToken,
-  onForegroundMessage,
-} from "../utils/firebase/messaging.ts";
+// import {
+//   requestPermissionAndGetToken,
+//   onForegroundMessage,
+// } from "../utils/firebase/messaging.ts";
+import { onMessageListener, requestPermissionAndGetToken } from "../utils/firebase/firebase.js";
 
 function Login() {
   const navigate = useNavigate();
@@ -61,7 +62,8 @@ function Login() {
       }
 
       // 포그라운드 메시지 처리
-      onForegroundMessage();
+      //onForegroundMessage();
+      onMessageListener();
 
       if (result.data.userRole === "USER") {
         navigate("/home");

@@ -4,12 +4,13 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 import backIcon from "../assets/images/left_arrow.png";
-import starIcon from "../assets/images/solar_star-line-duotone.png";
-import grayStarIcon from "../assets/images/gray_solar_star-line-duotone.png";
-import pinIcon from "../assets/images/pin.png";
-import chartIcon from "../assets/images/hugeicons_chart-evaluation.png";
-import grayChartIcon from "../assets/images/gray_hugeicons_chart-evaluation.png";
-
+import starIcon from "../assets/images/notification/solar_star-line-duotone.png";
+import pinIcon from "../assets/images/notification/pin.png";
+import chartIcon from "../assets/images/notification/hugeicons_chart-evaluation.png";
+import questIcon from "../assets/images/notification/hugeicons_task-01.png";
+import leaderIcon from "../assets/images/notification/Vector-1.png";
+import companyIcon from "../assets/images/notification/solar_buildings-linear.png";
+import challengeIcon from "../assets/images/notification/chellenge.png";
 import TopNav from "../components/nav/TopNav.tsx";
 import AlertItem from "../components/button/AlertItem.tsx";
 import {
@@ -35,6 +36,16 @@ const NotificationList: React.FC = () => {
       return pinIcon;
     } else if (title.startsWith("상반기 인사평가")) {
       return chartIcon;
+    } else if (title.startsWith("하반기 인사평가")) {
+      return chartIcon;
+    } else if (title.startsWith("직무별")) {
+      return questIcon;
+    } else if (title.startsWith("리더부여")) {
+      return leaderIcon;
+    } else if (title.startsWith("전사")) {
+      return companyIcon;
+    } else if (title.startsWith("도전과제")) {
+      return challengeIcon;
     }
   };
 
@@ -65,6 +76,10 @@ const NotificationList: React.FC = () => {
       navigate("/board");
     } else if (title.startsWith("도전과제")) {
       navigate("/challenge");
+    } else if (title.startsWith("직무별")) {
+      navigate("/quest");
+    } else if (title.startsWith("리더부여")) {
+      navigate("/quest");
     }
     try {
       // 알림 읽음 상태로 변경
@@ -172,6 +187,11 @@ const NoticeContent = styled.div`
 const NoticeIcon = styled.img<{ src: string; isRead: boolean }>`
   width: 14px;
   height: 14px;
+
+  aspect-ratio: 1 / 1; /* 1:1 비율 유지 */
+
+  object-fit: contain; /* 비율 유지하며 크기 조정 */
+
   padding-top: 2px;
   padding-left: 2px;
   opacity: ${({ isRead }) => (isRead ? "0.5" : "1")};

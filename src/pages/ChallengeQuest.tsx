@@ -5,41 +5,29 @@ import styled from "styled-components";
 import TopNav from "../components/nav/TopNav.tsx";
 import QuestRewardBtn from "../components/button/QuestRewardBtn.tsx";
 import DefaultErrorModal from "../components/modal/DefaultErrorModal.tsx";
-
-import BackIcon from "../assets/images/left_arrow.png";
-import StarSkin1 from "../assets/images/reward/star_skin_2.png";
-import StarSkin2 from "../assets/images/reward/star_skin_3.png";
-import StarSkin3 from "../assets/images/reward/star_skin_4.png";
-import StarSkin4 from "../assets/images/reward/star_skin_5.png";
-import StarSkin5 from "../assets/images/reward/star_skin_6.png";
-
-import { fetchChallenges, receiveChallengeReward, Challenge } from "../api/user/ChallengeApi.ts";
 import Realistic from "../components/animation/Realistic.tsx";
 
-const rewardImageMap: Record<string, string> = {
-  S1: StarSkin1,
-  S2: StarSkin2,
-  S3: StarSkin3,
-  S4: StarSkin4,
-  S5: StarSkin5,
-};
+import BackIcon from "../assets/images/left_arrow.png";
+
+import { fetchChallenges, receiveChallengeReward, Challenge } from "../api/user/ChallengeApi.ts";
+import { starSkinMap } from '../utils/ProfileImageUtil.ts'
 
 function ChallengeQuest() {
   const navigate = useNavigate();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [startReceiveAnimation, setStartReceiveAnimation] = useState(false);
 
   const handleBackIconClick = () => navigate("/home");
   const openSuccessModal = () => setIsSuccessModalOpen(true);
   const closeSuccessModal = () => setIsSuccessModalOpen(false);
 
-  const [startReceiveAnimation, setStartReceiveAnimation] = useState(false);
-
-  const triggerAnimation = () => {
+  const triggerReceiveAnimation = () => {
     setStartReceiveAnimation(false); // 먼저 false로 초기화
     setTimeout(() => {
       setStartReceiveAnimation(true); // 이후 true로 설정
     }, 0); // 짧은 지연 시간 추가
+    setStartReceiveAnimation(false);
   };
 
   // 도전과제 리스트업 API
@@ -57,12 +45,9 @@ function ChallengeQuest() {
     loadChallenges();
   }, []);
 
-  // 아이템 받기 API
+  // 아이템 받기 Click 이벤트 처리
   const handleReceiveRewardClick = async (challengeProgressId: number) => {
     try {
-      console.log("Sending challengeProgressId:", challengeProgressId);
-
-      // API 호출
       const response = await receiveChallengeReward(challengeProgressId);
 
       console.log("Response data:", response);
@@ -75,12 +60,19 @@ function ChallengeQuest() {
             : challenge
         )
       );
-      triggerAnimation();
+
+      console.log("start 폭죽 이벤트");
+      triggerReceiveAnimation();
+      console.log("start 성공 모달 출력");
       openSuccessModal();
     } catch (error: any) {
       console.error("Error receiving reward:", error);
-      alert(error.message || "아이템 수령에 실패했습니다.");
+      // alert(error.message || "아이템 수령에 실패했습니다.");
     }
+  };
+
+  const handleAnimationComplete = () => {
+    setStartReceiveAnimation(false);
   };
 
   const NavItem = {
@@ -93,7 +85,7 @@ function ChallengeQuest() {
 
   return (
     <ChallengeQuestContainer>
-      <TopNav lefter={NavItem} center={NavItem} righter={null}/>
+      <TopNav lefter={NavItem} center={NavItem} righter={null} />
 
       <QuestContainer>
         <QuestTitle className="text-md-200">
@@ -106,7 +98,7 @@ function ChallengeQuest() {
             key={challenge.challengesId} // 고유한 key 값
             title={challenge.name}
             content={challenge.description}
-            rewardImg={rewardImageMap[challenge.itemValue]} // 보상 이미지 (임시)
+            rewardImg={starSkinMap[challenge.itemValue]}
             isAvailable={challenge.challengeProgress.completed} // 완료되지 않은 경우 활성화
             isDone={challenge.challengeProgress.receive} // 완료 여부
             progress={{
@@ -129,7 +121,8 @@ function ChallengeQuest() {
         aboveButton={false}
       />
 
-      <AnimationContainer><Realistic onStart={startReceiveAnimation} /></AnimationContainer>
+      <AnimationContainer><Realistic onStart={startReceiveAnimation} onComplete={handleAnimationComplete}/></AnimationContainer>
+
 
     </ChallengeQuestContainer>
   );
@@ -165,4 +158,6 @@ const AnimationContainer = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
+
+  pointer-events: none; /* 클릭 이벤트 차단 */
 `;

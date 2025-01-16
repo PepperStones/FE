@@ -485,8 +485,11 @@ const StarAnimation1: React.FC<HomePage> = ({
                       <SpaceManBubble style={{}}>
                         <img src={Bubble_Icon} alt="" />
                         <div>
-                          <p>힘드시죠? </p>
-                          <p>항상 고생해주셔서 감사합니다!</p>
+                          <p>
+                            힘드시죠?
+                            <br />
+                            항상 고생해주셔서 감사합니다!
+                          </p>
                         </div>
                       </SpaceManBubble>
                     )}

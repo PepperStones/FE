@@ -206,7 +206,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
         </Title>
         <PopupWrapper>
           <PopUp isPopupOpen={isPopupOpen}>
-            <MyInfo onClick={() => navigate("/experience-point?tab=current")}>
+            <MyInfo onClick={() => navigate("/experience-point?tab=receipt")}>
               <MyLevel>
                 <Lavel className="caption-sm-300">나의 레벨</Lavel>
                 <Text className="text-lg-300">{userData.level}</Text>
@@ -253,7 +253,7 @@ const HomeTopNav: React.FC<HomeTopNavProps> = ({
               <ExpDivider />
               <ExpDetail
                 className="caption-sm-200"
-                onClick={() => navigate("/experience-point?tab=receipt")}
+                onClick={() => navigate("/experience-point?tab=current")}
               >
                 자세히 보기
                 <DtailIcon src={RightArrow}></DtailIcon>

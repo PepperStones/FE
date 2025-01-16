@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
-//import { toast, ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { createGlobalStyle } from 'styled-components';
@@ -59,32 +59,29 @@ const GlobalStyle = createGlobalStyle`
 
 
 const App = () => {
-  const [isPushModalOpen, setIsPushModalOpen] = useState(false);
-  // const [pushData, setPushData] = useState({ title: "", body: "", icon: "" });
-
-  const closePushModal = () => setIsPushModalOpen(false);
+  const [pushData, setPushData] = useState({ title: "", body: "", icon: "" });
 
   // Toast 알림 함수
-  // const notify = (title, body) => {
-  //   toast(`${body}`);
-  // };
+  const notify = (title, body) => {
+    toast(`${body}`);
+  };
 
-  // useEffect(() => {
-  //   const handleForegroundMessage = (payload) => {
-  //     const { title, body } = payload || {};
-  //     notify(title || "Default Title", body || "Default Body");
+  useEffect(() => {
+    const handleForegroundMessage = (payload) => {
+      const { title, body } = payload || {};
+      notify(title || "Default Title", body || "Default Body");
 
-  //     // 모달 데이터 업데이트
-  //     setPushData({
-  //       title: title || "Default Title",
-  //       body: body || "Default Body",
-  //       icon: payload.icon || "/favicon.ico",
-  //     });
+      // 모달 데이터 업데이트
+      setPushData({
+        title: title || "Default Title",
+        body: body || "Default Body",
+        icon: "/favicon.ico",
+      });
 
-  //   };
+    };
 
-  //   onForegroundMessage(handleForegroundMessage); // Firebase 메시지 핸들러 등록
-  // }, []);
+    onForegroundMessage(handleForegroundMessage); // Firebase 메시지 핸들러 등록
+  }, []);
   
   useEffect(() => {
     // 슬라이드 제스처 방지 (iOS)
@@ -137,43 +134,37 @@ const App = () => {
 
       </BrowserRouter>
 
-      {/*<StyledToastContainer className='text-sm-300' limit={100} position="top-right" autoClose={5000} />
-
-      {/* <PushModal
-        showPushModal={isPushModalOpen}
-        errorMessage={pushData.body}
-        onAcceptFunc={closePushModal}
-      /> */}
+      <StyledToastContainer className='text-sm-300' limit={100} position="top-right" autoClose={5000} />
     </>
   );
 };
 
 export default App;
 
-// const StyledToastContainer = styled(ToastContainer)`
-//   /* ToastContainer 스타일 */
-//   &&&.Toastify__toast-container {
-//     width: 400px;
-//     padding: 20px 10px;
-//     z-index: 9999;
-//   }
+const StyledToastContainer = styled(ToastContainer)`
+  /* ToastContainer 스타일 */
+  &&&.Toastify__toast-container {
+    width: 400px;
+    padding: 20px 10px;
+    z-index: 9999;
+  }
 
-//   /* 개별 Toast 스타일 */
-//   .Toastify__toast {
-//     background-color: var(--orange-70);
-//     color: var(--oragne-100);
-//     border-radius: 10px;
-//     box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.30);
-//     padding: 5px 20px;
-//   }
+  /* 개별 Toast 스타일 */
+  .Toastify__toast {
+    background-color: var(--orange-70);
+    color: var(--oragne-100);
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.30);
+    padding: 5px 20px;
+  }
 
-//   /* Toast 본문 스타일 */
-//   .Toastify__toast-body {
-//     color: var(--oragne-100);
-//   }
+  /* Toast 본문 스타일 */
+  .Toastify__toast-body {
+    color: var(--oragne-100);
+  }
 
-//   /* 진행 바 스타일 */
-//   .Toastify__progress-bar {
-//     background-color: var(--orange-10);
-//   }
-// `;
+  /* 진행 바 스타일 */
+  .Toastify__progress-bar {
+    background-color: var(--orange-10);
+  }
+`;

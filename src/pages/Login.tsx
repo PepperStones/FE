@@ -68,7 +68,7 @@ function Login() {
       }
 
       // 포그라운드 메시지 처리
-      onForegroundMessage();
+      //onForegroundMessage();
 
       setIsLoading(false);
 

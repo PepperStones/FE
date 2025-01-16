@@ -153,8 +153,8 @@ export default App;
 const StyledToastContainer = styled(ToastContainer)`
   /* ToastContainer 스타일 */
   &&&.Toastify__toast-container {
-    width: 300px;
-    padding: 10px;
+    width: 400px;
+    padding: 20px 10px;
     z-index: 9999;
   }
 
@@ -164,7 +164,7 @@ const StyledToastContainer = styled(ToastContainer)`
     color: var(--oragne-100);
     border-radius: 10px;
     box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.30);
-    padding: 5px;
+    padding: 5px 20px;
   }
 
   /* Toast 본문 스타일 */

@@ -225,7 +225,7 @@ const StarAnimation1: React.FC<HomePage> = ({
 
       default:
         console.log("Unknown skin type");
-        return decoD0;
+        break;
     }
   };
   const calculateOpacityByLevel = (levelName: string | null): number => {

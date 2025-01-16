@@ -24,6 +24,8 @@ import decoD3 from "../../assets/images/customItem/deco/DecoD3.png";
 import decoD4 from "../../assets/images/customItem/deco/DecoD4.png";
 import decoD5 from "../../assets/images/customItem/deco/DecoD5.png";
 
+import effectE0 from "../../assets/images/customItem/effect/effectE0.png";
+
 import { HomeResponse } from "../api/user/HomeApi.ts";
 
 const starData = [
@@ -219,8 +221,23 @@ const StarAnimation1: React.FC<HomePage> = ({
 
     switch (deco) {
       case "D0":
-        console.log("Skin type is S0");
+        console.log("Skin type is D0");
         return decoD0;
+      // S0에 대한 처리
+
+      default:
+        console.log("Unknown skin type");
+        break;
+    }
+  };
+
+  const handleEffect = () => {
+    const effect = home.data.user.effect;
+
+    switch (effect) {
+      case "E0":
+        console.log("Skin type is E0");
+        return effectE0;
       // S0에 대한 처리
 
       default:
@@ -495,14 +512,36 @@ const StarAnimation1: React.FC<HomePage> = ({
                   </SpaceManContiner>
                 )}
                 {star.id === 1 && (
-                  <DecoContainer
-                    style={{
-                      left: `${star.x - 7}px`,
-                      top: `${star.y - 22}px`,
-                    }}
-                  >
-                    <Deco src={handleDeco()} />
-                  </DecoContainer>
+                  <>
+                    <DecoContainer
+                      style={{
+                        left: `${star.x - 7}px`,
+                        top: `${star.y - 22}px`,
+                      }}
+                    >
+                      <Deco src={handleDeco()} />
+                    </DecoContainer>
+                    <EfectContainer
+                      style={{
+                        left: `${star.x + 12}px`,
+                        top: `${star.y - 17}px`,
+                        width: "7px",
+                        height: "7px",
+                      }}
+                    >
+                      <Effect src={handleEffect()} />
+                    </EfectContainer>
+                    <EfectContainer
+                      style={{
+                        left: `${star.x - 12}px`,
+                        top: `${star.y + 8}px`,
+                        width: "13px",
+                        height: "13px",
+                      }}
+                    >
+                      <Effect src={handleEffect()} />
+                    </EfectContainer>
+                  </>
                 )}
 
                 <Star
@@ -709,4 +748,20 @@ const DecoContainer = styled.div`
   height: 9px;
   transform: translate(-50%, -50%);
   z-index: 500;
+`;
+
+const EfectContainer = styled.div`
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+`;
+
+const Effect = styled.img`
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  aspect-ratio: 1 / 1;
 `;

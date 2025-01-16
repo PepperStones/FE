@@ -10,12 +10,19 @@ import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
 
 import allStar from "../../assets/images/star/real_start.png";
 
-import starS0 from "../../assets/images/customItem/S0D0E0.png";
-import starS1 from "../../assets/images/customItem/S1D0E0.png";
-import starS2 from "../../assets/images/customItem/S2D0E0.png";
-import starS3 from "../../assets/images/customItem/S3D0E0.png";
-import starS4 from "../../assets/images/customItem/S4D0E0.png";
-import starS5 from "../../assets/images/customItem/S5D0E0.png";
+import starS0 from "../../assets/images/customItem/S0DxEx.png";
+import starS1 from "../../assets/images/customItem/S1DxEx.png";
+import starS2 from "../../assets/images/customItem/S2DxEx.png";
+import starS3 from "../../assets/images/customItem/S3DxEx.png";
+import starS4 from "../../assets/images/customItem/S4DxEx.png";
+import starS5 from "../../assets/images/customItem/S5DxEx.png";
+
+import decoD0 from "../../assets/images/customItem/deco/DecoD0.png";
+import decoD1 from "../../assets/images/customItem/deco/DecoD1.png";
+import decoD2 from "../../assets/images/customItem/deco/DecoD2.png";
+import decoD3 from "../../assets/images/customItem/deco/DecoD3.png";
+import decoD4 from "../../assets/images/customItem/deco/DecoD4.png";
+import decoD5 from "../../assets/images/customItem/deco/DecoD5.png";
 
 import { HomeResponse } from "../api/user/HomeApi.ts";
 
@@ -131,11 +138,13 @@ const StarAnimation1: React.FC<HomePage> = ({
     x: number;
     y: number;
   } | null>(null); // 말풍선 위치
-
   const [loading, setLoading] = useState(false);
   const [savedData, setSavedData] = useState<
     Array<{ level: string; total_experience: number | null }>
   >([]);
+
+  const [skin, setSkin] = useState("S0");
+  const [deco, setDeco] = useState("");
 
   const handleBubbleClick = async (x: number, y: number) => {
     if (!loading) {
@@ -202,6 +211,21 @@ const StarAnimation1: React.FC<HomePage> = ({
       default:
         console.log("Unknown skin type");
         return starS0;
+    }
+  };
+
+  const handleDeco = () => {
+    const deco = home.data.user.decoration;
+
+    switch (deco) {
+      case "D0":
+        console.log("Skin type is S0");
+        return decoD0;
+      // S0에 대한 처리
+
+      default:
+        console.log("Unknown skin type");
+        return decoD0;
     }
   };
   const calculateOpacityByLevel = (levelName: string | null): number => {
@@ -445,7 +469,7 @@ const StarAnimation1: React.FC<HomePage> = ({
                       width: "20px", // 별 크기보다 약간 크게
                       height: `10px`,
                       left: `${star.x}px`,
-                      top: `${star.y - 10}px`, // 별 위쪽에 위치
+                      top: `${star.y - 15}px`, // 별 위쪽에 위치
                       transform: "translate(-50%, -50%)",
                     }}
                     onClick={handleBubbleClick}
@@ -470,6 +494,17 @@ const StarAnimation1: React.FC<HomePage> = ({
                     />
                   </SpaceManContiner>
                 )}
+                {star.id === 1 && (
+                  <DecoContainer
+                    style={{
+                      left: `${star.x - 7}px`,
+                      top: `${star.y - 22}px`,
+                    }}
+                  >
+                    <Deco src={handleDeco()} />
+                  </DecoContainer>
+                )}
+
                 <Star
                   src={star.id === 1 ? handleSkin() : StarImage}
                   alt={`Star ${star.id}`}
@@ -623,6 +658,7 @@ const SpaceManBubble = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  z-index: 1000;
 
   > img {
     object-fit: cover; /* 이미지 크기 조정 */
@@ -655,4 +691,22 @@ const SpaceManButton = styled.div`
   background: rgba(217, 17, 17, 0);
   margin: auto;
   z-index: 1000;
+`;
+
+const Deco = styled.img`
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  aspect-ratio: 1 / 1;
+  transform: rotate(-18deg); /* 10도 회전 */
+`;
+
+const DecoContainer = styled.div`
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  z-index: 500;
 `;

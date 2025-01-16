@@ -32,37 +32,8 @@ import StarEffect3 from '../assets/images/reward/star_effect_4.png'
 import StarEffect4 from '../assets/images/reward/star_effect_5.png'
 import StarEffect5 from '../assets/images/reward/star_effect_6.png'
 
-import S0DxEx from '../assets/images/customItem/S0DxEx.png'
-import S0DxE0 from '../assets/images/customItem/S0DxE0.png'
-import S0D0Ex from '../assets/images/customItem/S0D0Ex.png'
-import S0D0E0 from '../assets/images/customItem/S0D0E0.png'
-
-import S1DxEx from '../assets/images/customItem/S1DxEx.png'
-import S1DxE0 from '../assets/images/customItem/S1DxE0.png'
-import S1D0Ex from '../assets/images/customItem/S1D0Ex.png'
-import S1D0E0 from '../assets/images/customItem/S1D0E0.png'
-
-import S2DxEx from '../assets/images/customItem/S2DxEx.png'
-import S2DxE0 from '../assets/images/customItem/S2DxE0.png'
-import S2D0Ex from '../assets/images/customItem/S2D0Ex.png'
-import S2D0E0 from '../assets/images/customItem/S2D0E0.png'
-
-import S3DxEx from '../assets/images/customItem/S3DxEx.png'
-import S3DxE0 from '../assets/images/customItem/S3DxE0.png'
-import S3D0Ex from '../assets/images/customItem/S3D0Ex.png'
-import S3D0E0 from '../assets/images/customItem/S3D0E0.png'
-
-import S4DxEx from '../assets/images/customItem/S4DxEx.png'
-import S4DxE0 from '../assets/images/customItem/S4DxE0.png'
-import S4D0Ex from '../assets/images/customItem/S4D0Ex.png'
-import S4D0E0 from '../assets/images/customItem/S4D0E0.png'
-
-import S5DxEx from '../assets/images/customItem/S5DxEx.png'
-import S5DxE0 from '../assets/images/customItem/S5DxE0.png'
-import S5D0Ex from '../assets/images/customItem/S5D0Ex.png'
-import S5D0E0 from '../assets/images/customItem/S5D0E0.png'
-
 import { fetchStarCustomization, StarCustomizationResponse, updateStarCustomization } from "../api/user/MypageApi.ts";
+import { starSkinMap, starDecoMap, starEffectMap, profileImgMap, generateProfileImgKey } from '../utils/ProfileImageUtil.ts';
 
 const slideFwdBottom = keyframes`
   0% {
@@ -82,65 +53,6 @@ const fadeIn = keyframes`
   }
 `;
 
-const profileImgMap = {
-    "S0DxEx": S0DxEx,
-    "S0DxE0": S0DxE0,
-    "S0D0Ex": S0D0Ex,
-    "S0D0E0": S0D0E0,
-
-    "S1DxEx": S1DxEx,
-    "S1DxE0": S1DxE0,
-    "S1D0Ex": S1D0Ex,
-    "S1D0E0": S1D0E0,
-
-    "S2DxEx": S2DxEx,
-    "S2DxE0": S2DxE0,
-    "S2D0Ex": S2D0Ex,
-    "S2D0E0": S2D0E0,
-
-    "S3DxEx": S3DxEx,
-    "S3DxE0": S3DxE0,
-    "S3D0Ex": S3D0Ex,
-    "S3D0E0": S3D0E0,
-
-    "S4DxEx": S4DxEx,
-    "S4DxE0": S4DxE0,
-    "S4D0Ex": S4D0Ex,
-    "S4D0E0": S4D0E0,
-
-    "S5DxEx": S5DxEx,
-    "S5DxE0": S5DxE0,
-    "S5D0Ex": S5D0Ex,
-    "S5D0E0": S5D0E0,
-};
-
-const starSkinMap: Record<string, string> = {
-    S0: StarSkin0,
-    S1: StarSkin1,
-    S2: StarSkin2,
-    S3: StarSkin3,
-    S4: StarSkin4,
-    S5: StarSkin5,
-};
-
-const starDecoMap: Record<string, string> = {
-    D0: StarDeco0,
-    D1: StarDeco1,
-    D2: StarDeco2,
-    D3: StarDeco3,
-    D4: StarDeco4,
-    D5: StarDeco5,
-};
-
-const starEffectMap: Record<string, string> = {
-    E0: StarEffect0,
-    E1: StarEffect1,
-    E2: StarEffect2,
-    E3: StarEffect3,
-    E4: StarEffect4,
-    E5: StarEffect5,
-};
-
 const tabOffsets = [0, 120, 240]; // 슬라이드 양
 
 function CustomizingPage() {
@@ -159,12 +71,6 @@ function CustomizingPage() {
     const [isD0, setIsD0] = useState<boolean | undefined>(false); // 여우
 
     const [animate, setAnimate] = useState(false);
-
-    // 프로필 이미지 키 생성 함수
-    const generateProfileImgKey = (skin: string | null, deco: string | null, effect: string | null) => {
-        if (!skin || !deco || !effect) return null;
-        return `${skin}${deco}${effect}`; // 예: "S2D3E5"
-    };
 
     useEffect(() => {
         const loadStarData = async () => {
@@ -366,7 +272,7 @@ function CustomizingPage() {
             <TopNav lefter={NavItem} center={NavItem} righter={null} />
 
             <StarCustomizingContainer>
-                <MainStar isD0={profileImg?.includes('Dx')} key={profileImg} src={profileImg} alt="메인 별 스킨" />
+                <MainStar isD0={profileImg?.includes('D0')} isE0={profileImg?.includes('E0')} key={profileImg} src={profileImg} alt="메인 별 스킨" />
 
                 <TabMenu activeIndex={activeTabIndex} isD0={profileImg?.includes('Dx')}>
                     <TabItem active={activeTab === '별 스킨'} onClick={() => handleTabClick('별 스킨', 0)}>
@@ -423,9 +329,9 @@ const StarCustomizingContainer = styled.div`
     margin-top: 30px;
 `;
 
-const MainStar = styled.img <{ isD0: boolean }>`
-    width: 212px;
-    height: ${({ isD0 }) => (isD0 ? 212 : 263)}px;
+const MainStar = styled.img <{ isD0: boolean, isE0: boolean }>`
+    width: ${({ isE0 }) => (isE0 ? 254 : 212)}px;
+    height: ${({ isD0 }) => (isD0 ? 263 : 212)}px;
 
     animation: ${slideFwdBottom} 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 `;
@@ -439,7 +345,7 @@ const TabMenu = styled.div<{ activeIndex: number, isD0: boolean }>`
     border-bottom: 1px solid var(--gray-40);
 
     gap: 35px;
-    margin-top: ${({ isD0 }) => (!isD0 ? 20 : 71)}px;
+    margin-top: ${({ isD0 }) => (isD0 ? 71 : 20)}px;
 
     &::after {
         content: '';

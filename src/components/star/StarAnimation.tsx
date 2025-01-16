@@ -749,7 +749,9 @@ const DecoContainer = styled.div`
   transform: translate(-50%, -50%);
   z-index: 500;
 
-  border: none;
+  border: none; /* 명시적으로 추가 */
+  outline: none; /* 기본 아웃라인 제거 */
+  background: transparent; /* 배경색 제거 */
 `;
 
 const EfectContainer = styled.div`
@@ -757,6 +759,12 @@ const EfectContainer = styled.div`
   border: none;
   transform: translate(-50%, -50%);
   z-index: 1000;
+  outline: none; /* 기본 아웃라인 제거 */
+  background: transparent; /* 배경색 제거 */
+
+  border: none; /* 명시적으로 추가 */
+  outline: none; /* 기본 아웃라인 제거 */
+  background: transparent; /* 배경색 제거 */
 `;
 
 const Effect = styled.img`

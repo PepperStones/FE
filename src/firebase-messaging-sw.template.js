@@ -34,15 +34,3 @@ importScripts(
   
     self.registration.showNotification(notificationTitle, notificationOptions);
   });
-  
-  self.addEventListener('install', (event) => {
-    console.log('서비스 워커 설치 완료');
-    // 새로운 워커가 바로 활성화되도록 설정
-    self.skipWaiting();
-  });
-  
-  self.addEventListener('activate', (event) => {
-    console.log('서비스 워커 활성화 완료');
-    // 새 워커가 클라이언트를 즉시 제어하도록 설정
-    event.waitUntil(clients.claim());
-  });

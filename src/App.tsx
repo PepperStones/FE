@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import styled from "styled-components";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -65,7 +66,7 @@ const App = () => {
 
   // Toast 알림 함수
   const notify = (title, body) => {
-    toast(`${title}: ${body}`);
+    toast(`${body}`);
   };
 
   useEffect(() => {
@@ -136,7 +137,7 @@ const App = () => {
 
       </BrowserRouter>
 
-      <ToastContainer limit={50} position="top-right" autoClose={5000} />
+      <StyledToastContainer className='text-sm-300' limit={100} position="top-right" autoClose={5000} />
 
       <PushModal
         showPushModal={isPushModalOpen}
@@ -148,3 +149,31 @@ const App = () => {
 };
 
 export default App;
+
+const StyledToastContainer = styled(ToastContainer)`
+  /* ToastContainer 스타일 */
+  &&&.Toastify__toast-container {
+    width: 300px;
+    padding: 10px;
+    z-index: 9999;
+  }
+
+  /* 개별 Toast 스타일 */
+  .Toastify__toast {
+    background-color: var(--orange-70);
+    color: var(--oragne-100);
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.30);
+    padding: 5px;
+  }
+
+  /* Toast 본문 스타일 */
+  .Toastify__toast-body {
+    color: var(--oragne-100);
+  }
+
+  /* 진행 바 스타일 */
+  .Toastify__progress-bar {
+    background-color: var(--orange-10);
+  }
+`;

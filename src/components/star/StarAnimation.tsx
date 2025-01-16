@@ -404,7 +404,7 @@ const StarAnimation1: React.FC<HomePage> = ({
     if (isPageOption === 0) {
       translateX = containerSize.width / 2 - myStar.x;
       translateY =
-        containerSize.height / 2 - myStar.y + (isPopupOpen ? 350 : 20);
+        containerSize.height / 2 - myStar.y + (isPopupOpen ? 350 : 50);
       scale = isPopupOpen ? 20 : 12;
     }
     if (isPageOption === 1) {
@@ -476,7 +476,7 @@ const StarAnimation1: React.FC<HomePage> = ({
                       width: "20px", // 별 크기보다 약간 크게
                       height: `10px`,
                       left: `${star.x}px`,
-                      top: `${star.y - 15}px`, // 별 위쪽에 위치
+                      top: `${star.y - 14}px`, // 별 위쪽에 위치
                       transform: "translate(-50%, -50%)",
                     }}
                     onClick={handleBubbleClick}
@@ -688,6 +688,7 @@ const SpaceManBubble = styled.div`
   justify-content: center;
   flex-direction: column;
   z-index: 1000;
+  margin-top: 0.5px;
 
   > img {
     object-fit: cover; /* 이미지 크기 조정 */

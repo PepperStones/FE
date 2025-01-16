@@ -166,6 +166,8 @@ function UpdatePwdPage() {
 
             </UpdatePasswordContainer>
 
+            <div style={{ height: '200px' }}></div>
+            
             <FooterNav />
         </UpdatePasswordPageContainer>
     );
@@ -176,6 +178,8 @@ export default UpdatePwdPage;
 const UpdatePasswordPageContainer = styled.div`
 display: flex;
 flex-direction: column;
+
+overflow-y: scroll;
 `;
 
 const UpdatePasswordContainer = styled.div`

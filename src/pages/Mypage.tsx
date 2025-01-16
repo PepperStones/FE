@@ -70,7 +70,7 @@ function Mypage() {
     };
 
     const handleUpdatePwdClick = () => navigate('/mypage-pwd');
-    const handleCustomizingClick = () => navigate('/mypage-customize');
+    const handleCustomizingClick = () => navigate('/mypage-customize', { state: { fromCustomize: true } });
     const openInstallModal = () => setIsInstallModalOpen(true);
     const closeInstallModal = () => setIsInstallModalOpen(false);
     const openLogOutModal = () => setIsLogOutModalOpen(true);

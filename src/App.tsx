@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { createGlobalStyle } from 'styled-components';
 import ProtectedRoute from "./utils/ProtectedRoute.tsx";
@@ -54,47 +56,35 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
+
 const App = () => {
   const [isPushModalOpen, setIsPushModalOpen] = useState(false);
   const [pushData, setPushData] = useState({ title: "", body: "", icon: "" });
 
+  const closePushModal = () => setIsPushModalOpen(false);
+
+  // Toast 알림 함수
+  const notify = (title, body) => {
+    toast(`${title}: ${body}`);
+  };
+
   useEffect(() => {
-    // Subscribe to foreground messages
     const handleForegroundMessage = (payload) => {
-      console.log("Foreground message received:", payload);
+      const { title, body } = payload || {};
+      notify(title || "Default Title", body || "Default Body");
 
-      alert(`포그라운드 메세지 수신 in app.tsx`);
-
-      // Extract notification data
-      const { title, body, icon } = payload || {};
-
-      // Update state with notification data
+      // 모달 데이터 업데이트
       setPushData({
         title: title || "Default Title",
         body: body || "Default Body",
-        icon: icon || "/favicon.ico",
+        icon: payload.icon || "/favicon.ico",
       });
 
-      // Open modal
-      setIsPushModalOpen(true);
     };
 
-    // Call the onForegroundMessage function and pass the handler
-    onForegroundMessage(handleForegroundMessage);
-
-    // Cleanup function (if necessary)
-    return () => {
-      // No specific cleanup needed as Firebase handles subscriptions internally
-    };
+    onForegroundMessage(handleForegroundMessage); // Firebase 메시지 핸들러 등록
   }, []);
-
-  useEffect(() => {
-    console.log("모달 열림 여부:", isPushModalOpen);
-    console.log("푸시 데이터:", pushData);
-  }, [isPushModalOpen, pushData]);
-
-  const closePushModal = () => setIsPushModalOpen(false);
-
+  
   useEffect(() => {
     // 슬라이드 제스처 방지 (iOS)
     const handleTouchStart = (e: TouchEvent) => {
@@ -145,6 +135,8 @@ const App = () => {
         </Routes>
 
       </BrowserRouter>
+
+      <ToastContainer limit={50} position="top-right" autoClose={5000} />
 
       <PushModal
         showPushModal={isPushModalOpen}

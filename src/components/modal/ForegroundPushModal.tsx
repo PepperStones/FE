@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled, { keyframes } from 'styled-components';
 
-import errorIcon from '../../assets/images/triangle_caution.png'
-import successIcon from '../../assets/images/admin/success.png'
-
 interface ForegroundPushModalProps {
   showPushModal: boolean;
   errorMessage: string;
@@ -45,7 +42,6 @@ const ForegroundPushModal: React.FC<ForegroundPushModalProps> = ({ showPushModal
   return (
     <Overlay onClick={handleOverlayClick}>
       <Content isClosing={isClosing} isSuccess={isSuccess}>
-        {isSuccess ? <ContentIcon src={successIcon} /> : <ContentIcon src={errorIcon} />}
         <ContentText className='text-sm-300'>{errorMessage}</ContentText>
       </Content>
       <div style={{ height: '620px' }}></div>

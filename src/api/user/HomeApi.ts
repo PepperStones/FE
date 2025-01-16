@@ -18,6 +18,9 @@ export interface User {
   jobName: string;
   recentExperience: number;
   totalExperienceThisYear: number;
+  skin: string;
+  decoration: string;
+  effect: string;
 }
 
 export interface Team {

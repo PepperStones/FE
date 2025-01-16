@@ -7,7 +7,15 @@ import tagImage from "../../assets/images/union.png";
 import spaceMan from "../../assets/images/spaceman.png";
 import levelsData from "../../constants/levels.json";
 import Bubble_Icon from "../../assets/images/star/spaceMan_bubble.png";
+
 import allStar from "../../assets/images/star/real_start.png";
+
+import starS0 from "../../assets/images/customItem/S0D0E0.png";
+import starS1 from "../../assets/images/customItem/S1D0E0.png";
+import starS2 from "../../assets/images/customItem/S2D0E0.png";
+import starS3 from "../../assets/images/customItem/S3D0E0.png";
+import starS4 from "../../assets/images/customItem/S4D0E0.png";
+import starS5 from "../../assets/images/customItem/S5D0E0.png";
 
 import { HomeResponse } from "../api/user/HomeApi.ts";
 
@@ -80,6 +88,9 @@ export interface User {
   centerName: string;
   jobName: string;
   recentExperience: number;
+  skin: string;
+  decoration: string;
+  effect: string;
   totalExperienceThisYear: number;
 }
 
@@ -131,13 +142,11 @@ const StarAnimation1: React.FC<HomePage> = ({
       setLoading(true); // 로딩 상태 활성화
       setIsActiveBubble(true); // 말풍선 활성화
       setBubblePosition({ x, y }); // 말풍선 위치 저장
-      console.log("말풍선 활성화");
 
       // 5초 대기
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
       setIsActiveBubble(false); // 말풍선 비활성화
-      console.log("말풍선 꺼짐");
 
       setLoading(false); // 로딩 상태 비활성화
     }
@@ -158,14 +167,43 @@ const StarAnimation1: React.FC<HomePage> = ({
     const groupKey = levelString.charAt(0) as keyof LevelsDataType;
     const groupData = levelsData[groupKey];
 
-    if (!groupData) {
-      console.error(`그룹 ${groupKey}에 대한 데이터를 찾을 수 없습니다`);
-      return;
-    }
-
     setSavedData(groupData);
   };
 
+  const handleSkin = () => {
+    const skin = home.data.user.skin;
+
+    switch (skin) {
+      case "S0":
+        console.log("Skin type is S0");
+        return starS0;
+      // S0에 대한 처리
+
+      case "S1":
+        console.log("Skin type is S1");
+        return starS1;
+
+      case "S2":
+        console.log("Skin type is S2");
+        return starS2;
+
+      case "S3":
+        console.log("Skin type is S3");
+        return starS3;
+
+      case "S4":
+        console.log("Skin type is S3");
+        return starS4;
+
+      case "S5":
+        console.log("Skin type is S3");
+        return starS5;
+
+      default:
+        console.log("Unknown skin type");
+        return starS0;
+    }
+  };
   const calculateOpacityByLevel = (levelName: string | null): number => {
     const minOpacity = 0.4;
     const maxOpacity = 1;
@@ -174,13 +212,10 @@ const StarAnimation1: React.FC<HomePage> = ({
 
     // levelsData가 제대로 로드되었는지 확인
     if (!levelsData) {
-      console.error("levelsData is not loaded");
       return minOpacity;
     }
 
     const groupKey = levelName.charAt(0) as keyof LevelsDataType;
-    console.log("Group Key:", groupKey); // 디버깅을 위한 로그
-    console.log("Level Data for group:", levelsData[groupKey]); // 해당 그룹의 데이터 확인
 
     const groupData = levelsData[groupKey];
     if (!groupData) {
@@ -192,7 +227,6 @@ const StarAnimation1: React.FC<HomePage> = ({
     const currentLevelData = groupData.find(
       (level) => level.level === levelName
     );
-    console.log("Current Level Data:", currentLevelData); // 현재 레벨 데이터 확인
 
     if (!currentLevelData) {
       console.error(`레벨 ${levelName}에 대한 데이터를 찾을 수 없습니다`);
@@ -208,7 +242,6 @@ const StarAnimation1: React.FC<HomePage> = ({
     const validExperiences = groupData
       .map((level) => level.total_experience)
       .filter((exp): exp is number => exp !== null);
-    console.log("Valid Experiences:", validExperiences); // 유효한 경험치 값들 확인
 
     if (validExperiences.length === 0) {
       console.error("유효한 경험치 값이 없습니다");
@@ -217,7 +250,6 @@ const StarAnimation1: React.FC<HomePage> = ({
 
     const maxExperience = Math.max(...validExperiences);
     const experienceRatio = currentLevelData.total_experience / maxExperience;
-    console.log("Experience Ratio:", experienceRatio); // 경험치 비율 확인
 
     const opacity = minOpacity + (maxOpacity - minOpacity) * experienceRatio;
     console.log("Final Opacity:", opacity); // 최종 광량 값 확인
@@ -230,13 +262,13 @@ const StarAnimation1: React.FC<HomePage> = ({
     if (home && home.data && home.data.user.level) {
       saveData(home.data.user.level);
     }
-    console.log("levelsData:", levelsData);
   }, [home]);
 
   // 사용자와 팀원의 레벨 정보를 별에 배치
   const enhancedStarData = starData.map((star, index) => {
     if (index === 0) {
       const opacity = calculateOpacityByLevel(home.data.user.level);
+
       console.log("User Star Opacity:", opacity); // 사용자 별의 광량 확인
       return {
         ...star,
@@ -318,9 +350,7 @@ const StarAnimation1: React.FC<HomePage> = ({
   const myStar = adjustedStarData.find((star) => star.id === myStarId);
 
   const handleStarClick = (id: number) => {
-    console.log(`Clicked star ID: ${id}`);
     if (id === myStarId) {
-      console.log("Setting isPageOption to 0");
       setIsPageOption(0);
     }
 
@@ -441,7 +471,7 @@ const StarAnimation1: React.FC<HomePage> = ({
                   </SpaceManContiner>
                 )}
                 <Star
-                  src={StarImage}
+                  src={star.id === 1 ? handleSkin() : StarImage}
                   alt={`Star ${star.id}`}
                   animate={{
                     scale: star.id === myStarId ? 3 : 1,

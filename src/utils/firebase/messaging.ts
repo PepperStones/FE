@@ -68,21 +68,20 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
         timestamp,
       });
     }
-    else {
-      if (Notification.permission === "granted") {
-        try {
-          new Notification(title || "Default Title", {
-            body: body || "Default Body",
-            icon: icon || "/favicon.ico",
-            tag: timestamp,
-          });
-          console.log("푸시 알림 표시 성공");
-        } catch (error) {
-          console.error("푸시 알림 표시 실패:", error);
-        }
-      } else {
-        console.error("알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요.");
+
+    if (Notification.permission === "granted") {
+      try {
+        new Notification(title || "Default Title", {
+          body: body || "Default Body",
+          icon: icon || "/favicon.ico",
+          tag: timestamp,
+        });
+        console.log("푸시 알림 표시 성공");
+      } catch (error) {
+        console.error("푸시 알림 표시 실패:", error);
       }
+    } else {
+      console.error("알림 권한이 없습니다. 브라우저 설정에서 알림을 허용해주세요.");
     }
 
     /*

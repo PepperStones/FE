@@ -74,12 +74,17 @@ function AllQuestPage() {
             // Find the corresponding quest data for this unit
             const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
 
-            const currentProgress = questData
+            let currentProgress = questData
                 ? Math.min(
                     (questData.experience / (quest.maxScore || quest.maxPoints || 100)) * 100,
                     quest.maxScore || quest.maxPoints // Cap at 100
                 )
                 : 0;
+
+            // currentProgress가 0이면 10으로 고정
+            if (currentProgress === 0) {
+                currentProgress = 10;
+            }
 
             console.log("currentProgress && index : ", currentProgress, "/", quest.maxScore || quest.maxPoints, " and ", index);
 
@@ -94,7 +99,7 @@ function AllQuestPage() {
                         maxProgress={quest.maxScore || quest.maxPoints}
                         Variation={questData?.experience || null}
                         circleRadius={21}
-                        isQuestDetail={true}
+                        isQuestDetail={false}
                         isAllQuest={true}
                     />
                 </GridItem>

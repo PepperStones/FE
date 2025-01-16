@@ -45,11 +45,12 @@ const ProgressCircle = ({ currentProgress, maxProgress, Variation, circleRadius 
                         isQuestDetail={isQuestDetail}
                         strokeDasharray={`${circleCircumference}, ${circleCircumference}`}
                         strokeDashoffset={`${circleCircumference - (progressPercent / 100) * circleCircumference}`}
+                        progressPercent={progressPercent}
                     />
                 </CircularSvg>
                 <ProgressText>
                     {Variation !== undefined ? (
-                        <ProgressVariation className='text-md-300' isAllQuest={isAllQuest}>{Variation !== null ? '+': undefined } {Variation}</ProgressVariation>
+                        <ProgressVariation className='text-md-300' isAllQuest={isAllQuest}>{Variation !== null ? '+' : undefined} {Variation}</ProgressVariation>
                     ) : (
                         <>
                             <ProgressValue className='caption-md-300' >{currentProgress}</ProgressValue>
@@ -88,11 +89,20 @@ const CircleBackground = styled.circle`
     stroke: var(--gray-20);
 `;
 
-const CircleProgress = styled.circle<{isQuestDetail: boolean}>`
-    fill: none;
-    stroke: ${({ isQuestDetail }) => isQuestDetail ? "var(--gray-90)" : "var(--orange-70)"}; /* Progress circle color */
-    stroke-linecap: round; /* Rounded ends for the progress */
-    transition: stroke-dashoffset 0.35s ease; /* Smooth animation */
+const CircleProgress = styled.circle<{ progressPercent: number, isQuestDetail: boolean }>`
+fill: none;
+stroke: ${({ progressPercent, isQuestDetail }) =>
+        isQuestDetail
+            ? "var(--orange-70)" // isQuestDetail이 true일 경우 무조건 orange-70
+            : progressPercent === 100
+                ? "var(--orange-60)"
+                : progressPercent <= 30
+                    ? "#A88077"
+                    : progressPercent <= 50
+                        ? "#FF8365"
+                        : "#4caf50"};
+stroke-linecap: round; /* Rounded ends for the progress */
+transition: stroke-dashoffset 0.35s ease; /* Smooth animation */
 `;
 
 const ProgressText = styled.div`
@@ -103,7 +113,7 @@ const ProgressText = styled.div`
     text-align: center;
 `;
 
-const ProgressVariation = styled.div <{isAllQuest:boolean}>`
+const ProgressVariation = styled.div <{ isAllQuest: boolean }>`
 font-size: ${({ isAllQuest }) => isAllQuest ? "10px" : "12px"};
 color: var(--orange-90);
 `;

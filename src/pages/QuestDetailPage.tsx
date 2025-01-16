@@ -242,13 +242,17 @@ function QuestDetailPage() {
                     const unit = questDetails?.data.period === 'WEEKLY' ? (reversedIndex + 1) % 50 + 1 : (reversedIndex + 1) % 12 + 1;
                     const questData = questDetails?.data.questList.find((quest) => quest.unit === unit);
 
-                    const currentProgress = questData
+                    let currentProgress = questData
                         ? Math.min(
                             (questData.experience / (quest.maxScore || quest.maxPoints || 100)) * 100,
                             quest.maxScore || quest.maxPoints // Cap at 100
                         )
                         : 0;
 
+                    // currentProgress가 0이면 10으로 고정
+                    if (currentProgress === 0) {
+                        currentProgress = 10;
+                    }
 
                     // 각 버튼의 각도 계산
                     const buttonAngle = angleIncrement * index; // 버튼의 고유 각도
@@ -284,7 +288,7 @@ function QuestDetailPage() {
                                     maxProgress={quest.maxScore || quest.maxPoints}
                                     Variation={isTopButton ? questData?.experience || null : null}
                                     circleRadius={isTopButton ? 34 : 27}
-                                    isQuestDetail={true}
+                                    isQuestDetail={false}
                                 />
                             </ButtonContainer>
                         </CircleComponent>

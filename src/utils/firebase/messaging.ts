@@ -62,10 +62,7 @@ export const requestPermissionAndGetToken = async () => {
 };
 
 export const onForegroundMessage = (callback: (payload: any) => void): void => {
-  onMessage(messaging, (payload) => {
-    alert("onForegroundMessage 11111");
-    console.log("onForegroundMessage 11111");
-    
+  onMessage(messaging, (payload) => {    
     // 알림 데이터 추출
     const { title, body, icon } = payload.data || {};
     const timestamp = payload.data?.timestamp || Date.now().toString();
@@ -79,9 +76,6 @@ export const onForegroundMessage = (callback: (payload: any) => void): void => {
         timestamp,
       });
     }
-
-    alert("onForegroundMessage End");
-    console.log("onForegroundMessage End");
 
     /*
     // 브라우저 알림 표시

@@ -35,21 +35,14 @@ importScripts(
     self.registration.showNotification(notificationTitle, notificationOptions);
   });
   
-//   // 포그라운드 메시지 수신 및 알림 표시
-// self.addEventListener("message", (event) => {
-//   console.log("Service Worker로 포그라운드 메시지 수신:", event.data);
-//   alert(event.data);
-
-//   const { title, body, icon } = event.data.notification || {};
-//   alert(title);
-//   alert(body);
-
-//   const notificationTitle = title || "Default Title";
-//   const notificationOptions = {
-//     body: body || "Default Body",
-//     icon: icon || "/favicon.ico",
-//   };
-//   alert("성공!");
-
-//   self.registration.showNotification(notificationTitle, notificationOptions);
-// });
+  self.addEventListener('install', (event) => {
+    console.log('서비스 워커 설치 완료');
+    // 새로운 워커가 바로 활성화되도록 설정
+    self.skipWaiting();
+  });
+  
+  self.addEventListener('activate', (event) => {
+    console.log('서비스 워커 활성화 완료');
+    // 새 워커가 클라이언트를 즉시 제어하도록 설정
+    event.waitUntil(clients.claim());
+  });

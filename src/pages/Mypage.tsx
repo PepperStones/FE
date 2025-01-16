@@ -243,13 +243,13 @@ function Mypage() {
                         <DetailLeft>
                             <MypageIcon src={PasswordImg} /><IconDescription className='text-md-200'>비밀번호</IconDescription>
                         </DetailLeft>
-                        <FixButton className='caption-sm-200' onClick={handleUpdatePwdClick}>변경하기 <GoIcon src={GoIconImg}/></FixButton>
+                        <FixButton className='caption-sm-200' onClick={handleUpdatePwdClick}>변경하기 <GoIcon src={GoIconImg} /></FixButton>
                     </DetailContent>
                     <DetailContent>
                         <DetailLeft>
                             <MypageIcon src={SettingImg} /><IconDescription className='text-md-200'>인앱 설치</IconDescription>
                         </DetailLeft>
-                        <FixButton className='caption-sm-200' onClick={openInstallModal}>설처하기 <GoIcon src={GoIconImg}/></FixButton>
+                        <FixButton className='caption-sm-200' onClick={openInstallModal}>설처하기 <GoIcon src={GoIconImg} /></FixButton>
                     </DetailContent>
                 </ProfileDetailContainer>
 
@@ -262,10 +262,10 @@ function Mypage() {
                 </Evaluation>
 
                 <LogOutContainer>
-                    <LogOut className='caption-md-300' onClick={openLogOutModal}>로그아웃 <GoIcon src={GoIconImg}/></LogOut>
+                    <LogOut className='caption-md-300' onClick={openLogOutModal}>로그아웃 <GoIcon src={GoIconImg} /></LogOut>
                 </LogOutContainer>
 
-                <div style={{height:'200px'}}></div>
+                <div style={{ height: '200px' }}></div>
 
             </ProfileInfoContainer>
 

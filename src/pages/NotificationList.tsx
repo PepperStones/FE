@@ -77,11 +77,11 @@ const NotificationList: React.FC = () => {
     } else if (title.startsWith("도전과제")) {
       navigate("/challenge");
     } else if (title.startsWith("직무별")) {
-      navigate("/experience-point?tab=receip");
+      navigate("/experience-point?tab=receipt");
     } else if (title.startsWith("리더부여")) {
-      navigate("/experience-point?tab=receip");
+      navigate("/experience-point?tab=receipt");
     } else if (title.startsWith("전사")) {
-      navigate("/experience-point?tab=receip");
+      navigate("/experience-point?tab=receipt");
     } else if (title.startsWith("인사평가")) {
       navigate("/mypage");
     }

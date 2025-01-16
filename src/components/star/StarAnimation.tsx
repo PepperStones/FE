@@ -748,11 +748,13 @@ const DecoContainer = styled.div`
   height: 9px;
   transform: translate(-50%, -50%);
   z-index: 500;
+
+  border: none;
 `;
 
 const EfectContainer = styled.div`
   position: absolute;
-
+  border: none;
   transform: translate(-50%, -50%);
   z-index: 1000;
 `;

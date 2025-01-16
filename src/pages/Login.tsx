@@ -67,6 +67,9 @@ function Login() {
         setIsLoading(false);
       }
 
+      // 포그라운드 메시지 처리
+      onForegroundMessage();
+
       setIsLoading(false);
 
       if (result.data.userRole === "USER") {

@@ -307,6 +307,8 @@ function CustomizingPage() {
                 </StarSkinsContainer>
             </StarCustomizingContainer>
 
+            <div style={{ height: '200px' }}></div>
+
             <FooterNav />
         </CustomizingPageContainer>
     );
@@ -317,6 +319,8 @@ export default CustomizingPage;
 const CustomizingPageContainer = styled.div`
     display: flex;
     flex-direction: column;
+
+    overflow-y: scroll;
 `;
 
 const StarCustomizingContainer = styled.div`

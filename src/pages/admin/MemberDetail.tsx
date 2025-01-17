@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import moment from "moment";
 
 import TopNav from '../../components/nav/TopNav.tsx';
 import LargeBtn from '../../components/button/LargeBtn.tsx';
 import SmallBtn from '../../components/button/SmallBtn.tsx';
 import DefaultModal from '../../components/modal/DefaultModal.tsx';
 import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker } from 'antd';
 
 import BackIcon from '../../assets/images/left_arrow.png'
 import EinImg from '../../assets/images/admin/orange_ein.png'
@@ -185,15 +185,19 @@ function MemberDetail() {
                             <MypageIcon src={JoinDateImg} /><IconDescription className='text-md-200'>입사일</IconDescription>
                         </DetailLeft>
                         <DatePickerWrapper>
-                            <DatePicker
-                                selected={joinDate}
-                                onChange={handleDateChange}
-                                dateFormat="YYYY-MM-DD"
-                                placeholderText="입사일을 선택해주세요"
-                                className='text-sm-200'
-                                disabled={!isEditable}
-                            >
-                            </DatePicker>
+                            {isEditable ?
+                                <StyledDatePicker
+                                    onChange={handleDateChange}
+                                    format="YYYY-MM-DD"
+                                    placeholder="입사일을 선택해주세요."
+                                    style={{ background: 'var(--black-50)', border: 'none' }}
+                                    className='text-sm-200'
+                                    disabled={!isEditable}
+                                >
+                                </StyledDatePicker>
+                                :
+                                <DateText className='text-sm-200'>{joinDate ? joinDate.toISOString().split("T")[0] : undefined}</DateText>
+                            }
                         </DatePickerWrapper>
                     </DetailContent>
 
@@ -521,4 +525,25 @@ input {
       outline: none;
     }
 }
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  .ant-picker {
+    border-radius: 8px; /* Rounded corners */
+    border: none /* Custom border color */
+    background: var(--black-50) !important;
+  }
+
+  .ant-picker-input > input {
+    background: var(--black-50);
+    color: var(--gray-60);
+  }
+
+  .ant-picker-placeholder {
+    color: white;
+  }
+`;
+
+const DateText = styled.div`
+color: var(--gray-60);
 `;

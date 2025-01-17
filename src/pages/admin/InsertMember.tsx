@@ -6,8 +6,7 @@ import styled, { keyframes } from 'styled-components';
 import TopNav from '../../components/nav/TopNav.tsx';
 import LargeBtn from '../../components/button/LargeBtn.tsx';
 import DefaultErrorModal from '../../components/modal/DefaultErrorModal.tsx';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker } from "antd";
 
 import BackIcon from '../../assets/images/left_arrow.png'
 import EinImg from '../../assets/images/admin/orange_ein.png'
@@ -86,7 +85,7 @@ function InsertMember() {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => setInput(event.target.value);
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, setInput: React.Dispatch<React.SetStateAction<string>>) => setInput(event.target.value);
-    const handleDateChange = (date) => setJoinDate(date);
+    const handleDateChange = (date) => { console.log(date); setJoinDate(date); }
 
     const openWrongEinErrorModal = () => setIsWrongEinErrorModalOpen(true);
     const closeWrongEinErrorModal = () => setIsWrongEinErrorModalOpen(false);
@@ -134,14 +133,15 @@ function InsertMember() {
                             <MypageIcon src={JoinDateImg} /><IconDescription className='text-md-200'>입사일</IconDescription>
                         </DetailLeft>
                         <DatePickerWrapper>
-                            <DatePicker
-                                selected={joinDate}
+                            <StyledDatePicker
+                                value={joinDate}
                                 onChange={handleDateChange}
-                                dateFormat="YYYY-MM-DD"
-                                placeholderText="입사일을 선택해주세요"
+                                format="YYYY-MM-DD"
+                                placeholder="입사일을 선택해주세요"
                                 className='text-sm-200'
+                                style={{background: 'var(--black-50)', border: 'none'}}
                             >
-                            </DatePicker>
+                            </StyledDatePicker>
                         </DatePickerWrapper>
                     </DetailContent>
 
@@ -399,4 +399,21 @@ input {
       outline: none;
     }
 }
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  .ant-picker {
+    border-radius: 8px; /* Rounded corners */
+    border: none /* Custom border color */
+    background: var(--black-50) !important;
+  }
+
+  .ant-picker-input > input {
+    background: var(--black-50);
+    color: var(--gray-60);
+  }
+
+  .ant-picker-placeholder {
+    color: white;
+  }
 `;
